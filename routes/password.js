@@ -4,13 +4,13 @@ import ProjectConfigs from '../utils/data/configs.js';
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.render('password');
+    res.render('dashboard/password');
 });
 
 router.post('/', async (req, res) => {
     const formData = req.body;
     const result = await ProjectConfigs.update(formData, true);
-    res.render('password', result);
+    res.render('dashboard/password', result);
 });
 
 

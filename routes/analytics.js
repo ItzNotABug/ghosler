@@ -4,7 +4,7 @@ import Files from '../utils/data/files.js';
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    res.render('analytics', await Files.all());
+    res.render('dashboard/analytics', await Files.all());
 });
 
 router.post('/delete/:postId', async (req, res) => {

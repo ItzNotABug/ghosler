@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (_, res) => {
     const configs = await ProjectConfigs.all();
-    res.render('settings', {configs: configs});
+    res.render('dashboard/settings', {configs: configs});
 });
 
 router.post('/', async (req, res) => {
@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
     const configs = await ProjectConfigs.all();
 
     const {level, message} = result;
-    res.render('settings', {level, message, configs});
+    res.render('dashboard/settings', {level, message, configs});
 });
 
 
