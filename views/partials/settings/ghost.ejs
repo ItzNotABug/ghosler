@@ -1,0 +1,19 @@
+<!-- Ghost Site Settings -->
+<div class="cardview">
+    <div class="card-header" onclick="toggleCard(this, 'ghostSiteSettings')">
+        <h3>Ghost Site Settings</h3>
+        <i class="arrow down"></i>
+    </div>
+
+    <div id="ghostSiteSettings" style="display: none;">
+        <div class="form-group">
+            <label>URL</label>
+            <input type="url" value="<%= configs.ghost.url; %>" name="ghost.url" required>
+        </div>
+
+        <div class="form-group">
+            <label>Admin Key</label>
+            <input type="password" value="<%= configs.ghost.key; %>" name="ghost.key" required>
+        </div>
+    </div>
+</div>

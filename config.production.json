@@ -1,0 +1,24 @@
+{
+  "ghosler": {
+    "url": "",
+    "port": 2369,
+    "auth": {
+      "user": "ghosler",
+      "pass": "21232f297a57a5a743894a0e4a801fc3"
+    }
+  },
+  "ghost": {
+    "url": "",
+    "key": "",
+    "version": "v5.0"
+  },
+  "newsletter": {
+    "show_comments": true,
+    "show_featured_image": true,
+    "logo_rounded_corners": false,
+    "footer_content": "",
+    "show_powered_by_ghost": true,
+    "show_powered_by_ghosler": true
+  },
+  "mail": []
+}

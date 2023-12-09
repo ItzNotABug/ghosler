@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Analytics - Ghosler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: serif;
+            background-color: #f4f4f4
+        }
+
+        .cardview {
+            padding: 20px;
+            text-align: left;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+            border-radius: 10px;
+            max-width: 50%;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: left;
+            font-size: 1.25rem;
+            background-color: #1b2d48;
+            color: #fff;
+            font-weight: 500
+        }
+
+        h2 {
+            margin: .25em 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        td,
+        th {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd
+        }
+
+        td:first-child,
+        th:first-child {
+            text-align: left
+        }
+
+        th {
+            background-color: #1b2d48
+        }
+
+        table {
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+            border-radius: 10px;
+            width: auto;
+            max-width: 90%;
+            border-spacing: 0
+        }
+
+        thead tr:first-child th:first-child {
+            border-top-left-radius: 10px
+        }
+
+        thead tr:first-child th:last-child {
+            border-top-right-radius: 10px
+        }
+
+        tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 10px
+        }
+
+        tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 10px
+        }
+
+        thead {
+            color: #fff;
+            background-color: #333
+        }
+
+        a {
+            color: #333;
+            text-decoration: none
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .by-line {
+            color: #666;
+            font-size: 1rem
+        }
+
+        @media screen and (max-width: 480px) {
+
+            td,
+            tr {
+                padding: 10px
+            }
+
+            table {
+                border-radius: 0;
+                background-color: transparent;
+                box-shadow: none
+            }
+
+            .table-container {
+                overflow-x: auto
+            }
+
+            .cardview {
+                max-width: 80%
+            }
+
+            thead {
+                display: none
+            }
+
+            table,
+            tbody,
+            td,
+            tr {
+                display: block;
+                width: auto
+            }
+
+            h2 {
+                margin: .25em 0;
+                font-size: 1.25rem;
+                font-weight: 700
+            }
+
+            tr {
+                margin-bottom: 20px;
+                background-color: #fff;
+                box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+                border-radius: 8px
+            }
+
+            td {
+                text-align: left;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border-bottom: 1px solid #ddd
+            }
+
+            tbody tr:last-child td:first-child {
+                border-bottom-left-radius: 0
+            }
+
+            tr td:last-child {
+                border-bottom: none
+            }
+
+            td[data-title]:not([data-title=Title])::before {
+                content: attr(data-title) ": ";
+                font-weight: 700;
+                margin-right: 8px
+            }
+
+            .post-title {
+                padding-bottom: 16px
+            }
+
+            .by-line,
+            .post-title {
+                margin: 0
+            }
+
+            td[data-title=Title] {
+                order: -1
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="header">Analytics - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+
+<% if (analytics.length === 0) { %>
+    <h2 style="text-align: center; color: #666; margin: 25px;">No data available!</h2>
+    <p style="text-align: center; color: #666; margin: 25px; line-height: 2">
+        Newsletter analytics will show up once you publish a post
+        after setting up Ghosler.
+
+        <br>Also make sure you've set up the <strong>Webhook</strong> with <strong>Publish Post</strong> event on Ghost
+        integration's screen.
+    </p>
+<% } else { %>
+    <div>
+        <div class="cardview">
+            <h2 style="padding-bottom: 4px; padding-top: 4px;">Overview</h2>
+            <p><strong>Posts:</strong> <%= overview.posts; %></p>
+            <p><strong>Total Emails Sent:</strong> <%= overview.sent; %></p>
+            <p><strong>Total Emails Opened:</strong> <%= overview.opens; %>
+                <% if (overview.sent > 0) { %>
+                    (<%= Math.round(overview.opens / overview.sent * 100) %>%)
+            </p>
+            <% } %>
+        </div>
+    </div>
+
+    <p style="text-align: center; color: #666; line-height: 1.75">
+        Here's a summary of your recent posts.
+        <br>To resend a newsletter, simply <strong>Delete</strong> the desired post here and <strong>Re-Publish</strong>
+        it from the
+        Ghost
+        dashboard.
+    </p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Members</th>
+                <th>Emails Sent</th>
+                <th>Emails Opened</th>
+                <th>Newsletter Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% analytics.forEach(element => { %>
+                <tr>
+                    <td data-title="Title">
+                        <div class="post-title">
+                            <h2><a href="<%= element.url; %>" target="_blank"><%= element.title; %></a></h2>
+                            <div class="by-line">By <%= element.author; %>, <%= element.date; %> </div>
+                        </div>
+                    </td>
+                    <td data-title="Members"><%= element.stats.members; %></td>
+                    <td data-title="Emails Sent"><%= element.stats.emailsSent; %></td>
+                    <td data-title="Emails Opened"><%= element.stats.emailsOpened; %>
+                        <% if (element.stats.emailsSent > 0) { %>
+                            (<%= Math.round(element.stats.emailsOpened / element.stats.emailsSent * 100) %>%)
+                        <% } %>
+                    </td>
+                    <td data-title="Newsletter Status"><%= element.stats.newsletterStatus; %></td>
+                    <td data-title="Action">
+                        <button type="button"
+                                style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none;"
+                                onclick="if (confirm('Are you sure to delete this Post analytics?\nClick OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }"
+                        > Delete
+                        </button>
+                    </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+<% } %>
+
+<script>
+    function deletePostAnalytics(postId) {
+        fetch(`/analytics/delete/${postId}`, {method: 'POST'})
+            .then(() => window.location.reload())
+            .catch((error) => console.log(error))
+    }
+</script>
+</body>
+</html>

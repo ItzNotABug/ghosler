@@ -1,0 +1,16 @@
+<!-- Ghosler Settings -->
+<div class="cardview">
+    <div class="card-header" onclick="toggleCard(this, 'ghoslerSettings')">
+        <h3>Profile</h3>
+        <i class="arrow down"></i>
+    </div>
+
+    <div id="ghoslerSettings" style="display: none;">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="<%= configs.ghosler.auth.user; %>" name="ghosler.auth.user">
+        </div>
+
+        <button type="button" onclick="window.location='/password'">Change Password</button>
+    </div>
+</div>

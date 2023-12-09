@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="<%= site.lang ?? 'en'; %>">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Newsletter - <%= site.title; %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important
+            }
+
+            .content, .footer {
+                padding: 20px !important
+            }
+
+            .view-in-browser {
+                float: none !important;
+                display: block !important;
+                text-align: left !important
+            }
+        }</style>
+</head>
+<body>
+
+<!-- Email Preview Content -->
+<%- include('./partials/newsletter/header/preview.ejs') %>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="center" style="padding: 10px 0 30px 0;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" class="email-container"
+                   style="border-collapse: collapse; border: 0.5px solid #cccccc; background-color: #ffffff;">
+                <!-- Header -->
+                <%- include('./partials/newsletter/header/site_header.ejs') %>
+
+                <!-- Post content -->
+                <%- include('./partials/newsletter/post/meta.ejs') %>
+                <%- include('./partials/newsletter/post/content.ejs') %>
+
+                <!-- Footer -->
+                <%- include('./partials/newsletter/footer/comments.ejs') %>
+                <%- include('./partials/newsletter/footer/unsubscribe.ejs') %>
+
+                <!-- Powered By -->
+                <%- include('./partials/newsletter/footer/powered_by.ejs') %>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Tracking Pixel -->
+<!-- Checks required for preview mode or when running on localhost. -->
+<% if (typeof newsletter.trackingPixel !== 'undefined' && newsletter.trackingPixel && !newsletter.trackingPixel.includes('localhost')) { %>
+    <img src="<%= newsletter.trackingPixel; %>" alt=""
+         style="width: 1px; height: 1px; position: absolute; left: -9999px;"
+         role="presentation"/>
+<% } %>
+
+<!-- prevent Gmail on iOS font size manipulation -->
+<!-- shamelessly copied from tryghost/ghost repository -->
+<div style="display:none;white-space:nowrap;font:15px courier;line-height:0">&#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0;
+    &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0;
+    &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0; &#xA0;
+</div>
+</body>
+</html>

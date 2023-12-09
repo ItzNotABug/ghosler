@@ -1,0 +1,31 @@
+<!-- Comments -->
+<!--
+TODO: Add the feedback section some day.
+    Url formats: feedback url, 1 = more like this, 0 = less like this
+    Example: site/{postSlug}/#/feedback/{postId}/{type}/?uuid=memberUUID
+-->
+<% if (show_comments) { %>
+    <tr>
+        <td style="padding: 0 30px;">
+            <hr style="border: 0; border-bottom: 1px solid #eeeeee; margin-bottom: 20px;">
+            <table style="border: none; width: 100%; text-align: center; margin: 0; padding: 0;">
+                <tr>
+                    <td style="vertical-align: middle; text-align: center; margin: 0; padding: 0;">
+                        <a href="<%= post.comments %>" target="_blank" style="text-decoration: none;">
+                            <img src="<%= resources.url %>/images/comment.png" alt="" width="20" height="20"
+                                 style="vertical-align: middle; margin-right: 5px;" onerror="this.style.display='none'">
+                            <span style="color: #6c757d; font-size: 15px; font-weight: 600; font-style: oblique; font-family: 'Times New Roman', Times, serif; vertical-align: middle;">Join the Discussion</span>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <hr style="border: 0; border-bottom: 1px solid #eeeeee; margin-top: 20px;">
+        </td>
+    </tr>
+<% } else { %>
+    <tr>
+        <td>
+            <hr style="border: 0; border-bottom: 1px solid #eeeeee; margin: 16px 25px 6px;">
+        </td>
+    </tr>
+<% } %>

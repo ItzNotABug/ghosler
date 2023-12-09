@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Logs - Ghosler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: serif;
+            background-color: #f4f4f4
+        }
+
+        .cardview {
+            padding: 20px;
+            text-align: left;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+            border-radius: 10px;
+            max-width: 50%;
+        }
+
+        .header {
+            padding: 20px;
+            text-align: left;
+            font-size: 1.25rem;
+            background-color: #1b2d48;
+            color: #fff;
+            font-weight: 500
+        }
+
+        h3 {
+            margin: 1em 0;
+            color: #1b2d48;
+            font-weight: 700;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .log-container {
+            font-family: 'Courier New', monospace;
+            background-color: #f3f3f3;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 10px;
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.75;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .log-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media screen and (max-width: 480px) {
+            .cardview {
+                max-width: 80%;
+            }
+
+            h3, p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="header">Logs - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+
+<div class="cardview">
+
+    <h3>Log level: <%= level.charAt(0).toUpperCase() + level.slice(1); %></h3>
+
+    <% if (content) { %>
+        <p>Displayed logs are sorted in reverse chronological order, with the most recent entries appearing at the
+            top.</p>
+
+        <pre class="log-container"><%= content; %></pre>
+    <% } else { %>
+        <p>No log content available.</p>
+    <% } %>
+</div>
+</body>
+</html>

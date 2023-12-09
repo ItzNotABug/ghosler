@@ -1,0 +1,16 @@
+# IntelliJ project files
+.idea
+*.iml
+
+# logs
+.logs
+*.log
+
+# project specific data files folder
+files
+
+# auto gen
+node_modules
+
+# debug configuration
+config.debug.json

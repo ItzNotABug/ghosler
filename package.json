@@ -1,0 +1,16 @@
+{
+  "name": "ghosler",
+  "description": "Send newsletter emails to your members, using your own email credentials!",
+  "version": "0.1",
+  "private": true,
+  "main": "app.js",
+  "type": "module",
+  "author": "@itznotabug",
+  "dependencies": {
+    "@tryghost/admin-api": "^1.13.11",
+    "ejs": "3.1.9",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.5",
+    "winston": "^3.11.0"
+  }
+}
