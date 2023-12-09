@@ -24,7 +24,7 @@ and opens, with the capability to use **multiple** email accounts.
 Pre-requisites: `Node` & `pm2` installed.
 
 1. Clone the project on your server.
-2. Run `npm ci && pm2 app.js --name ghosler` & you are done. Navigate to main site & edit required settings after
+2. Run `npm ci && pm2 start app.js --name ghosler` & you are done. Navigate to main site & edit required settings after
    completing the Setup instructions below.
 
 ### Setup Instructions
