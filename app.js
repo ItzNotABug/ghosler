@@ -1,7 +1,7 @@
 import express from 'express';
 import Miscellaneous from './utils/misc.js';
-import {logDebug, logTags} from './utils/log/logger.js';
 import ProjectConfigs from './utils/data/configs.js';
+import {logDebug, logTags} from './utils/log/logger.js';
 
 // route imports
 import logs from './routes/logs.js';
@@ -26,6 +26,9 @@ expressApp.use('/password', password);
 expressApp.use('/analytics', analytics);
 expressApp.use('/published', published);
 expressApp.use('/track/pixel.png', track);
+
+// custom 404 after all the pages have been set up.
+expressApp.use((req, res) => res.status(404).render('404'));
 
 logDebug(logTags.Express, 'Routes configured!');
 
