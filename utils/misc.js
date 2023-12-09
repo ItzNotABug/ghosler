@@ -35,7 +35,7 @@ export default class Miscellaneous {
                 if (authenticated) return next();
                 else {
                     res.setHeader('WWW-Authenticate', 'Basic realm="401"');
-                    res.status(401).send('Unauthorized');
+                    res.status(401).render('errors/401');
                 }
             } else next();
         });

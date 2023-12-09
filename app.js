@@ -28,7 +28,7 @@ expressApp.use('/published', published);
 expressApp.use('/track/pixel.png', track);
 
 // custom 404 after all the pages have been set up.
-expressApp.use((req, res) => res.status(404).render('404'));
+expressApp.use((req, res) => res.status(404).render('errors/404'));
 
 logDebug(logTags.Express, 'Routes configured!');
 
