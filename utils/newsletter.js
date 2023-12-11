@@ -32,7 +32,6 @@ export default class Newsletter {
 
         // save the counts for this post.
         post.stats.members = subscribers.length;
-        post.stats.emailsOpened = '0'.repeat(post.stats.members);
         await post.update();
 
         await new NewsletterMailer().send(post, subscribers, template);
