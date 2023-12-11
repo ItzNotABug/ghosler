@@ -41,7 +41,7 @@ export default class Files {
             // create files directory.
             await this.makeFilesDir();
 
-            // Initialize the file with an empty JSON object.
+            // Initialize / Update the file with provided post object.
             await fs.writeFile(filePath, JSON.stringify(post), 'utf8');
 
             return true;

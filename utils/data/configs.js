@@ -162,6 +162,12 @@ export default class ProjectConfigs {
         else return {level: 'error', message: 'Error updating settings, check error logs for more info.'};
     }
 
+    /**
+     * Update the file with latest configs.
+     *
+     * @param configs Configs to save.
+     * @returns {Promise<boolean>} True if updated, false if something went wrong.
+     */
     static async #write(configs) {
         const filePath = await this.#getConfigFilePath();
 
