@@ -16,10 +16,11 @@ export default class NewsletterMailer {
      * @param {string} html - The HTML content of the email.
      */
     async send(post, subscribers, html) {
-        logDebug(logTags.Newsletter, 'Initializing sending emails.');
-
+        post.stats.members = subscribers.length;
         post.stats.newsletterStatus = 'Sending';
         await post.update();
+
+        logDebug(logTags.Newsletter, 'Initializing sending emails.');
 
         let allEmailSendPromises = [];
         const subject = `Newsletter - ${post.title}`;

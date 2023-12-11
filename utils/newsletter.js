@@ -30,10 +30,6 @@ export default class Newsletter {
         const renderData = await this.makeRenderingData(post, site, hasCommentsEnabled);
         const template = await this.#renderTemplate(renderData);
 
-        // save the counts for this post.
-        post.stats.members = subscribers.length;
-        await post.update();
-
         await new NewsletterMailer().send(post, subscribers, template);
     }
 
