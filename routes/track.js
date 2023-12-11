@@ -1,12 +1,13 @@
 import express from 'express';
-import Post from '../utils/models/post.js';
+import Queue from '../utils/data/queue.js';
 import Miscellaneous from '../utils/misc.js';
 
+const statsQueue = new Queue();
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     if (req.query && req.query.uuid) {
-        Post.updateStats(req.query.uuid).then();
+        statsQueue.add(req.query.uuid).then();
     }
 
     const pixel = Miscellaneous.trackingPixel();

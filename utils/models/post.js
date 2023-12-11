@@ -1,8 +1,6 @@
 import Stats from './stats.js';
-import BitSet from '../bitset.js';
 import Files from '../data/files.js';
 import Miscellaneous from '../misc.js';
-import {logDebug, logTags} from '../log/logger.js';
 
 /**
  * Represents a Post.
@@ -71,27 +69,6 @@ export default class Post {
             post.authors.filter(author => author.id !== post.primary_author.id).map(author => author.name).join(', '),
             new Stats()
         );
-    }
-
-    static async updateStats(encryptedUUID) {
-        const uuid = Miscellaneous.decode(encryptedUUID);
-
-        const [postId, memberIndex] = uuid.split('_');
-        const post = await Files.get(postId);
-        if (!post) return;
-
-        const emailOpenedStats = post.stats.emailsOpened;
-        const bitSet = new BitSet(emailOpenedStats);
-
-        if (bitSet.get(parseInt(memberIndex)) === 0) {
-            bitSet.set(parseInt(memberIndex), 1);
-            post.stats.emailsOpened = bitSet.toString();
-
-            const saved = await Files.create(post, true);
-            if (saved) {
-                logDebug(logTags.Stats, `Tracking updated for post: ${post.title}`);
-            }
-        }
     }
 
     /**
