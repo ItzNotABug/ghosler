@@ -1,4 +1,5 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 import Files from './data/files.js';
 import ProjectConfigs from './data/configs.js';
@@ -118,5 +119,21 @@ export default class Miscellaneous {
      */
     static hash(data) {
         return crypto.createHash('md5').update(data).digest('hex');
+    }
+
+    /**
+     * Generate a token for Ghost request authentication.
+     *
+     * @param {String} key - API key to sign JWT with
+     * @param {String} audience - token audience
+     *
+     * @returns {string} Token for the web requests.
+     */
+    static ghostToken(key, audience) {
+        const [id, secret] = key.split(':');
+
+        return jwt.sign({}, Buffer.from(secret, 'hex'), {
+            keyid: id, algorithm: 'HS256', expiresIn: '5m', audience
+        });
     }
 }
