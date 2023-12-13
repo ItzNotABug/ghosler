@@ -26,8 +26,8 @@ export default class NewsletterMailer {
         const subject = `Newsletter - ${post.title}`;
         const mailConfigs = await ProjectConfigs.mail();
 
-        if (mailConfigs.length > 1 && subscribers.length > 0) {
-            logDebug(logTags.Newsletter, 'More than one email configs founds, splitting the subscribers.');
+        if (mailConfigs.length > 1 && subscribers.length > 1) {
+            logDebug(logTags.Newsletter, 'More than one subscriber & email configs found, splitting the subscribers.');
 
             const chunkSize = Math.ceil(subscribers.length / mailConfigs.length);
             for (let i = 0; i < mailConfigs.length; i++) {
@@ -112,9 +112,24 @@ export default class NewsletterMailer {
      * @returns {string} - The HTML content with placeholders replaced.
      */
     #correctHTML(html, subscriber, post, index) {
-        return html
+        let source = html
             .replace('{MEMBER_UUID}', subscriber.uuid)
+            .replace('Jamie Larson', subscriber.name) // default value due to preview
+            .replace('19 September 2013', subscriber.created) // default value due to preview
+            .replace('jamie@example.com', subscriber.email) // default value due to preview
+            .replace('free subscriber', `${subscriber.status} subscriber`) // default value due to preview
             .replace('{TRACKING_PIXEL_LINK}', Miscellaneous.encode(`${post.id}_${index}`));
+
+        if (subscriber.name === '') {
+            // we use wrong class tag to keep the element visible,
+            // use the right one to hide it as it is defined in the styles.
+            source = source.replace(
+                'class=\"wrong-user-subscription-name-field\"',
+                'class=\"user-subscription-name-field\"'
+            );
+        }
+
+        return source;
     }
 
     /**

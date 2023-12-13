@@ -119,9 +119,10 @@ export default class ProjectConfigs {
 
         const ghostUrl = formData['ghost.url'];
         const ghostAdminKey = formData['ghost.key'];
+        const newsletterCenterTitle = formData['newsletter.center_title'];
         const newsletterShowComments = formData['newsletter.show_comments'];
+        const newsletterShowSubscription = formData['newsletter.show_subscription'];
         const newsletterShowFeaturedImage = formData['newsletter.show_featured_image'];
-        const newsletterLogoRoundedCorners = formData['newsletter.logo_rounded_corners'];
         const newsletterFooterContent = formData['newsletter.footer_content'];
         const newsletterPoweredByGhost = formData['newsletter.show_powered_by_ghost'];
         const newsletterPoweredByGhosler = formData['newsletter.show_powered_by_ghosler'];
@@ -139,9 +140,10 @@ export default class ProjectConfigs {
         configs.ghost.key = ghostAdminKey;
 
         // newsletter
+        configs.newsletter.center_title = newsletterCenterTitle === 'on' ?? false;
         configs.newsletter.show_comments = newsletterShowComments === 'on' ?? true;
+        configs.newsletter.show_subscription = newsletterShowSubscription === 'on' ?? false;
         configs.newsletter.show_featured_image = newsletterShowFeaturedImage === 'on' ?? true;
-        configs.newsletter.logo_rounded_corners = newsletterLogoRoundedCorners === 'on' ?? false;
         configs.newsletter.show_powered_by_ghost = newsletterPoweredByGhost === 'on' ?? true;
         configs.newsletter.show_powered_by_ghosler = newsletterPoweredByGhosler === 'on' ?? true;
         configs.newsletter.footer_content = newsletterFooterContent;

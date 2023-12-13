@@ -8,6 +8,14 @@
 
     <div id="newsletterSettings" style="display: none;">
         <div class="form-group-row ">
+            <label>Center Title</label>
+            <input type="checkbox" name="newsletter.center_title"
+            <% if (Boolean(configs.newsletter.center_title)) { %> checked
+                    <% } %>
+            >
+        </div>
+
+        <div class="form-group-row ">
             <label>Show Comments</label>
             <input type="checkbox" name="newsletter.show_comments"
             <% if (Boolean(configs.newsletter.show_comments)) { %> checked
@@ -16,17 +24,17 @@
         </div>
 
         <div class="form-group-row ">
-            <label>Show Featured Image</label>
-            <input type="checkbox" name="newsletter.show_featured_image"
-            <% if (Boolean(configs.newsletter.show_featured_image)) { %> checked
+            <label>Show Subscription</label>
+            <input type="checkbox" name="newsletter.show_subscription"
+            <% if (Boolean(configs.newsletter.show_subscription)) { %> checked
                     <% } %>
             >
         </div>
 
         <div class="form-group-row ">
-            <label>Add Rounded Corners to Logo</label>
-            <input type="checkbox" name="newsletter.logo_rounded_corners"
-            <% if (Boolean(configs.newsletter.logo_rounded_corners)) { %> checked
+            <label>Show Featured Image</label>
+            <input type="checkbox" name="newsletter.show_featured_image"
+            <% if (Boolean(configs.newsletter.show_featured_image)) { %> checked
                     <% } %>
             >
         </div>
