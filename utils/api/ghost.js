@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Miscellaneous from '../misc.js';
 import GhostAdminAPI from '@tryghost/admin-api';
 import ProjectConfigs from '../data/configs.js';
@@ -96,9 +95,15 @@ export default class Ghost {
         const ghost = await ProjectConfigs.ghost();
         let token = `Ghost ${Miscellaneous.ghostToken(ghost.key, '/admin/')}`;
         const ghostHeaders = {Authorization: token, 'User-Agent': 'GhostAdminSDK/1.13.11'};
-        const response = await axios.get(`${ghost.url}/ghost/api/admin/settings`, {headers: ghostHeaders});
 
-        return response.data.settings;
+        const response = await fetch(`${ghost.url}/ghost/api/admin/settings`, {headers: ghostHeaders});
+        if (!response.ok) {
+            // will be caught by the calling function anyway.
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse.settings;
     }
 
     // GhostAdminAPI

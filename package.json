@@ -8,7 +8,6 @@
   "author": "@itznotabug",
   "dependencies": {
     "@tryghost/admin-api": "^1.13.11",
-    "axios": "^1.0.0",
     "ejs": "3.1.9",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
