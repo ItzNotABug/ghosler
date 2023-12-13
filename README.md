@@ -21,7 +21,7 @@ and opens, with the capability to use **multiple** email accounts.
 
 ### Running Ghosler
 
-Pre-requisites: `Node` & `pm2` installed.
+Pre-requisites: `Node 18^` & `pm2` installed.
 
 1. Clone the project on your server.
 2. Run `npm ci && pm2 start app.js --name ghosler` & you are done. Navigate to main site & edit required settings after
@@ -59,3 +59,5 @@ same as in the [config.production.json](./config.production.json) file.
 1. Add support for multiple newsletters.
 2. Add feedback support in newsletter template.
 3. Build a `CLI` to install, update & other options to manage Ghosler instance **[WIP]**.
+
+#### And don't forget to `⭐` the project!
