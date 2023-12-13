@@ -15,10 +15,10 @@ router.post('/', async (req, res) => {
     logDebug(logTags.Newsletter, 'Post received via webhook.');
 
     if (!created) {
-        res.json({message: "Unable to save the post data!"});
+        res.json({message: "The post data could not be saved, or emails for this post have already been sent."});
     } else {
         Newsletter.send(post).then(); // schedule sending.
-        res.json({message: "Newsletter will be sent shortly"});
+        res.json({message: "Newsletter will be sent shortly."});
     }
 });
 
