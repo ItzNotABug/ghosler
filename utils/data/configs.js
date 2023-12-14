@@ -121,6 +121,7 @@ export default class ProjectConfigs {
         const ghostAdminKey = formData['ghost.key'];
         const newsletterCenterTitle = formData['newsletter.center_title'];
         const newsletterShowComments = formData['newsletter.show_comments'];
+        const newsletterShowLatestPosts = formData['newsletter.show_latest_posts'];
         const newsletterShowSubscription = formData['newsletter.show_subscription'];
         const newsletterShowFeaturedImage = formData['newsletter.show_featured_image'];
         const newsletterFooterContent = formData['newsletter.footer_content'];
@@ -142,6 +143,7 @@ export default class ProjectConfigs {
         // newsletter
         configs.newsletter.center_title = newsletterCenterTitle === 'on' ?? false;
         configs.newsletter.show_comments = newsletterShowComments === 'on' ?? true;
+        configs.newsletter.show_latest_posts = newsletterShowLatestPosts === 'on' ?? false;
         configs.newsletter.show_subscription = newsletterShowSubscription === 'on' ?? false;
         configs.newsletter.show_featured_image = newsletterShowFeaturedImage === 'on' ?? true;
         configs.newsletter.show_powered_by_ghost = newsletterPoweredByGhost === 'on' ?? true;

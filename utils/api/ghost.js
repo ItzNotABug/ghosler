@@ -84,6 +84,21 @@ export default class Ghost {
     }
 
     /**
+     * Returns a list of latest post.
+     *
+     * @param {string} currentPostId Current post id.
+     * @returns {Promise<[Object]>}
+     */
+    async latest(currentPostId) {
+        const ghost = await this.#ghost();
+        return await ghost.posts.browse({
+            filter: `status:published+id:-${currentPostId}`,
+            order: 'published_at DESC', limit: 3,
+            fields: 'title, custom_excerpt, excerpt, url, feature_image'
+        });
+    }
+
+    /**
      * Read the site's settings. We especially check if the site has comments enabled.
      *
      * **Be Careful: This api is not officially baked into GhostAdminAPI & is added manually!
