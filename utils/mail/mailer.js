@@ -23,7 +23,6 @@ export default class NewsletterMailer {
         logDebug(logTags.Newsletter, 'Initializing sending emails.');
 
         let allEmailSendPromises = [];
-        const subject = `Newsletter - ${post.title}`;
         const mailConfigs = await ProjectConfigs.mail();
 
         if (mailConfigs.length > 1 && subscribers.length > 1) {
@@ -37,10 +36,7 @@ export default class NewsletterMailer {
                 // Create promises for each subscriber in the chunk and add to allEmailSendPromises
                 const promises = chunk.map((subscriber, index) => {
                         const globalIndex = i * chunkSize + index;
-                        this.#sendEmailToSubscriber(
-                            transporter, mailConfigs[i],
-                            subscriber, globalIndex, post, html, subject
-                        );
+                        this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, html);
                     }
                 );
                 allEmailSendPromises.push(...promises);
@@ -51,7 +47,7 @@ export default class NewsletterMailer {
             // Handling a single mail configuration
             const transporter = await this.#transporter(mailConfigs[0]);
             const promises = subscribers.map((subscriber, index) =>
-                this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, html, subject)
+                this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, html)
             );
 
             allEmailSendPromises.push(...promises);
@@ -79,11 +75,10 @@ export default class NewsletterMailer {
      * @param {number} index - The index of the subscriber in the subscribers array.
      * @param {Post} post - The post related to the newsletter.
      * @param {string} html - The original HTML content of the email.
-     * @param {string} subject - The subject of the email.
      *
      * @returns {Promise<boolean>} - Promise resolving to true if email was sent successfully, false otherwise.
      */
-    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html, subject) {
+    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html) {
         const correctHTML = this.#correctHTML(html, subscriber, post, index);
 
         try {
@@ -91,7 +86,7 @@ export default class NewsletterMailer {
                 from: mailConfigs.from,
                 replyTo: mailConfigs.reply_to,
                 to: `"${subscriber.name}" <${subscriber.email}>`,
-                subject: subject,
+                subject: post.title,
                 html: correctHTML
             });
 
