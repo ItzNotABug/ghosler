@@ -99,6 +99,40 @@ export default class Ghost {
     }
 
     /**
+     * Registers a webhook to receive post data on publish if one doesn't exist.
+     *
+     * **Note:** Ignored when running on localhost.
+     *
+     * @returns {Promise<{level: string, message: string}>}
+     */
+    async registerWebhook() {
+        const ghosler = await ProjectConfigs.ghosler();
+        if (ghosler.url === '' || ghosler.url.includes('localhost')) {
+            return {level: 'warning', message: 'Ignore webhook check.'};
+        }
+
+        const ghost = await this.#ghost();
+
+        try {
+            await ghost.webhooks.add({
+                name: 'Ghosler Webhook',
+                event: 'post.published',
+                target_url: `${ghosler.url}/published`,
+            });
+
+            return {level: 'success', message: 'Webhook created successfully.'};
+        } catch (error) {
+            const context = error.context;
+            if (context === 'Target URL has already been used for this event.') {
+                return {level: 'success', message: 'Webhook exists for this API Key.'};
+            } else {
+                logError(logTags.Ghost, error);
+                return {level: 'error', message: 'Webhook creation failed, see error logs.'};
+            }
+        }
+    }
+
+    /**
      * Read the site's settings. We especially check if the site has comments enabled.
      *
      * **Be Careful: This api is not officially baked into GhostAdminAPI & is added manually!

@@ -37,17 +37,15 @@ Pre-requisites: `Node 18^` & `pm2` installed.
     - Click on **Add Custom Integration**.
     - Name the integration (e.g., Newsletters) and click **Add**.
     - **Copy** the **Admin API Key** displayed.
-3. **Set Up Webhook**:
-    - In the same section, scroll down to **Add Webhook**.
-    - Name the webhook (e.g., Send Newsletter).
-    - Select **Post published** as the event.
-    - Set the **Target Url** to `https://your-domain.com/published`.
-    - Click **Add** to finalize.
-4. **Configure Ghosler**:
+3. **Configure Ghosler**:
     - Fire up the Ghosler front-end by going to `https://your-domain.com`. Default `PORT` is `2369`.
     - Click on **Settings** button.
     - Click on **Ghost Settings** & add your **Ghost Site Url** & **Admin API Key**.
+    - Add mail configurations in **Emails** section.
     - Change other settings you wish to and click **Save Changes**.
+      Upon clicking **Save Changes**, Ghosler will automatically create a new `Webhook` in the Ghost Integration (if it
+      doesn't already exist).
+      This webhook enables **Ghosler** to receive information about posts when they are published.
 
 Now as soon as you publish your Post, it will be sent to your Subscribers who have enabled receiving emails.
 
