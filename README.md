@@ -18,6 +18,8 @@ and opens, with the capability to use **multiple** email accounts.
   accordingly.
 - **Tracking Email Performance**: Monitor email deliverability and open rates.
 - **Customize Newsletter**: You can customize the newsletter via Settings, or go full on by editing the `*.ejs` files.
+- **Paid & Free Members Management**: Ghosler shows a **Subscribe** button to members who do not have access to paid
+  content.
 
 ### Running Ghosler
 
