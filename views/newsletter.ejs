@@ -460,7 +460,43 @@
                                 <!-- Post Content -->
                                 <tr class="post-content-row">
                                     <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; font-size: 17px; line-height: 1.5em; color: #15212A; padding-bottom: 20px; border-bottom: 1px solid #e5eff5; max-width: 600px;"
-                                        valign="top"><%- post.content %> </td>
+                                        valign="top">
+                                        <%- post.content %>
+
+                                        <!-- Paywall area if the subscriber is not paying -->
+                                        <% if (post.showPaywall) { %>
+                                            <div class="align-center" style="text-align: center;">
+                                                <hr style="position: relative; display: block; width: 100%; margin: 3em 0; padding: 0; height: 1px; border: 0; border-top: 1px solid #e5eff5;">
+                                                <h2 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.11em; font-weight: 700; text-rendering: optimizeLegibility; margin: 1.5em 0 0.5em 0; font-size: 26px;">
+                                                    Subscribe to <span
+                                                            style="white-space: nowrap; font-size: 26px !important;">
+                                                        continue reading.
+                                                    </span>
+                                                </h2>
+                                                <p style="margin: 0 auto 1.5em auto; line-height: 1.6em; max-width: 440px;">
+                                                    Become a paid member of <%= site.title; %> to get access to all
+                                                    <span style="white-space: nowrap;">subscriber-only content.</span>
+                                                </p>
+                                                <div style="box-sizing: border-box; width: 100%; display: table;">
+                                                    <table border="0" cellspacing="0" cellpadding="0" align="center"
+                                                           style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: auto;">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td align="center"
+                                                                style="font-size: 18px; color: <%= site.color %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; text-align: center; border-radius: 5px;"
+                                                                valign="top" bgcolor="<%= site.color %>">
+                                                                <a href="<%= newsletter.subscription; %>"
+                                                                   style="overflow-wrap: anywhere; border: 1px solid <%= site.color %>; border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; background-color: <%= site.color %>; color: #FFFFFF;"
+                                                                   target="_blank">Subscribe</a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <p style="margin: 0 0 1.5em 0; line-height: 1.6em;"></p>
+                                            </div>
+                                        <% } %>
+                                    </td>
                                 </tr>
                             </table>
                         </td>
@@ -599,7 +635,7 @@
                                 <h3 style="margin-top: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.11em; text-rendering: optimizeLegibility; font-size: 14px; font-weight: 700; text-transform: uppercase; margin: 0 0 18px;">
                                     Subscription details</h3>
                                 <p style="margin: 0 0 1.5em 0; font-size: 15px; font-weight: 400; line-height: 1.45em; text-decoration: none; margin-bottom: 16px; color: #15212A;">
-                                    <span>You are receiving this because you are a <strong style="font-weight: 700;">free subscriber</strong> to <%- site.title %>. </span>
+                                    <span>You are receiving this because you are a <strong style="font-weight: 700;">free subscriber</strong> to <%= site.title %>. </span>
                                 </p>
                                 <table border="0" cellpadding="0" cellspacing="0" role="presentation"
                                        style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;"

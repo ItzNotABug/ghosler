@@ -19,6 +19,8 @@ export default class Post {
      * @param {string} [featureImageCaption=''] - The caption of the feature image.
      * @param {string} [primaryAuthor=''] - The primary author of the Post.
      * @param {string} [authors=''] - The authors of the Post.
+     * @param {string} [visibility=''] - The visibility of the Post.
+     * @param {Object[]} [tiers] - The tiers of the Post.
      * @param {Stats}  [stats=new Stats()] - The statistics related to this Post.
      */
     constructor(
@@ -32,6 +34,8 @@ export default class Post {
         featureImageCaption = '',
         primaryAuthor = '',
         authors = '',
+        visibility = '',
+        tiers = [],
         stats = new Stats()
     ) {
         this.id = id;
@@ -44,7 +48,18 @@ export default class Post {
         this.featureImageCaption = featureImageCaption;
         this.primaryAuthor = primaryAuthor;
         this.authors = authors;
+        this.visibility = visibility;
+        this.tiers = tiers;
         this.stats = stats;
+    }
+
+    /**
+     * Check if this is a paying members content or not.
+     *
+     * @returns {boolean} True if paid post, false otherwise.
+     */
+    get isPaid() {
+        return this.visibility === 'paid' || this.visibility === 'tiers';
     }
 
     /**
@@ -67,6 +82,8 @@ export default class Post {
             post.feature_image_caption,
             post.primary_author.name,
             post.authors.filter(author => author.id !== post.primary_author.id).map(author => author.name).join(', '),
+            post.visibility,
+            post.tiers,
             new Stats()
         );
     }

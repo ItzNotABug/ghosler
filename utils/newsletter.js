@@ -25,10 +25,20 @@ export default class Newsletter {
             logDebug(logTags.Newsletter, `${subscribers.length} users have enabled receiving newsletters.`);
         }
 
-        const renderData = await this.makeRenderingData(post, ghost);
-        const template = await this.#renderTemplate(renderData);
+        const fullRenderData = await this.makeRenderingData(post, ghost);
+        const fullyRenderedTemplate = await this.#renderTemplate(fullRenderData);
 
-        await new NewsletterMailer().send(post, subscribers, template);
+        let payWalledTemplate;
+        if (post.isPaid) {
+            const partialRenderData = this.#removePaidContent(fullRenderData);
+            payWalledTemplate = await this.#renderTemplate(partialRenderData);
+        }
+
+        await new NewsletterMailer().send(
+            post, subscribers,
+            fullyRenderedTemplate, payWalledTemplate,
+            fullRenderData.newsletter.unsubscribeLink
+        );
     }
 
     /**
@@ -61,7 +71,8 @@ export default class Newsletter {
                 comments: `${post.url}#ghost-comments`,
                 featuredImage: post.featureImage,
                 featuredImageCaption: post.featureImageCaption,
-                latestPosts: []
+                latestPosts: [],
+                showPaywall: false
             },
             newsletter: {
                 subscription: `${site.url}#/portal/account`,
@@ -87,8 +98,8 @@ export default class Newsletter {
             postData.post.latestPosts = latestPosts.map(post => ({
                 title: post.title,
                 url: post.url,
-                feature_image: post.feature_image,
-                excerpt: (post.custom_excerpt ?? post.excerpt).replace(/\n/g, '. ')
+                featuredImage: post.feature_image,
+                preview: (post.custom_excerpt ?? post.excerpt).replace(/\n/g, '. ')
             }));
         }
 
@@ -106,6 +117,19 @@ export default class Newsletter {
             logError(logTags.Newsletter, error);
             return undefined;
         }
+    }
+
+    // remove content that is paid.
+    static #removePaidContent(renderedPostData) {
+        let postContent = renderedPostData.post.content;
+
+        const segmentIndex = postContent.indexOf('<!--members-only-->');
+        if (segmentIndex !== -1) {
+            renderedPostData.post.showPaywall = true;
+            renderedPostData.post.content = postContent.substring(0, segmentIndex);
+        }
+
+        return renderedPostData;
     }
 
     // Sample data for preview.
@@ -128,10 +152,12 @@ export default class Newsletter {
                 comments: 'https://bulletin.ghost.io/welcome/#ghost-comments',
                 featuredImage: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                 featuredImageCaption: '<span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@fakurian?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit" style="color: #2fb1ff; text-decoration: none; overflow-wrap: anywhere;"><span style="white-space: pre-wrap;">Milad Fakurian</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit" style="color: #2fb1ff; text-decoration: none; overflow-wrap: anywhere;"><span style="white-space: pre-wrap;">Unsplash</span></a>',
-                latestPosts: []
+                latestPosts: [],
+                showPaywall: true
             },
             newsletter: {
-                unsubscribe_link: 'https://bulletin.ghost.io/unsubscribe'
+                unsubscribeLink: 'https://bulletin.ghost.io/unsubscribe',
+                subscription: 'https://bulletin.ghost.io/#/portal/account',
             }
         };
 

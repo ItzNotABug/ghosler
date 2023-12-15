@@ -13,9 +13,11 @@ export default class NewsletterMailer {
      *
      * @param {Post} post - The post to be sent.
      * @param {Subscriber[]} subscribers - An array of subscribers.
-     * @param {string} html - The HTML content of the email.
+     * @param {string} fullContent - The HTML content of the email.
+     * @param {string|undefined} partialContent - Partial HTML content of the email for non-paying users.
+     * @param {string} unsubscribeLink - An unsubscribe link for the subscribers.
      */
-    async send(post, subscribers, html) {
+    async send(post, subscribers, fullContent, partialContent, unsubscribeLink) {
         post.stats.members = subscribers.length;
         post.stats.newsletterStatus = 'Sending';
         await post.update();
@@ -24,6 +26,7 @@ export default class NewsletterMailer {
 
         let allEmailSendPromises = [];
         const mailConfigs = await ProjectConfigs.mail();
+        let tierIds = post.isPaid ? [...post.tiers.map(tier => tier.id)] : [];
 
         if (mailConfigs.length > 1 && subscribers.length > 1) {
             logDebug(logTags.Newsletter, 'More than one subscriber & email configs found, splitting the subscribers.');
@@ -36,7 +39,8 @@ export default class NewsletterMailer {
                 // Create promises for each subscriber in the chunk and add to allEmailSendPromises
                 const promises = chunk.map((subscriber, index) => {
                         const globalIndex = i * chunkSize + index;
-                        this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, html);
+                        const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
+                        this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, contentToSend, unsubscribeLink);
                     }
                 );
                 allEmailSendPromises.push(...promises);
@@ -46,8 +50,10 @@ export default class NewsletterMailer {
 
             // Handling a single mail configuration
             const transporter = await this.#transporter(mailConfigs[0]);
-            const promises = subscribers.map((subscriber, index) =>
-                this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, html)
+            const promises = subscribers.map((subscriber, index) => {
+                    const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
+                    this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, contentToSend, unsubscribeLink);
+                }
             );
 
             allEmailSendPromises.push(...promises);
@@ -75,10 +81,11 @@ export default class NewsletterMailer {
      * @param {number} index - The index of the subscriber in the subscribers array.
      * @param {Post} post - The post related to the newsletter.
      * @param {string} html - The original HTML content of the email.
+     * @param {string} unsubscribeLink - An unsubscribe link for the subscriber.
      *
      * @returns {Promise<boolean>} - Promise resolving to true if email was sent successfully, false otherwise.
      */
-    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html) {
+    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html, unsubscribeLink) {
         const correctHTML = this.#correctHTML(html, subscriber, post, index);
 
         try {
@@ -87,7 +94,13 @@ export default class NewsletterMailer {
                 replyTo: mailConfigs.reply_to,
                 to: `"${subscriber.name}" <${subscriber.email}>`,
                 subject: post.title,
-                html: correctHTML
+                html: correctHTML,
+                list: {
+                    unsubscribe: {
+                        comment: 'Unsubscribe',
+                        url: unsubscribeLink.replace('{MEMBER_UUID}', subscriber.uuid),
+                    },
+                }
             });
 
             return info.response.includes('250');
