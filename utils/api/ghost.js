@@ -123,7 +123,9 @@ export default class Ghost {
             return {level: 'success', message: 'Webhook created successfully.'};
         } catch (error) {
             const context = error.context;
-            if (context === 'Target URL has already been used for this event.') {
+            if (error.name === 'UnauthorizedError') {
+                return {level: 'error', message: 'Unable to check for Webhook, Ghost Admin API not valid.'};
+            } else if (context === 'Target URL has already been used for this event.') {
                 return {level: 'success', message: 'Webhook exists for this API Key.'};
             } else {
                 logError(logTags.Ghost, error);
