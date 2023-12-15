@@ -1,8 +1,8 @@
 import ejs from 'ejs';
 import path from 'path';
-import {fileURLToPath} from 'url';
 
 import Ghost from './api/ghost.js';
+import Files from './data/files.js';
 import ProjectConfigs from './data/configs.js';
 import NewsletterMailer from './mail/mailer.js';
 import {logDebug, logError, logTags} from './log/logger.js';
@@ -25,7 +25,7 @@ export default class Newsletter {
             logDebug(logTags.Newsletter, `${subscribers.length} users have enabled receiving newsletters.`);
         }
 
-        const fullRenderData = await this.makeRenderingData(post, ghost);
+        const fullRenderData = await this.#makeRenderingData(post, ghost);
         const fullyRenderedTemplate = await this.#renderTemplate(fullRenderData);
 
         let payWalledTemplate;
@@ -47,7 +47,7 @@ export default class Newsletter {
      * @param {Post} post
      * @param {Ghost} ghost
      */
-    static async makeRenderingData(post, ghost) {
+    static async #makeRenderingData(post, ghost) {
         const ghosler = await ProjectConfigs.ghosler();
 
         const site = await ghost.site();
@@ -99,7 +99,10 @@ export default class Newsletter {
                 title: post.title,
                 url: post.url,
                 featuredImage: post.feature_image,
-                preview: (post.custom_excerpt ?? post.excerpt).replace(/\n/g, '. ')
+                preview: (
+                    post.custom_excerpt ??
+                    post.excerpt ?? 'Click to read & discover more in the full article.'
+                ).replace(/\n/g, '. ')
             }));
         }
 
@@ -108,8 +111,11 @@ export default class Newsletter {
 
     // Render the ejs template with given data.
     static async #renderTemplate(renderingData) {
-        const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        const templatePath = path.join(__dirname, '../views/newsletter.ejs');
+        let templatePath;
+
+        if (await Files.customTemplateExists()) {
+            templatePath = Files.customTemplatePath();
+        } else templatePath = path.join(process.cwd(), '/views/newsletter.ejs');
 
         try {
             return await ejs.renderFile(templatePath, renderingData);

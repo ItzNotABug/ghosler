@@ -23,6 +23,13 @@ export default class Files {
     }
 
     /**
+     * Get the custom template's path.
+     */
+    static #customTemplatePath() {
+        return path.join(process.cwd(), 'custom-template.ejs');
+    }
+
+    /**
      * * Asynchronously creates a JSON file with a specified name in a predefined directory.
      *
      * @param {Object} post - The post data to be saved as a file.
@@ -181,6 +188,29 @@ export default class Files {
             // empty anyway!
             return {content: '', level: type};
         }
+    }
+
+    /**
+     * Checks whether the user has supplied a custom template to be used for preview & emails.
+     *
+     * @returns {Promise<boolean>} True if a file named 'custom-template.ejs' exists.
+     */
+    static async customTemplateExists() {
+        try {
+            await fs.access(this.#customTemplatePath());
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns the Path for the custom template.
+     *
+     * @returns {string} Path of the file.
+     */
+    static customTemplatePath() {
+        return this.#customTemplatePath();
     }
 
     /**

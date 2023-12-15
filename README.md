@@ -17,7 +17,8 @@ and opens, with the capability to use **multiple** email accounts.
 - **Support for Multiple Email Accounts**: Distribute newsletters through various email accounts, dividing member counts
   accordingly.
 - **Tracking Email Performance**: Monitor email deliverability and open rates.
-- **Customize Newsletter**: You can customize the newsletter via Settings, or go full on by editing the `*.ejs` files.
+- **Customize Newsletter**: You can customize the newsletter via Settings, or go full on by providing
+  a [custom template](#custom-template).
 - **Paid & Free Members Management**: Ghosler shows a **Subscribe** button to members who do not have access to paid
   content.
 
@@ -53,6 +54,15 @@ Now as soon as you publish your Post, it will be sent to your Subscribers who ha
 
 Ghosler will always use a debug version of the configs i.e. `config.debug.json` if one exists. The JSON schema is the
 same as in the [config.production.json](./config.production.json) file.
+
+#### Custom Template
+
+If you want to customize the newsletter template even more, follow the steps -
+
+1. Create a **custom-template.ejs** in the root directory.
+2. Customize it as you like, take a look at [pre-defined template](./views/newsletter.ejs) for reference.
+3. That's it! Ghosler will use the new template for preview & sending newsletter.
+4. Rename the file to anything if you don't want to use the custom template.
 
 ### TODOs
 
