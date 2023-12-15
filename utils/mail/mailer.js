@@ -13,9 +13,11 @@ export default class NewsletterMailer {
      *
      * @param {Post} post - The post to be sent.
      * @param {Subscriber[]} subscribers - An array of subscribers.
-     * @param {string} html - The HTML content of the email.
+     * @param {string} fullContent - The HTML content of the email.
+     * @param {string|undefined} partialContent - Partial HTML content of the email for non-paying users.
+     * @param {string} unsubscribeLink - An unsubscribe link for the subscribers.
      */
-    async send(post, subscribers, html) {
+    async send(post, subscribers, fullContent, partialContent, unsubscribeLink) {
         post.stats.members = subscribers.length;
         post.stats.newsletterStatus = 'Sending';
         await post.update();
@@ -23,11 +25,11 @@ export default class NewsletterMailer {
         logDebug(logTags.Newsletter, 'Initializing sending emails.');
 
         let allEmailSendPromises = [];
-        const subject = `Newsletter - ${post.title}`;
         const mailConfigs = await ProjectConfigs.mail();
+        let tierIds = post.isPaid ? [...post.tiers.map(tier => tier.id)] : [];
 
-        if (mailConfigs.length > 1 && subscribers.length > 0) {
-            logDebug(logTags.Newsletter, 'More than one email configs founds, splitting the subscribers.');
+        if (mailConfigs.length > 1 && subscribers.length > 1) {
+            logDebug(logTags.Newsletter, 'More than one subscriber & email configs found, splitting the subscribers.');
 
             const chunkSize = Math.ceil(subscribers.length / mailConfigs.length);
             for (let i = 0; i < mailConfigs.length; i++) {
@@ -37,10 +39,8 @@ export default class NewsletterMailer {
                 // Create promises for each subscriber in the chunk and add to allEmailSendPromises
                 const promises = chunk.map((subscriber, index) => {
                         const globalIndex = i * chunkSize + index;
-                        this.#sendEmailToSubscriber(
-                            transporter, mailConfigs[i],
-                            subscriber, globalIndex, post, html, subject
-                        );
+                        const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
+                        this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, contentToSend, unsubscribeLink);
                     }
                 );
                 allEmailSendPromises.push(...promises);
@@ -50,8 +50,10 @@ export default class NewsletterMailer {
 
             // Handling a single mail configuration
             const transporter = await this.#transporter(mailConfigs[0]);
-            const promises = subscribers.map((subscriber, index) =>
-                this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, html, subject)
+            const promises = subscribers.map((subscriber, index) => {
+                    const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
+                    this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, contentToSend, unsubscribeLink);
+                }
             );
 
             allEmailSendPromises.push(...promises);
@@ -79,11 +81,11 @@ export default class NewsletterMailer {
      * @param {number} index - The index of the subscriber in the subscribers array.
      * @param {Post} post - The post related to the newsletter.
      * @param {string} html - The original HTML content of the email.
-     * @param {string} subject - The subject of the email.
+     * @param {string} unsubscribeLink - An unsubscribe link for the subscriber.
      *
      * @returns {Promise<boolean>} - Promise resolving to true if email was sent successfully, false otherwise.
      */
-    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html, subject) {
+    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html, unsubscribeLink) {
         const correctHTML = this.#correctHTML(html, subscriber, post, index);
 
         try {
@@ -91,8 +93,14 @@ export default class NewsletterMailer {
                 from: mailConfigs.from,
                 replyTo: mailConfigs.reply_to,
                 to: `"${subscriber.name}" <${subscriber.email}>`,
-                subject: subject,
-                html: correctHTML
+                subject: post.title,
+                html: correctHTML,
+                list: {
+                    unsubscribe: {
+                        comment: 'Unsubscribe',
+                        url: unsubscribeLink.replace('{MEMBER_UUID}', subscriber.uuid),
+                    },
+                }
             });
 
             return info.response.includes('250');
@@ -112,9 +120,24 @@ export default class NewsletterMailer {
      * @returns {string} - The HTML content with placeholders replaced.
      */
     #correctHTML(html, subscriber, post, index) {
-        return html
+        let source = html
             .replace('{MEMBER_UUID}', subscriber.uuid)
+            .replace('Jamie Larson', subscriber.name) // default value due to preview
+            .replace('19 September 2013', subscriber.created) // default value due to preview
+            .replace('jamie@example.com', subscriber.email) // default value due to preview
+            .replace('free subscriber', `${subscriber.status} subscriber`) // default value due to preview
             .replace('{TRACKING_PIXEL_LINK}', Miscellaneous.encode(`${post.id}_${index}`));
+
+        if (subscriber.name === '') {
+            // we use wrong class tag to keep the element visible,
+            // use the right one to hide it as it is defined in the styles.
+            source = source.replace(
+                'class=\"wrong-user-subscription-name-field\"',
+                'class=\"user-subscription-name-field\"'
+            );
+        }
+
+        return source;
     }
 
     /**

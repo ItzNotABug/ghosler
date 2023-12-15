@@ -13,10 +13,11 @@
     "version": "v5.0"
   },
   "newsletter": {
-    "show_comments": true,
-    "show_featured_image": true,
-    "logo_rounded_corners": false,
+    "center_title": false,
     "footer_content": "",
+    "show_comments": true,
+    "show_subscription": true,
+    "show_featured_image": true,
     "show_powered_by_ghost": true,
     "show_powered_by_ghosler": true
   },

@@ -1,60 +1,745 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="<%= site.lang ?? 'en'; %>">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Newsletter - <%= site.title; %></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width" name="viewport">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <!--[if mso]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+    </xml><![endif]-->
+    <title><%= post.title; %></title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif
+        .view-online-link {
+            word-wrap: none;
+            white-space: nowrap;
+            color: #738a94;
         }
 
-        @media only screen and (max-width: 600px) {
-            .email-container {
-                width: 100% !important
+        .post-content-row td p {
+            margin: 0 0 1.5em 0;
+            line-height: 1.6em;
+        }
+
+        .post-content-row img {
+            width: auto;
+            border: none;
+            height: auto;
+            margin: 0 auto;
+            display: block;
+            max-width: 100%;
+            border-radius: 5px;
+            -ms-interpolation-mode: bicubic;
+        }
+
+        .post-content-row blockquote {
+            font-size: 17px;
+            line-height: 1.6em;
+            margin: 2em 0 2em 0;
+            padding: 0 25px 0 25px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+            border-left: <%= site.color %> 2px solid;
+        }
+
+        .post-content-row hr {
+            position: relative;
+            display: block;
+            width: 100%;
+            margin: 3em 0;
+            padding: 0;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #e5eff5;
+        }
+
+        .post-content-row code {
+            font-size: 0.9em;
+            background: #F2F7FA;
+            word-break: break-all;
+            padding: 1px 7px;
+            border-radius: 3px;
+            color: <%= site.color %>;
+        }
+
+        @media only screen and (max-width: 620px) {
+            table.body {
+                width: 100%;
+                min-width: 100%;
             }
 
-            .content, .footer {
-                padding: 20px !important
+            table.body p,
+            table.body ul,
+            table.body ol,
+            table.body td {
+                font-size: 16px !important;
             }
 
-            .view-in-browser {
-                float: none !important;
-                display: block !important;
-                text-align: left !important
+            table.body td .site-title {
+                font-size: 24px !important;
             }
-        }</style>
+
+            table.body td .site-description {
+                font-size: 14px !important;
+            }
+
+            table.body .content {
+                padding: 0 !important;
+            }
+
+            table.body .container {
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            table.body .main {
+                border-spacing: 10px 0 !important;
+                border-left-width: 0 !important;
+                border-radius: 0 !important;
+                border-right-width: 0 !important;
+            }
+
+            table.body .btn table {
+                width: 100% !important;
+            }
+
+            table.body .btn a {
+                width: 100% !important;
+            }
+
+            table.body .site-url a {
+                font-size: 14px !important;
+                padding-bottom: 15px !important;
+            }
+
+            table.body .post-meta,
+            table.body .post-meta-date {
+                white-space: normal !important;
+                font-size: 12px !important;
+                line-height: 1.5em;
+            }
+
+            table.body .post-meta,
+            table.body .view-online {
+                width: 100% !important;
+            }
+
+            table.body .view-online-link,
+            table.body .footer,
+            table.body .footer a {
+                font-size: 12px !important;
+            }
+
+            table.body .post-title a {
+                font-size: 32px !important;
+                line-height: 1.15em !important;
+            }
+
+            table.body .post-meta.view-online-mobile {
+                display: table-row !important;
+            }
+
+            table.body .post-meta.view-online.desktop {
+                display: none !important;
+            }
+
+            table.body .view-online {
+                text-decoration: underline;
+            }
+
+            table.feedback-buttons {
+                display: none !important;
+            }
+
+            table.feedback-buttons-mobile {
+                display: table !important;
+                width: 100% !important;
+                max-width: 390px;
+            }
+
+            table.body .feedback-button-mobile-text {
+                font-size: 13px !important;
+            }
+
+            table.body .latest-posts-header {
+                font-size: 12px !important;
+            }
+
+            table.body .latest-post-title {
+                display: inline-block !important;
+                width: 100%;
+                padding-right: 8px !important;
+            }
+
+            table.body .latest-post h4,
+            table.body .latest-post h4 span {
+                padding: 4px 0 6px !important;
+                font-size: 15px !important;
+            }
+
+            table.body .latest-post-excerpt,
+            table.body .latest-post-excerpt a,
+            table.body .latest-post-excerpt span {
+                font-size: 13px !important;
+                line-height: 1.2 !important;
+            }
+
+            table.body .latest-post-excerpt span {
+                display: none !important;
+            }
+
+            table.body .subscription-box h3 {
+                font-size: 14px !important;
+            }
+
+            table.body .subscription-box p,
+            table.body .subscription-box p span {
+                font-size: 13px !important;
+            }
+
+            table.body .subscription-details,
+            table.body .manage-subscription {
+                display: inline-block;
+                width: 100%;
+                text-align: left !important;
+                font-size: 13px !important;
+            }
+
+            table.body .subscription-details {
+                padding-bottom: 12px;
+            }
+
+            table.body h1 {
+                font-size: 32px !important;
+                line-height: 1.3em !important;
+            }
+
+            table.body h2,
+            table.body h2 span {
+                font-size: 26px !important;
+                line-height: 1.22em !important;
+            }
+
+            table.body h3 {
+                font-size: 21px !important;
+                line-height: 1.25em !important;
+            }
+
+            table.body h4 {
+                font-size: 19px !important;
+                line-height: 1.3em !important;
+            }
+
+            table.body h5 {
+                font-size: 16px !important;
+                line-height: 1.4em !important;
+            }
+
+            table.body h6 {
+                font-size: 16px !important;
+                line-height: 1.4em !important;
+            }
+
+            table.body blockquote {
+                font-size: 17px;
+                line-height: 1.6em;
+                margin-bottom: 0;
+                padding-left: 15px;
+            }
+
+            table.body blockquote + * {
+                margin-top: 1.5em !important;
+            }
+
+            table.body hr {
+                margin: 2em 0 !important;
+            }
+        }
+
+        @media all {
+            .subscription-details p.user-subscription-name-field {
+                display: none !important;
+            }
+
+            #MessageViewBody a {
+                color: inherit;
+                text-decoration: none;
+                font-size: inherit;
+                font-family: inherit;
+                font-weight: inherit;
+                line-height: inherit;
+            }
+
+            .btn-primary table td:hover {
+                background-color: #34495e !important;
+            }
+
+            .btn-primary a:hover {
+                background-color: #34495e !important;
+                border-color: #34495e !important;
+            }
+        }
+    </style>
 </head>
-<body>
 
-<!-- Email Preview Content -->
-<%- include('./partials/newsletter/header/preview.ejs') %>
+<body style="background-color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; -webkit-font-smoothing: antialiased; font-size: 18px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; color: #15212A;">
 
-<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+<!-- Preview Content -->
+<% if (post.preview) { %>
+    <div style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">
+        <%= post.preview %>
+    </div>
+<% } %>
+
+<table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" class="body" role="presentation"
+       style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; background-color: #fff; width: 100%;"
+       width="100%">
+
+    <!-- Outlook doesn't respect max-width, so we need an extra centered table -->
+    <!--[if mso]>
     <tr>
-        <td align="center" style="padding: 10px 0 30px 0;">
-            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" class="email-container"
-                   style="border-collapse: collapse; border: 0.5px solid #cccccc; background-color: #ffffff;">
-                <!-- Header -->
-                <%- include('./partials/newsletter/header/site_header.ejs') %>
+        <td>
+            <center>
+                <table border="0" cellpadding="0" cellspacing="0" width="600">
+    <![endif]-->
 
-                <!-- Post content -->
-                <%- include('./partials/newsletter/post/meta.ejs') %>
-                <%- include('./partials/newsletter/post/content.ejs') %>
-
-                <!-- Footer -->
-                <%- include('./partials/newsletter/footer/comments.ejs') %>
-                <%- include('./partials/newsletter/footer/unsubscribe.ejs') %>
-
-                <!-- Powered By -->
-                <%- include('./partials/newsletter/footer/powered_by.ejs') %>
-            </table>
+    <tr>
+        <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A;"
+            valign="top">&#xA0;
         </td>
+        <td class="container"
+            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; display: block; max-width: 600px; margin: 0 auto;"
+            valign="top">
+
+            <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 600px;">
+                <table border="0" cellpadding="0" cellspacing="0" class="main" role="presentation"
+                       style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; background: #ffffff; border-radius: 3px; border-spacing: 20px 0; width: 100%;"
+                       width="100%">
+
+                    <tr>
+                        <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; box-sizing: border-box;"
+                            valign="top">
+                            <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                   style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;"
+                                   width="100%">
+
+                                <!-- Site Header -->
+                                <tr>
+                                    <td align="center"
+                                        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; padding-top: 50px; border-bottom: 1px solid #e5eff5;"
+                                        valign="top" width="100%">
+                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                               style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;"
+                                               width="100%">
+                                            <% if (site.logo !== null) { %>
+                                                <tr>
+                                                    <td align="center"
+                                                        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; padding-bottom: 10px; padding-top: 20px; text-align: center; border-radius: 3px;"
+                                                        valign="top">
+                                                        <a href="<%= site.url %>"
+                                                           style="color: <%= site.color %>>; text-decoration: none; overflow-wrap: anywhere;"
+                                                           target="_blank">
+                                                            <img src="<%= site.logo %>" alt="<%= site.title %>"
+                                                                 border="0" height="48" width="48"
+                                                                 style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 115px; height: 115px; border-radius: 3px;">
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                            <tr>
+                                                <td class="site-title" align="center"
+                                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #15212A; font-size: 24px; letter-spacing: -0.1px; font-weight: 700; text-align: center; padding-bottom: 10px;"
+                                                    valign="top">
+                                                    <div style="width: 100% !important;">
+                                                        <a href="<%= site.url %>"
+                                                           style="text-decoration: none; color: #15212A; overflow-wrap: anywhere; font-family: serif;"
+                                                           target="_blank"><%= site.title %> </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="site-description" align="center"
+                                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #6c757d; font-size: 14px; letter-spacing: -0.1px; text-align: center; padding-bottom: 50px;"
+                                                    valign="top">
+                                                    <div style="width: 100% !important; font-family: serif;"><%= site.description %> </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- Post Title -->
+                                <tr>
+                                    <td class="post-title"
+                                        align="<% if (center_title) { %>center<% } else { %>left<% } %>"
+                                        style="vertical-align: top; color: #15212A; padding-bottom: 16px; font-size: 42px; line-height: 1.1em; font-weight: 700; font-family: Georgia, serif; letter-spacing: -0.01em; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>;"
+                                        valign="top">
+                                        <a class="post-title" href="<%= post.url %>"
+                                           style="text-decoration: none; color: #15212A; display: block; margin-top: 50px; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>;
+                                                   overflow-wrap: anywhere;" target="_blank"><%= post.title %> </a>
+                                    </td>
+                                </tr>
+
+                                <!-- Post Meta -->
+                                <tr>
+                                    <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; width: 100%;"
+                                        valign="top" width="100%">
+                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                               style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; padding-bottom: 48px;"
+                                               width="100%">
+                                            <tr>
+                                                <td class="post-meta" align="left" height="20"
+                                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #738a94; font-size: 13px; letter-spacing: 0.1px; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>; padding: 0;"
+                                                    valign="top"> By <%= post.author %> • <span class="post-meta-date"
+                                                                                                style="white-space: nowrap;"><%= post.date %> </span>
+                                                    <a class="view-online-link" href="<%= post.comments %>"
+                                                       style="text-decoration: none; color: #738a94; font-size: 13px; letter-spacing: 0.1px; overflow-wrap: anywhere;"
+                                                       target="_blank" valign="middle"> &#x2022;
+                                                        <img alt="Comment"
+                                                             border="0"
+                                                             height="16"
+                                                             src="https://static.ghost.org/v5.0.0/images/comment-icon.png"
+                                                             style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 16px; height: 16px; margin-bottom: 1px; vertical-align: middle;"
+                                                             width="16">
+                                                    </a>
+                                                </td>
+                                                <% if (!center_title) { %>
+                                                    <td class="post-meta view-online desktop" align="right"
+                                                        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #738a94; font-size: 13px; letter-spacing: 0.1px; text-align: right;"
+                                                        valign="top">
+                                                        <a class="view-online-link" href="<%= post.url %>"
+                                                           style="text-decoration: none; word-wrap: none; white-space: nowrap; color: #738a94; overflow-wrap: anywhere;"
+                                                           target="_blank">View in browser </a>
+                                                    </td>
+                                                <% } %>
+                                            </tr>
+                                            <% if (center_title) { %>
+                                                <tr>
+                                                    <td class="post-meta view-online desktop" align="center"
+                                                        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #738a94; font-size: 13px; letter-spacing: 0.1px; text-align: center;"
+                                                        valign="top">
+                                                        <a class="view-online-link" href="<%= post.url %>"
+                                                           style="text-decoration: none; word-wrap: none; white-space: nowrap; color: #738a94; overflow-wrap: anywhere;"
+                                                           target="_blank">View in browser </a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                            <tr class="post-meta view-online-mobile" align="left"
+                                                style="color: #738a94; font-size: 13px; letter-spacing: 0.1px; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>; display: none;">
+                                                <td class="view-online" align="center" height="20"
+                                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #738a94; font-size: 13px; letter-spacing: 0.1px; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>;"
+                                                    valign="top">
+                                                    <a class="view-online-link" href="<%= post.url %>"
+                                                       style="text-decoration: none; word-wrap: none; white-space: nowrap; color: #738a94; overflow-wrap: anywhere;"
+                                                       target="_blank">View in browser </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                                <!-- Featured Image-->
+                                <% if (show_featured_image && post.featuredImage) { %>
+                                    <tr>
+                                        <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; width: 100%; padding-bottom: 10px;"
+                                            valign="top" width="100%">
+                                            <img alt src="<%= post.featuredImage %>"
+                                                 style="border-radius: 5px;  border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                 width="600">
+                                        </td>
+                                    </tr><% if (post.featuredImageCaption) { %>
+                                        <tr>
+                                            <td align="center"
+                                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; width: 100%; padding-bottom: 30px; text-align: center; font-size: 13px; color: #738a94;"
+                                                valign="top" width="100%"><%- post.featuredImageCaption %> </td>
+                                        </tr><% } %>
+                                <% } %>
+
+                                <!-- Post Content -->
+                                <tr class="post-content-row">
+                                    <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; font-size: 17px; line-height: 1.5em; color: #15212A; padding-bottom: 20px; border-bottom: 1px solid #e5eff5; max-width: 600px;"
+                                        valign="top">
+                                        <%- post.content %>
+
+                                        <!-- Paywall area if the subscriber is not paying -->
+                                        <% if (post.showPaywall) { %>
+                                            <div class="align-center" style="text-align: center;">
+                                                <hr style="position: relative; display: block; width: 100%; margin: 3em 0; padding: 0; height: 1px; border: 0; border-top: 1px solid #e5eff5;">
+                                                <h2 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.11em; font-weight: 700; text-rendering: optimizeLegibility; margin: 1.5em 0 0.5em 0; font-size: 26px;">
+                                                    Subscribe to <span
+                                                            style="white-space: nowrap; font-size: 26px !important;">
+                                                        continue reading.
+                                                    </span>
+                                                </h2>
+                                                <p style="margin: 0 auto 1.5em auto; line-height: 1.6em; max-width: 440px;">
+                                                    Become a paid member of <%= site.title; %> to get access to all
+                                                    <span style="white-space: nowrap;">subscriber-only content.</span>
+                                                </p>
+                                                <div style="box-sizing: border-box; width: 100%; display: table;">
+                                                    <table border="0" cellspacing="0" cellpadding="0" align="center"
+                                                           style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: auto;">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td align="center"
+                                                                style="font-size: 18px; color: <%= site.color %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; text-align: center; border-radius: 5px;"
+                                                                valign="top" bgcolor="<%= site.color %>">
+                                                                <a href="<%= newsletter.subscription; %>"
+                                                                   style="overflow-wrap: anywhere; border: 1px solid <%= site.color %>; border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; background-color: <%= site.color %>; color: #FFFFFF;"
+                                                                   target="_blank">Subscribe</a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <p style="margin: 0 0 1.5em 0; line-height: 1.6em;"></p>
+                                            </div>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Comment Section -->
+                    <% if (show_comments) { %>
+                        <tr>
+                            <td align="center" bgcolor="#ffffff"
+                                dir="ltr"
+                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; background-color: #ffffff; text-align: center; padding: 32px 0 24px; border-bottom: 1px solid #e5eff5;"
+                                valign="top" width="100%">
+
+                                <!-- For desktops -->
+                                <table border="0" cellpadding="0" cellspacing="0" class="feedback-buttons"
+                                       role="presentation"
+                                       style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; margin: auto; width: auto;"
+                                       width="auto">
+                                    <tr>
+                                        <!-- Comments -->
+                                        <td align="center" dir="ltr" nowrap
+                                            style="color: #15212A; display: inline-block; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer;"
+                                            valign="top">
+                                            <a href="<%= post.comments %>"
+                                               style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                               target="_blank">
+                                                <img alt="Comment" border="0"
+                                                     height="36"
+                                                     src="https://static.ghost.org/v5.0.0/images/comment.png"
+                                                     style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                     width="122">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- For mobiles -->
+                                <table border="0" cellpadding="0" cellspacing="0" class="feedback-buttons-mobile"
+                                       role="presentation"
+                                       style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; display: none; mso-hide: all;"
+                                       width="100%">
+
+                                    <tr>
+                                        <!-- Comments -->
+                                        <td align="center" dir="ltr" nowrap
+                                            style="color: #15212A; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer; width: 33%;"
+                                            valign="top" width="33%">
+                                            <a href="<%= post.comments %>"
+                                               style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                               target="_blank">
+                                                <img alt="Comment"
+                                                     border="0" height="42"
+                                                     src="https://static.ghost.org/v5.0.0/images/comment-mobile.png"
+                                                     style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                     width="42">
+                                                <p class="feedback-button-mobile-text"
+                                                   style="margin: 0 0 1.5em 0; line-height: 1.6em; color: #15212A; font-weight: 500; margin-bottom: 0; font-size: 13px;">
+                                                    Comment</p>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <!-- Keep Reading / Latest Posts -->
+                    <% if (post.latestPosts.length > 0) { %>
+                        <tr>
+                            <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; padding: 24px 0; border-bottom: 1px solid #e5eff5;"
+                                valign="top">
+                                <h3 class="latest-posts-header"
+                                    style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.11em; text-rendering: optimizeLegibility; margin: 0; padding: 8px 0 16px; color: #15212A; font-size: 13px; font-weight: 700; text-transform: uppercase;">
+                                    Keep reading</h3>
+
+                                <% post.latestPosts.forEach(element => { %>
+                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+                                           style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;"
+                                           width="100%">
+                                        <tr>
+                                            <td class="latest-post"
+                                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; padding: 8px 0;"
+                                                valign="top">
+
+                                                <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+                                                       style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;"
+                                                       width="100%">
+                                                    <tr>
+                                                        <td valign="top" align="left" class="latest-post-title"
+                                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; padding-right: 12px;">
+                                                            <h4 class
+                                                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; text-rendering: optimizeLegibility; line-height: 1.2em; margin: 0; padding: 2px 0 4px; font-size: 18px; font-weight: 700;">
+                                                                <a href="<%= element.url %>"
+                                                                   style="overflow-wrap: anywhere; text-decoration: none; color: #15212A;"
+                                                                   target="_blank"><%= element.title %></a>
+                                                            </h4>
+
+                                                            <p class="latest-post-excerpt"
+                                                               style="line-height: 1.6em; margin: 0; padding: 0; color: #738a94; font-size: 15px; font-weight: 400;">
+                                                                <a href="<%= element.url %>"
+                                                                   style="overflow-wrap: anywhere; text-decoration: none; color: #738a94;"
+                                                                   target="_blank"><%= `${element.preview.substring(0, 50)}...` %></a>
+                                                            </p>
+                                                        </td>
+
+                                                        <% if (element.featuredImage) { %>
+                                                            <td width="100" class="latest-post-img"
+                                                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A;"
+                                                                valign="top">
+                                                                <a href="<%= element.url %>"
+                                                                   style="overflow-wrap: anywhere; display: block; height: 100px; overflow: hidden; color: inherit; text-decoration: none;"
+                                                                   target="_blank">
+                                                                    <img src="<%= element.featuredImage %>"
+                                                                         width="100" height="100" loading="lazy"
+                                                                         style="border-radius: 5px; border: none; -ms-interpolation-mode: bicubic; max-width: 100%; object-fit: cover;"
+                                                                         alt>
+                                                                </a>
+                                                            </td>
+                                                        <% } %>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                <% }); %>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <!-- Manage Subscription -->
+                    <% if (show_subscription) { %>
+                        <tr>
+                            <td class="subscription-box"
+                                style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; padding: 32px 0; border-bottom: 1px solid #e5eff5; color: #15212A;"
+                                valign="top">
+                                <h3 style="margin-top: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.11em; text-rendering: optimizeLegibility; font-size: 14px; font-weight: 700; text-transform: uppercase; margin: 0 0 18px;">
+                                    Subscription details</h3>
+                                <p style="margin: 0 0 1.5em 0; font-size: 15px; font-weight: 400; line-height: 1.45em; text-decoration: none; margin-bottom: 16px; color: #15212A;">
+                                    <span>You are receiving this because you are a <strong style="font-weight: 700;">free subscriber</strong> to <%= site.title %>. </span>
+                                </p>
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                       style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;"
+                                       width="100%">
+                                    <tr>
+                                        <td class="subscription-details"
+                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A;"
+                                            valign="top">
+                                            <p class="wrong-user-subscription-name-field"
+                                               style="margin: 0 0 1.5em 0; margin-bottom: 0; font-size: 15px; font-weight: 400; line-height: 1.45em; text-decoration: none; color: #15212A;">
+                                                Name: Jamie Larson</p>
+                                            <p style="margin: 0 0 1.5em 0; margin-bottom: 0; font-size: 15px; font-weight: 400; line-height: 1.45em; text-decoration: none; color: #15212A;">
+                                                Email: <a href="#"
+                                                          style="overflow-wrap: anywhere; text-decoration: none; color: #15212A;"
+                                                          target="_blank">jamie@example.com</a>
+                                            </p>
+                                            <p style="margin: 0 0 1.5em 0; margin-bottom: 0; font-size: 15px; font-weight: 400; line-height: 1.45em; text-decoration: none; color: #15212A;">
+                                                Member since: 19 September 2013</p>
+                                        </td>
+                                        <td align="right" class="manage-subscription"
+                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; white-space: nowrap; font-size: 15px; font-weight: 600; text-align: right; line-height: 1.45em; vertical-align: bottom; color: <%= site.color %>;"
+                                            valign="bottom">
+                                            <a href="<%= newsletter.subscription %>"
+                                               style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                               target="_blank"> Manage subscription → </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    <% } %>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td align="center"
+                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; box-sizing: border-box;"
+                            valign="top">
+                            <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                                   style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; padding-top: 40px; padding-bottom: 30px;"
+                                   width="100%">
+                                <!-- Custom footer text -->
+                                <% if (typeof footer_content !== 'undefined' && footer_content) { %>
+                                    <tr>
+                                        <td align="center" class="footer"
+                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #738a94; margin-top: 20px; text-align: center; font-size: 13px; padding: 10px 30px;line-height: 1.5em;"
+                                            valign="top">
+                                            <p dir="ltr"
+                                               style="margin: 0 0 1.5em 0; line-height: 1.6em;"><%- footer_content %> </p>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                                <!-- Unsubscribe -->
+                                <tr>
+                                    <td align="center" class="footer"
+                                        style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; vertical-align: top; color: #738a94; margin-top: 20px; text-align: center; font-size: 13px; padding: 10px 30px;line-height: 1.5em;"
+                                        valign="top"><%= site.title %> &#xA9; 2023 &#x2013; <a
+                                                href="<%= newsletter.unsubscribeLink; %>"
+                                                style="overflow-wrap: anywhere; color: #738a94; text-decoration: underline;"
+                                                target="_blank">Unsubscribe </a>
+                                    </td>
+                                </tr>
+                                <!-- Powered by -->
+                                <% if (show_powered_by_ghost || show_powered_by_ghosler) { %>
+                                    <tr>
+                                        <td align="center"
+                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; text-align: center; padding-top: 70px; padding-bottom: 40px;"
+                                            valign="top">
+                                            <% if (show_powered_by_ghost) { %> <a href="https://ghost.org/"
+                                                                                  style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                                                                  target="_blank">
+                                                <img alt="Powered by Ghost" border="0" height="30"
+                                                     src="https://static.ghost.org/v4.0.0/images/powered.png"
+                                                     style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 142px; height: 30px;"
+                                                     width="142">
+                                            </a>
+                                            <% } %>
+                                            <% if (show_powered_by_ghost && show_powered_by_ghosler) { %> <p></p>
+                                            <% } %>
+                                            <% if (show_powered_by_ghosler) { %> <a
+                                                    href="https://github.com/itznotabug/ghosler"
+                                                    style="color: #888; font-family: 'Arial Rounded MT Bold', serif; font-size: 14px; font-weight: 500; text-decoration: none; overflow-wrap: anywhere;"
+                                                    target="_blank" rel="noopener noreferrer">Newsletter Powered by
+                                                <span style="color:<%= site.color %>;">Ghosler️</span>
+                                            </a>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </td>
+        <td>&nbsp;</td>
     </tr>
+
+    <!--[if mso]>
+    </table>
+    </center>
+    </td>
+    </tr>
+    <![endif]-->
 </table>
 
 <!-- Tracking Pixel -->

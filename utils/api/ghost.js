@@ -1,6 +1,8 @@
-import ProjectConfigs from '../data/configs.js';
+import Miscellaneous from '../misc.js';
 import GhostAdminAPI from '@tryghost/admin-api';
+import ProjectConfigs from '../data/configs.js';
 import Subscriber from '../models/subscriber.js';
+import {logError, logTags, logToConsole} from '../log/logger.js';
 
 /**
  * Class that handles api calls with Ghost's Admin APIs.
@@ -60,21 +62,40 @@ export default class Ghost {
      * @returns {Promise<boolean>}
      */
     async hasCommentsEnabled() {
-        return true;
-        // const settings = await this.#settings();
-        //
-        // // supposed to be an array of objects but lets check anyway!
-        // if (Array.isArray(settings)) {
-        //     const commentsSettingsKey = 'comments_enabled';
-        //     const settingObject = settings.filter(obj => obj.key === commentsSettingsKey)[0];
-        //     const commentsEnabled = settingObject ? settingObject.value !== 'off' : true;
-        //     logToConsole(logTags.Ghost, `Site comments enabled: ${commentsEnabled}`);
-        //     return commentsEnabled;
-        // } else {
-        //     // no idea about this unknown structure, return a default value!
-        //     logToConsole(logTags.Ghost, 'Could not check if the site has comments enabled, defaulting to true');
-        //     return true;
-        // }
+        try {
+            const settings = await this.#settings();
+
+            // supposed to be an array of objects but lets check anyway!
+            if (Array.isArray(settings)) {
+                const commentsSettingsKey = 'comments_enabled';
+                const settingObject = settings.filter(obj => obj.key === commentsSettingsKey)[0];
+                const commentsEnabled = settingObject ? settingObject.value !== 'off' : true;
+                logToConsole(logTags.Ghost, `Site comments enabled: ${commentsEnabled}`);
+                return commentsEnabled;
+            } else {
+                // no idea about this unknown structure, return a default value!
+                logToConsole(logTags.Ghost, 'Could not check if the site has comments enabled, defaulting to true');
+                return true;
+            }
+        } catch (error) {
+            logError(logTags.Ghost, error);
+            return true;
+        }
+    }
+
+    /**
+     * Returns a list of latest post.
+     *
+     * @param {string} currentPostId Current post id.
+     * @returns {Promise<[Object]>}
+     */
+    async latest(currentPostId) {
+        const ghost = await this.#ghost();
+        return await ghost.posts.browse({
+            filter: `status:published+id:-${currentPostId}`,
+            order: 'published_at DESC', limit: 3,
+            fields: 'title, custom_excerpt, excerpt, url, feature_image'
+        });
     }
 
     /**
@@ -85,10 +106,20 @@ export default class Ghost {
      *
      * @returns {Promise<Object[]>}
      */
-    // async #settings() {
-    //     const ghost = await this.#ghost();
-    //     return await ghost.settings.read();
-    // }
+    async #settings() {
+        const ghost = await ProjectConfigs.ghost();
+        let token = `Ghost ${Miscellaneous.ghostToken(ghost.key, '/admin/')}`;
+        const ghostHeaders = {Authorization: token, 'User-Agent': 'GhostAdminSDK/1.13.11'};
+
+        const response = await fetch(`${ghost.url}/ghost/api/admin/settings`, {headers: ghostHeaders});
+        if (!response.ok) {
+            // will be caught by the calling function anyway.
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const jsonResponse = await response.json();
+        return jsonResponse.settings;
+    }
 
     // GhostAdminAPI
     async #ghost() {
