@@ -136,6 +136,10 @@ export default class ProjectConfigs {
         configs.ghosler.auth.user = user;
         if (configs.ghosler.url !== url) configs.ghosler.url = url;
 
+        if (ghostUrl === '' || ghostAdminKey === '') {
+            return {level: 'error', message: 'Ghost URL or Admin API Key is missing.'};
+        }
+
         // ghost
         configs.ghost.url = ghostUrl;
         configs.ghost.key = ghostAdminKey;
