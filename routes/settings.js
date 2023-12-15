@@ -16,14 +16,15 @@ router.post('/', async (req, res) => {
     const result = await ProjectConfigs.update(formData);
     const configs = await ProjectConfigs.all();
 
-    const {level, message} = result;
+    let {level, message} = result;
 
     if (configs.ghost.url && configs.ghost.key) {
         const ghost = new Ghost();
         const response = await ghost.registerWebhook();
+
         if (response.level === 'error') {
-            res.render('index', response);
-            return;
+            level = response.level;
+            message = response.message;
         }
     }
 
