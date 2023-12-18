@@ -66,7 +66,7 @@ export default class NewsletterMailer {
         // Update the post status and save it
         post.stats.newsletterStatus = 'Sent';
         post.stats.emailsSent = successfulEmails;
-        post.stats.emailsOpened = `${successfulEmails}`.repeat(post.stats.emailsSent);
+        post.stats.emailsOpened = '0'.repeat(successfulEmails);
         await post.update();
 
         logDebug(logTags.Newsletter, 'Email sending complete.');
