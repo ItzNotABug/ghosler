@@ -9,8 +9,8 @@ and opens, with the capability to use **multiple** email accounts.
 ##### Note:
 
 1. Currently, only one newsletter is supported. **If you have multiple active newsletters, do not use this for now.**
-2. The UI isn't too friendly on desktop as I do not have enough exp. in web, but gets the job done, if you are someone
-   who can improve the UI, please contribute.
+2. The dashboard UI isn't too friendly on desktop as I do not have enough exp. in web, but gets the job done, if you are
+   someone who can improve the UI, please contribute.
 
 ### Key Features
 
@@ -26,9 +26,18 @@ and opens, with the capability to use **multiple** email accounts.
 
 Pre-requisites: `Node 18^` & `pm2` installed.
 
-1. Clone the project on your server.
-2. Run `npm ci && pm2 start app.js --name ghosler` & you are done. Navigate to main site & edit required settings after
-   completing the Setup instructions below.
+1. Install the `CLI` -
+
+   ```npm
+   npm -g i ghosler-cli
+   ```
+
+2. Go to the directory you want to install `Ghosler`, make sure its empty & run below command -
+
+   ```shell
+   ghosler install
+   ```
+   Now navigate to main site & edit required settings after completing the Setup instructions below.
 
 ### Setup Instructions
 
@@ -68,6 +77,6 @@ If you want to customize the newsletter template even more, follow the steps -
 
 1. Add support for multiple newsletters.
 2. Add feedback support in newsletter template.
-3. Build a `CLI` to install, update & other options to manage Ghosler instance **[WIP]**.
+3. <s>Build a `CLI` to install, update & other options to manage Ghosler instance</s>.
 
 #### And don't forget to `⭐` the project!
