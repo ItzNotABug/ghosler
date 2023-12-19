@@ -246,7 +246,7 @@
                     <td data-title="Newsletter Status"><%= element.stats.newsletterStatus; %></td>
                     <td data-title="Action">
                         <button type="button"
-                                style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none;"
+                                style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none; cursor: pointer"
                                 onclick="if (confirm('Are you sure to delete this Post analytics?\nClick OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }"
                         > Delete
                         </button>
@@ -262,7 +262,7 @@
     function deletePostAnalytics(postId) {
         fetch(`/analytics/delete/${postId}`, {method: 'POST'})
             .then(() => window.location.reload())
-            .catch((error) => console.log(error))
+            .catch((error) => console.log(error));
     }
 </script>
 </body>
