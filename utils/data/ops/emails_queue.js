@@ -1,12 +1,12 @@
-import Files from './files.js';
-import BitSet from '../bitset.js';
-import Miscellaneous from '../misc.js';
-import {logDebug, logError, logTags} from '../log/logger.js';
+import Files from '../files.js';
+import BitSet from '../../bitset.js';
+import Miscellaneous from '../../misc.js';
+import {logDebug, logError, logTags} from '../../log/logger.js';
 
 /**
  * A queue class for batching and processing updates to tracking statistics.
  */
-export default class Queue {
+export default class EmailsQueue {
 
     /**
      * Creates a new Queue instance.
@@ -24,7 +24,7 @@ export default class Queue {
      *
      * @param {string} encodedUUID - The base64 encoded UUID consisting of postId and memberIndex.
      */
-    async add(encodedUUID) {
+    add(encodedUUID) {
         const uuid = Miscellaneous.decode(encodedUUID);
         const [postId, memberIndex] = uuid.split('_');
 
@@ -44,7 +44,7 @@ export default class Queue {
     async #processQueue() {
         const updatePromises = [];
         for (const [postId, memberIndexes] of this.queue) {
-            updatePromises.push(this.#updateFile(postId, Array.from(memberIndexes)));
+            updatePromises.push(this.#updateFile(postId, memberIndexes));
         }
 
         await Promise.allSettled(updatePromises);

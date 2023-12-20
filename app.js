@@ -18,6 +18,7 @@ Miscellaneous.setup(expressApp).then();
 
 // define routes
 logDebug('Express', 'Setting routes...');
+expressApp.use(track);
 expressApp.use('/', index);
 expressApp.use('/logs', logs);
 expressApp.use('/preview', preview);
@@ -25,7 +26,6 @@ expressApp.use('/settings', settings);
 expressApp.use('/password', password);
 expressApp.use('/analytics', analytics);
 expressApp.use('/published', published);
-expressApp.use('/track/pixel.png', track);
 
 // custom 404 after all the pages have been set up.
 expressApp.use((req, res) => res.status(404).render('errors/404'));
