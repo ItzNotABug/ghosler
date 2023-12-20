@@ -245,6 +245,14 @@
                     </td>
                     <td data-title="Newsletter Status"><%= element.stats.newsletterStatus; %></td>
                     <td data-title="Action">
+                        <% if (element.stats.postContentTrackedLinks.length > 0) { %>
+                            <button type="button"
+                                    style="color: white; background-color: darkgreen; border-radius: 6px; padding: 10px; border: none; cursor: pointer; margin-right: 8px;"
+                                    onclick="window.location='/analytics/links/<%= element.id %>'"
+                            > Links
+                            </button>
+                        <% } %>
+
                         <button type="button"
                                 style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none; cursor: pointer"
                                 onclick="if (confirm('Are you sure to delete this Post analytics?\nClick OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }"

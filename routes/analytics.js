@@ -13,4 +13,10 @@ router.post('/delete/:postId', async (req, res) => {
     res.send(result);
 });
 
+router.get('/links/:postId', async (req, res) => {
+    const postId = req.params.postId;
+    const post = await Files.get(postId);
+    res.render('dashboard/links', post);
+});
+
 export default router;
