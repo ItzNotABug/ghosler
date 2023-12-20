@@ -115,6 +115,8 @@ export default class Newsletter {
             }));
         }
 
+        postData.trackLinks = customisations.track_links;
+
         return postData;
     }
 
@@ -126,6 +128,7 @@ export default class Newsletter {
      */
     static async renderTemplate(renderingData) {
         let templatePath;
+        const injectUrlTracking = renderingData.trackLinks;
 
         if (await Files.customTemplateExists()) {
             templatePath = Files.customTemplatePath();
@@ -133,7 +136,9 @@ export default class Newsletter {
 
         try {
             const template = await ejs.renderFile(templatePath, renderingData);
-            return await this.#injectUrlTracking(renderingData, template);
+            return injectUrlTracking
+                ? await this.#injectUrlTracking(renderingData, template)
+                : {trackedLinks: [], modifiedHtml: template};
         } catch (error) {
             logError(logTags.Newsletter, error);
             return undefined;
@@ -284,6 +289,8 @@ export default class Newsletter {
         if (customisations.footer_content !== '') {
             preview.footer_content = customisations.footer_content;
         }
+
+        preview.trackLinks = customisations.track_links;
 
         return preview;
     }
