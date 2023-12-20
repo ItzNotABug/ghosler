@@ -19,7 +19,8 @@
     "show_subscription": true,
     "show_featured_image": true,
     "show_powered_by_ghost": true,
-    "show_powered_by_ghosler": true
+    "show_powered_by_ghosler": true,
+    "track_links": true
   },
   "mail": []
 }
