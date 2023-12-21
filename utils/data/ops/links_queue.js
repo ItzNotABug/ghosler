@@ -12,9 +12,11 @@ export default class LinksQueue {
      * @param {number} [delay=10000] - The delay in milliseconds before processing the queue.
      */
     constructor(delay = 10000) {
-        this.delay = delay;
-        this.queue = new Map();
         this.timer = null;
+        this.delay = delay;
+
+        /** @type {Map<string, Map<string, number>>} */
+        this.queue = new Map();
     }
 
     /**

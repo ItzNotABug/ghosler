@@ -14,9 +14,11 @@ export default class EmailsQueue {
      * @param {number} [delay=10000] - The delay in milliseconds before processing the queue.
      */
     constructor(delay = 10000) {
-        this.delay = delay;
-        this.queue = new Map();
         this.timer = null;
+        this.delay = delay;
+
+        /**@type {Map<string, Set<number>>} */
+        this.queue = new Map();
     }
 
     /**
@@ -56,7 +58,7 @@ export default class EmailsQueue {
      * Internal method to update the file with the queued changes.
      *
      * @param {string} postId - The ID of the post.
-     * @param {number[]} memberIndexes - Array of member indexes to be updated.
+     * @param {Set<number>} memberIndexes - Array of member indexes to be updated.
      */
     async #updateFile(postId, memberIndexes) {
         try {
