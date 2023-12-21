@@ -1,12 +1,12 @@
-import Files from './files.js';
-import BitSet from '../bitset.js';
-import Miscellaneous from '../misc.js';
-import {logDebug, logError, logTags} from '../log/logger.js';
+import Files from '../files.js';
+import BitSet from '../../bitset.js';
+import Miscellaneous from '../../misc.js';
+import {logDebug, logError, logTags} from '../../log/logger.js';
 
 /**
  * A queue class for batching and processing updates to tracking statistics.
  */
-export default class Queue {
+export default class EmailsQueue {
 
     /**
      * Creates a new Queue instance.
@@ -14,9 +14,11 @@ export default class Queue {
      * @param {number} [delay=10000] - The delay in milliseconds before processing the queue.
      */
     constructor(delay = 10000) {
-        this.delay = delay;
-        this.queue = new Map();
         this.timer = null;
+        this.delay = delay;
+
+        /**@type {Map<string, Set<number>>} */
+        this.queue = new Map();
     }
 
     /**
@@ -24,7 +26,7 @@ export default class Queue {
      *
      * @param {string} encodedUUID - The base64 encoded UUID consisting of postId and memberIndex.
      */
-    async add(encodedUUID) {
+    add(encodedUUID) {
         const uuid = Miscellaneous.decode(encodedUUID);
         const [postId, memberIndex] = uuid.split('_');
 
@@ -44,7 +46,7 @@ export default class Queue {
     async #processQueue() {
         const updatePromises = [];
         for (const [postId, memberIndexes] of this.queue) {
-            updatePromises.push(this.#updateFile(postId, Array.from(memberIndexes)));
+            updatePromises.push(this.#updateFile(postId, memberIndexes));
         }
 
         await Promise.allSettled(updatePromises);
@@ -56,7 +58,7 @@ export default class Queue {
      * Internal method to update the file with the queued changes.
      *
      * @param {string} postId - The ID of the post.
-     * @param {number[]} memberIndexes - Array of member indexes to be updated.
+     * @param {Set<number>} memberIndexes - Array of member indexes to be updated.
      */
     async #updateFile(postId, memberIndexes) {
         try {

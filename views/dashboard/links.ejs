@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Links - Ghosler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: serif;
+            background-color: #f4f4f4
+        }
+
+        .header {
+            padding: 20px;
+            text-align: left;
+            font-size: 1.25rem;
+            background-color: #1b2d48;
+            color: #fff;
+            font-weight: 500
+        }
+
+        h2 {
+            margin: .25em 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        td,
+        th {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd
+        }
+
+        td:first-child,
+        th:first-child {
+            text-align: left
+        }
+
+        th {
+            background-color: #1b2d48
+        }
+
+        table {
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+            border-radius: 10px;
+            width: auto;
+            max-width: 90%;
+            border-spacing: 0
+        }
+
+        thead tr:first-child th:first-child {
+            border-top-left-radius: 10px
+        }
+
+        thead tr:first-child th:last-child {
+            border-top-right-radius: 10px
+        }
+
+        tbody tr:last-child td:first-child {
+            border-bottom-left-radius: 10px
+        }
+
+        tbody tr:last-child td:last-child {
+            border-bottom-right-radius: 10px
+        }
+
+        thead {
+            color: #fff;
+            background-color: #333
+        }
+
+        a {
+            color: #333;
+            text-decoration: none
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        @media screen and (max-width: 480px) {
+            td,
+            tr {
+                padding: 10px;
+            }
+
+            table {
+                border-radius: 0;
+                background-color: transparent;
+                box-shadow: none
+            }
+
+            .table-container {
+                overflow-x: auto
+            }
+
+            thead {
+                display: none
+            }
+
+            table,
+            tbody,
+            td,
+            tr {
+                display: block;
+                width: auto
+            }
+
+            td {
+                word-break: break-all;
+                white-space: pre-wrap;
+            }
+
+            h2 {
+                margin: .25em 0;
+                font-size: 1.25rem;
+                font-weight: 700
+            }
+
+            tr {
+                margin-bottom: 20px;
+                background-color: #fff;
+                box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+                border-radius: 8px
+            }
+
+            td {
+                text-align: left;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border-bottom: 1px solid #ddd
+            }
+
+            tbody tr:last-child td:first-child {
+                border-bottom-left-radius: 0
+            }
+
+            tr td:last-child {
+                border-bottom: none
+            }
+
+            td[data-title]:not([data-title=Link])::before {
+                content: attr(data-title) ": ";
+                font-weight: 700;
+                margin-right: 8px
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+<div class="header">Links - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+<% if (typeof stats === 'undefined' || !stats || !stats.postContentTrackedLinks || stats.postContentTrackedLinks.length === 0) { %>
+    <h2 style="text-align: center; color: #666; margin: 25px;">No links available for this post!</h2>
+<% } else { %>
+    <p style="text-align: center; color: #666; margin: 25px; line-height: 1.5">
+        <strong>Clicks are tracked & incremented<br>everytime they are clicked.</strong>
+    </p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Links</th>
+                <th>Clicks</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% stats.postContentTrackedLinks.forEach(element => { %>
+                <tr>
+                    <% const link = Object.keys(element)[0]; %>
+                    <% const clicks = element[link]; %>
+                    <td data-title="Link"><h4><a href="<%= link; %>" target="_blank"><%= link; %></a></h4></td>
+                    <td data-title="Clicks"><%= clicks; %></td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+<% } %>
+</body>
+</html>

@@ -21,6 +21,8 @@ and opens, with the capability to use **multiple** email accounts.
   a [custom template](#custom-template).
 - **Paid & Free Members Management**: Ghosler shows a **Subscribe** button to members who do not have access to paid
   content.
+- **Link Click Tracking in Emails**: Ghosler supports tracking URL clicks in the email, providing more insights on how
+  your members are interacting with added links.
 
 ### Running Ghosler
 

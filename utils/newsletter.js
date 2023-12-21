@@ -1,3 +1,4 @@
+import he from 'he';
 import ejs from 'ejs';
 import path from 'path';
 
@@ -26,17 +27,23 @@ export default class Newsletter {
         }
 
         const fullRenderData = await this.#makeRenderingData(post, ghost);
-        const fullyRenderedTemplate = await this.#renderTemplate(fullRenderData);
+        const {trackedLinks, fullTemplate} = await this.renderTemplate(fullRenderData);
 
         let payWalledTemplate;
         if (post.isPaid) {
             const partialRenderData = this.#removePaidContent(fullRenderData);
-            payWalledTemplate = await this.#renderTemplate(partialRenderData);
+            payWalledTemplate = (await this.renderTemplate(partialRenderData)).modifiedHtml;
+        }
+
+        if (trackedLinks.length > 0) {
+            trackedLinks.forEach(link => {
+                post.stats.postContentTrackedLinks.push({[link]: 0});
+            });
         }
 
         await new NewsletterMailer().send(
             post, subscribers,
-            fullyRenderedTemplate, payWalledTemplate,
+            fullTemplate, payWalledTemplate,
             fullRenderData.newsletter.unsubscribeLink
         );
     }
@@ -55,6 +62,7 @@ export default class Newsletter {
 
         let postData = {
             site: {
+                url: site.url,
                 lang: site.lang,
                 logo: site.logo,
                 title: site.title,
@@ -62,6 +70,7 @@ export default class Newsletter {
                 color: site.accent_color ?? '#ff247c',
             },
             post: {
+                id: post.id,
                 url: post.url,
                 date: post.date,
                 title: post.title,
@@ -106,19 +115,30 @@ export default class Newsletter {
             }));
         }
 
+        postData.trackLinks = customisations.track_links;
+
         return postData;
     }
 
-    // Render the ejs template with given data.
-    static async #renderTemplate(renderingData) {
+    /**
+     * Render the newsletter `ejs` template with given data.
+     *
+     * @param renderingData Data to use to render the content.
+     * @returns {Promise<{trackedLinks: string[], modifiedHtml: string}|undefined>}
+     */
+    static async renderTemplate(renderingData) {
         let templatePath;
+        const injectUrlTracking = renderingData.trackLinks;
 
         if (await Files.customTemplateExists()) {
             templatePath = Files.customTemplatePath();
         } else templatePath = path.join(process.cwd(), '/views/newsletter.ejs');
 
         try {
-            return await ejs.renderFile(templatePath, renderingData);
+            const template = await ejs.renderFile(templatePath, renderingData);
+            return injectUrlTracking
+                ? await this.#injectUrlTracking(renderingData, template)
+                : {trackedLinks: [], modifiedHtml: template};
         } catch (error) {
             logError(logTags.Newsletter, error);
             return undefined;
@@ -138,17 +158,90 @@ export default class Newsletter {
         return renderedPostData;
     }
 
+    // we cannot use the 'ping' attribute to anchor tags,
+    // so we add redirects to track url clicks in email clients.
+    static async #injectUrlTracking(renderingData, renderedPostData) {
+        const ghosler = await ProjectConfigs.ghosler();
+        const pingUrl = `${ghosler.url}/track/link?postId=${renderingData.post.id}&redirect=`;
+
+        const domainsToExclude = [
+            new URL(ghosler.url).host, // current domain
+            new URL('https://static.ghost.org').host, // ghost static resources domain
+        ];
+
+        /**
+         * Exclude featured image urls and urls in feature image caption.
+         */
+        let match;
+        let urlsToExclude = [he.decode(renderingData.post.featuredImage)];
+        const regex = /<a href="(https?:\/\/unsplash\.com[^"]*)"/g;
+        while ((match = regex.exec(renderingData.post.featuredImageCaption)) !== null) {
+            urlsToExclude.push(he.decode(match[1]));
+        }
+
+        /**
+         * Exclude certain urls like -
+         * 1. blog & its logo url,
+         * 2. current post url, comments,
+         * 3. subscription, unsubscribe,
+         * 4. featured image urls from keep reading section (if exists).
+         *
+         * This way we can be sure to track links to other articles as well, example: Keep Reading section.
+         */
+        [
+            renderingData.site.url, renderingData.site.logo,
+            renderingData.post.url, renderingData.post.comments,
+            renderingData.newsletter.subscription,
+            renderingData.newsletter.unsubscribeLink,
+            ...renderingData.post.latestPosts.map(post => post.featuredImage)
+        ].forEach(internalLinks => urlsToExclude.push(he.decode(internalLinks)));
+
+        // Extract the <body> content
+        const bodyContentMatch = renderedPostData.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+        if (!bodyContentMatch) return {trackedLinks: [], modifiedHtml: renderedPostData};
+        let bodyContent = bodyContentMatch[1];
+
+        // Define regex for link holder tags with URLs
+        const tagUrlRegex = /(<(?:a|img)\b[^>]*\b(?:href|src)=")(https?:\/\/[^"]+)(")/gi;
+
+        // Set to store original links
+        let trackedLinks = new Set();
+
+        // Function to process tag URLs
+        const processTagUrl = (match, prefix, url, suffix) => {
+            url = he.decode(url);
+            const urlHost = new URL(url).host;
+
+            if (!domainsToExclude.includes(urlHost) && !urlsToExclude.includes(url)) {
+                trackedLinks.add(url);
+                return `${prefix}${pingUrl}${url}${suffix}`;
+            }
+            return match;
+        };
+
+        // Add ping attribute to tags and store original links
+        bodyContent = bodyContent.replace(tagUrlRegex, processTagUrl);
+
+        // Reconstruct the full HTML with the updated body content
+        const modifiedHtml = renderedPostData.replace(/<body[^>]*>([\s\S]*)<\/body>/i, `<body>${bodyContent}</body>`);
+
+        // Convert the set to an array and return along with modified HTML
+        return {trackedLinks: Array.from(trackedLinks), modifiedHtml};
+    }
+
     // Sample data for preview.
     static async preview() {
         let preview = {
             site: {
                 lang: 'en',
                 color: '#ff247c',
+                url: 'https://bulletin.ghost.io/',
                 logo: 'https://bulletin.ghost.io/content/images/size/w256h256/2021/06/ghost-orb-black-transparent-10--1-.png',
                 title: 'Bulletin',
                 description: 'Thoughts, stories and ideas.'
             },
             post: {
+                id: '60d14faa9e72bc002f16c727',
                 url: 'https://bulletin.ghost.io/welcome',
                 date: '22 June 2021',
                 title: 'Welcome',
@@ -196,6 +289,8 @@ export default class Newsletter {
         if (customisations.footer_content !== '') {
             preview.footer_content = customisations.footer_content;
         }
+
+        preview.trackLinks = customisations.track_links;
 
         return preview;
     }
