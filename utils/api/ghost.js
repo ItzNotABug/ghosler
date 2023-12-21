@@ -148,12 +148,17 @@ export default class Ghost {
         }
 
         const ghost = await this.#ghost();
+        const secret = (await ProjectConfigs.ghost()).secret;
+        if (!secret || secret === '') {
+            return {level: 'error', message: 'Secret is not set or empty or is less than 8 characters.'};
+        }
 
         try {
             await ghost.webhooks.add({
                 name: 'Ghosler Webhook',
                 event: 'post.published',
                 target_url: `${ghosler.url}/published`,
+                secret: secret,
             });
 
             return {level: 'success', message: 'Webhook created successfully.'};
