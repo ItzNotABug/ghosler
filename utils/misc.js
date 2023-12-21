@@ -1,6 +1,6 @@
+import crypto from 'crypto';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import crypto from 'node:crypto';
 import Files from './data/files.js';
 import ProjectConfigs from './data/configs.js';
 import {logDebug, logTags} from './log/logger.js';
@@ -119,6 +119,25 @@ export default class Miscellaneous {
      */
     static hash(data) {
         return crypto.createHash('md5').update(data).digest('hex');
+    }
+
+    /**
+     * Validate if the incoming webhook contains valid secret key.
+     *
+     * @param {express.Request} request - The express request object.
+     * @return {Promise<boolean>} True if valid, false otherwise.
+     */
+    static async isPostSecure(request) {
+        const payload = JSON.stringify(request.body);
+        const signature = request.headers['x-ghost-signature'];
+
+        const ghostConfigs = await ProjectConfigs.ghost();
+
+        const expectedSignature = crypto
+            .createHmac('sha256', ghostConfigs.secret)
+            .update(payload).digest('hex');
+
+        return signature === expectedSignature;
     }
 
     /**

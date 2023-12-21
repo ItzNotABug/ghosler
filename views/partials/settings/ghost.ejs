@@ -15,5 +15,38 @@
             <label>Admin Key</label>
             <input type="password" value="<%= configs.ghost.key; %>" name="ghost.key" required>
         </div>
+
+        <div class="form-group">
+            <label>Secret Key</label>
+            <input type="password" value="<%= configs.ghost.secret; %>" name="ghost.secret" required>
+            <span style="font-size: 14px; color: #6c757d; line-height: 1.75;">Use something like -
+                        <strong>
+                            <a href="https://www.lastpass.com/features/password-generator#generatorTool"
+                               target="_blank" style="text-decoration: none; color: #DD2222">LastPass
+                            </a></strong>,
+                        <strong>
+                            <a href="https://www.avast.com/en-in/random-password-generator"
+                               target="_blank" style="text-decoration: none; color: #FF7800">Avast
+                            </a></strong>,
+                        <strong>
+                            <a href="https://1password.com/password-generator/"
+                               target="_blank" style="text-decoration: none; color: #0472EC">1Password
+                            </a></strong> or
+                        <strong>
+                            <a href="https://www.dashlane.com/features/password-generator"
+                               target="_blank" style="text-decoration: none; color: #1B815A">Dashlane
+                            </a></strong>
+                        to generate a secure secret key.
+                    <br>
+                    <br>
+                    <strong>Note: Use Max-Length. No Special Characters!</strong>
+                    <br>
+                <strong>To change the Secret, first delete the Webhook from the integration.
+                    Click <a
+                            id="integration" href="<%= configs.ghost.url %>/ghost/#/settings/integrations/"
+                            target="_blank"
+                            style="color: darkred; text-decoration: none;">here</a> for deletion.</strong>
+            </span>
+        </div>
     </div>
 </div>

@@ -207,6 +207,13 @@
     </style>
 
     <script>
+        function integrationIdFromAdminKey(secondID) {
+            const lastTwo = secondID.slice(-2);
+            const shiftedValue = parseInt(lastTwo, 16) - 3 /* shift value of 3 */;
+            const shiftedHex = shiftedValue.toString(16).padStart(2, '0');
+            return secondID.slice(0, -2) + shiftedHex;
+        }
+
         function toggleCard(header, contentId) {
             const content = document.getElementById(contentId);
             if (content.style.display === 'none') {
@@ -269,10 +276,14 @@
             mailConfigIndex--;
         }
 
-        // Initialize all cards to be collapsed by default
         window.onload = function () {
             const cardContents = document.querySelectorAll('.cardview > div:not(.card-header)');
             cardContents.forEach((content) => content.style.display = 'none');
+
+            const integrationElement = document.getElementById('integration');
+            const splitKey = '<%= configs.ghost.key.split(':')[0] %>';
+            const integrationId = integrationIdFromAdminKey(splitKey);
+            integrationElement.href = '<%= configs.ghost.url %>/ghost/#/settings/integrations/' + integrationId;
         };
     </script>
 </head>
