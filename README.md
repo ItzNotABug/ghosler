@@ -3,8 +3,8 @@
 **Ghosler** enables easy sending of newsletter using your own email and SMTP credentials when you are just starting
 out & have a small to moderate user-base.
 
-It is helpful for bypassing the limitations of the hardcoded Mailgun setup and supports tracking email deliverability
-and opens, with the capability to use **multiple** email accounts.
+It is helpful for bypassing the limitations of the hardcoded Mailgun setup and supports many analytical features, along
+with the capability to use **multiple** email accounts.
 
 ##### Note:
 
@@ -21,8 +21,10 @@ and opens, with the capability to use **multiple** email accounts.
   a [custom template](#custom-template).
 - **Paid & Free Members Management**: Ghosler shows a **Subscribe** button to members who do not have access to paid
   content.
-- **Link Click Tracking in Emails**: Ghosler supports tracking URL clicks in the email, providing more insights on how
+- **URL Click Tracking in Emails**: Ghosler supports tracking URL clicks in the email, providing more insights on how
   your members are interacting with added links.
+- **Newsletter Post Feedback**: Gain insights into reader preferences with detailed feedback on each post, including
+  likes, dislikes, and overall sentiment.
 
 ### Running Ghosler
 
@@ -78,7 +80,7 @@ If you want to customize the newsletter template even more, follow the steps -
 ### TODOs
 
 1. Add support for multiple newsletters.
-2. Add feedback support in newsletter template.
+2. <s>Add feedback support in newsletter template</s>.
 3. <s>Build a `CLI` to install, update & other options to manage Ghosler instance</s>.
 
 #### And don't forget to `⭐` the project!
