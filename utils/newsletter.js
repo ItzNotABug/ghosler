@@ -86,12 +86,15 @@ export default class Newsletter {
             newsletter: {
                 subscription: `${site.url}#/portal/account`,
                 trackingPixel: `${ghosler.url}/track/pixel.png?uuid={TRACKING_PIXEL_LINK}`,
-                unsubscribeLink: `${site.url}unsubscribe?uuid={MEMBER_UUID}`
+                unsubscribeLink: `${site.url}unsubscribe?uuid={MEMBER_UUID}`,
+                feedbackLikeLink: `${site.url}#/feedback/${post.id}/0/?uuid={MEMBER_UUID}`,
+                feedbackDislikeLink: `${site.url}#/feedback/${post.id}/1/?uuid={MEMBER_UUID}`
             },
         };
 
         const customisations = await ProjectConfigs.newsletter();
         postData.center_title = customisations.center_title;
+        postData.show_feedback = customisations.show_feedback;
         postData.show_subscription = customisations.show_subscription;
         postData.show_featured_image = customisations.show_featured_image;
         postData.show_powered_by_ghost = customisations.show_powered_by_ghost;
@@ -193,6 +196,8 @@ export default class Newsletter {
             renderingData.post.url, renderingData.post.comments,
             renderingData.newsletter.subscription,
             renderingData.newsletter.unsubscribeLink,
+            renderingData.newsletter.feedbackLikeLink,
+            renderingData.newsletter.feedbackDislikeLink,
             ...renderingData.post.latestPosts.map(post => post.featuredImage)
         ].forEach(internalLinks => urlsToExclude.push(he.decode(internalLinks)));
 
@@ -257,11 +262,14 @@ export default class Newsletter {
             newsletter: {
                 unsubscribeLink: 'https://bulletin.ghost.io/unsubscribe',
                 subscription: 'https://bulletin.ghost.io/#/portal/account',
+                feedbackLikeLink: 'https://bulletin.ghost.io/#/feedback/60d14faa9e72bc002f16c727/0/?uuid=example',
+                feedbackDislikeLink: 'https://bulletin.ghost.io/#/feedback/60d14faa9e72bc002f16c727/1/?uuid=example'
             }
         };
 
         const customisations = await ProjectConfigs.newsletter();
         preview.center_title = customisations.center_title;
+        preview.show_feedback = customisations.show_feedback;
         preview.show_comments = customisations.show_comments;
         preview.show_subscription = customisations.show_subscription;
 

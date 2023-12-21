@@ -16,6 +16,7 @@
     "center_title": false,
     "footer_content": "",
     "show_comments": true,
+    "show_feedback": true,
     "show_subscription": true,
     "show_featured_image": true,
     "show_powered_by_ghost": true,

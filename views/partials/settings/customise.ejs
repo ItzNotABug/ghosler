@@ -29,6 +29,14 @@
         </div>
 
         <div class="form-group-row">
+            <label>Show Feedback</label>
+            <input type="checkbox" name="newsletter.show_feedback"
+            <% if (Boolean(configs.newsletter.show_feedback)) { %> checked
+                    <% } %>
+            >
+        </div>
+
+        <div class="form-group-row">
             <label>Show Comments</label>
             <input type="checkbox" name="newsletter.show_comments"
             <% if (Boolean(configs.newsletter.show_comments)) { %> checked
