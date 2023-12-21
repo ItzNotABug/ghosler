@@ -175,22 +175,22 @@
             Feedback for "<%= post ? post.title : 'NA' %>"
         </h2>
 
-        <p><strong style=" color: #555;">Liked By:</strong>
+        <p><strong style="font-size: 16px; color: #555;">Liked By:</strong>
             <span style="color: #28a745;"><%= postSentiments.positive_feedback ?? 0; %></span>
         </p>
 
-        <p><strong style=" color: #555;">Disliked By:</strong>
+        <p><strong style="font-size: 16px; color: #555;">Disliked By:</strong>
             <span style="color: #dc3545;"><%= postSentiments.negative_feedback ?? 0; %></span>
         </p>
 
-        <p><strong style=" color: #555;">Overall Sentiment:</strong>
+        <p><strong style="font-size: 16px; color: #555;">Overall Sentiment:</strong>
             <span style="color: #007bff;"><%= `${postSentiments.sentiment ?? 0}%`; %></span>
         </p>
     </div>
 </div>
 
 <% if (typeof post === 'undefined' || typeof post.stats === 'undefined' || !post.stats || !post.stats.postContentTrackedLinks || post.stats.postContentTrackedLinks.length === 0) { %>
-    <h2 style="text-align: center; color: #666; margin: 25px;">No tracked URLs available for this post.</h2>
+    <h4 style="text-align: center; color: #666; margin: 25px;">No tracked URLs available for this post.</h4>
 <% } else { %>
     <p style="text-align: center; color: #666; margin: 25px; line-height: 1.5">
         <strong>URLs are tracked and incremented<br>every time they are clicked.</strong>
