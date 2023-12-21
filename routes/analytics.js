@@ -1,4 +1,5 @@
 import express from 'express';
+import Ghost from '../utils/api/ghost.js';
 import Files from '../utils/data/files.js';
 
 const router = express.Router();
@@ -13,10 +14,11 @@ router.post('/delete/:postId', async (req, res) => {
     res.send(result);
 });
 
-router.get('/links/:postId', async (req, res) => {
+router.get('/details/:postId', async (req, res) => {
     const postId = req.params.postId;
     const post = await Files.get(postId);
-    res.render('dashboard/links', post);
+    const postSentiments = await new Ghost().postSentiments(postId);
+    res.render('dashboard/details', {post, postSentiments});
 });
 
 export default router;

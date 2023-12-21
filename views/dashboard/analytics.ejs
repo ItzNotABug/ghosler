@@ -202,8 +202,8 @@
             <p><strong>Total Emails Opened:</strong> <%= overview.opens; %>
                 <% if (overview.sent > 0) { %>
                     (<%= Math.round(overview.opens / overview.sent * 100) %>%)
+                <% } %>
             </p>
-            <% } %>
         </div>
     </div>
 
@@ -245,15 +245,11 @@
                     </td>
                     <td data-title="Newsletter Status"><%= element.stats.newsletterStatus; %></td>
                     <td data-title="Action">
-                        <% if (typeof element.stats.postContentTrackedLinks !== 'undefined'
-                                && element.stats.postContentTrackedLinks
-                                && element.stats.postContentTrackedLinks.length > 0) { %>
-                            <button type="button"
-                                    style="color: white; background-color: darkgreen; border-radius: 6px; padding: 10px; border: none; cursor: pointer; margin-right: 8px;"
-                                    onclick="window.location='/analytics/links/<%= element.id %>'"
-                            > Links
-                            </button>
-                        <% } %>
+                        <button type="button"
+                                style="color: white; background-color: darkgreen; border-radius: 6px; padding: 10px; border: none; cursor: pointer; margin-right: 8px;"
+                                onclick="window.location='/analytics/details/<%= element.id %>'"
+                        > Details
+                        </button>
 
                         <button type="button"
                                 style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none; cursor: pointer"
