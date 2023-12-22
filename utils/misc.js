@@ -132,17 +132,29 @@ export default class Miscellaneous {
     static async isPostSecure(request) {
         const payload = JSON.stringify(request.body);
         const ghostConfigs = await ProjectConfigs.ghost();
-        const signatureWithDate = request.headers['x-ghost-signature'];
+        const signatureWithDateHeader = request.headers['x-ghost-signature'];
 
         // Secret set on Ghosler but not recd. in the request headers.
-        if (ghostConfigs.secret && !signatureWithDate) {
+        if (ghostConfigs.secret && !signatureWithDateHeader) {
             logError(logTags.Express, 'The \'X-Ghost-Signature\' header not found in the request. Did you setup the Secret Key correctly?');
             return false;
         }
 
+        const signatureAndTimeStamp = signatureWithDateHeader.split(', ');
+
         // @see: https://github.com/TryGhost/Ghost/blob/efb2b07c601cd557976bcbe12633f072da5c22a7/ghost/core/core/server/services/webhooks/WebhookTrigger.js#L98
-        const signature = signatureWithDate.split(', ')[0].replace('sha256=', '');
-        if (!signature) return false;
+        const signature = signatureAndTimeStamp[0].replace('sha256=', '');
+        const timeStamp = parseInt(signatureAndTimeStamp[1].replace('t=', ''));
+        if (!signature || isNaN(timeStamp)) {
+            logError(logTags.Express, 'Either the signature or the timestamp in the \'X-Ghost-Signature\' header is not valid or doesn\'t exist.');
+            return false;
+        }
+
+        const maxTimeDiff = 5 * 60 * 1000; // 5 minutes
+        if (Math.abs(Date.now() - timeStamp) > maxTimeDiff) {
+            logError(logTags.Express, 'The timestamp in the \'X-Ghost-Signature\' header exceeds 5 minutes.');
+            return false;
+        }
 
         const expectedSignature = crypto
             .createHmac('sha256', ghostConfigs.secret)
