@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Links - Ghosler</title>
+    <title>Details - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             margin: 0;
             font-family: serif;
             background-color: #f4f4f4
+        }
+
+        .cardview {
+            padding: 20px;
+            text-align: left;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
+            border-radius: 10px;
+            max-width: 50%;
         }
 
         .header {
@@ -97,6 +107,10 @@
                 overflow-x: auto
             }
 
+            .cardview {
+                max-width: 80%;
+            }
+
             thead {
                 display: none
             }
@@ -154,9 +168,29 @@
 </head>
 
 <body>
-<div class="header">Links - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
-<% if (typeof stats === 'undefined' || !stats || !stats.postContentTrackedLinks || stats.postContentTrackedLinks.length === 0) { %>
-    <h2 style="text-align: center; color: #666; margin: 25px;">No links available for this post!</h2>
+<div class="header">Details - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+<div>
+    <div class="cardview">
+        <h2 style="padding-bottom: 6px; padding-top: 4px; color: #333; border-bottom: 2px solid #e2e2e2;">
+            Feedback for "<%= post ? post.title : 'NA' %>"
+        </h2>
+
+        <p><strong style="font-size: 16px; color: #555;">Liked By:</strong>
+            <span style="color: #28a745;"><%= postSentiments.positive_feedback ?? 0; %></span>
+        </p>
+
+        <p><strong style="font-size: 16px; color: #555;">Disliked By:</strong>
+            <span style="color: #dc3545;"><%= postSentiments.negative_feedback ?? 0; %></span>
+        </p>
+
+        <p><strong style="font-size: 16px; color: #555;">Overall Sentiment:</strong>
+            <span style="color: #007bff;"><%= `${postSentiments.sentiment ?? 0}%`; %></span>
+        </p>
+    </div>
+</div>
+
+<% if (typeof post === 'undefined' || typeof post.stats === 'undefined' || !post.stats || !post.stats.postContentTrackedLinks || post.stats.postContentTrackedLinks.length === 0) { %>
+    <h4 style="text-align: center; color: #666; margin: 25px;">No tracked URLs available for this post.</h4>
 <% } else { %>
     <p style="text-align: center; color: #666; margin: 25px; line-height: 1.5">
         <strong>URLs are tracked and incremented<br>every time they are clicked.</strong>
@@ -171,7 +205,7 @@
             </tr>
             </thead>
             <tbody>
-            <% stats.postContentTrackedLinks.forEach(element => { %>
+            <% post.stats.postContentTrackedLinks.forEach(element => { %>
                 <tr>
                     <% const link = Object.keys(element)[0]; %>
                     <% const clicks = element[link]; %>

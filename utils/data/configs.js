@@ -121,6 +121,7 @@ export default class ProjectConfigs {
         const ghostAdminKey = formData['ghost.key'];
         const newsletterTrackLinks = formData['newsletter.track_links'];
         const newsletterCenterTitle = formData['newsletter.center_title'];
+        const newsletterShowFeedback = formData['newsletter.show_feedback'];
         const newsletterShowComments = formData['newsletter.show_comments'];
         const newsletterShowLatestPosts = formData['newsletter.show_latest_posts'];
         const newsletterShowSubscription = formData['newsletter.show_subscription'];
@@ -148,6 +149,7 @@ export default class ProjectConfigs {
         // newsletter
         configs.newsletter.track_links = newsletterTrackLinks === 'on' ?? true;
         configs.newsletter.center_title = newsletterCenterTitle === 'on' ?? false;
+        configs.newsletter.show_feedback = newsletterShowFeedback === 'on' ?? true;
         configs.newsletter.show_comments = newsletterShowComments === 'on' ?? true;
         configs.newsletter.show_latest_posts = newsletterShowLatestPosts === 'on' ?? false;
         configs.newsletter.show_subscription = newsletterShowSubscription === 'on' ?? false;

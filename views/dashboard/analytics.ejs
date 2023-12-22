@@ -196,23 +196,30 @@
 <% } else { %>
     <div>
         <div class="cardview">
-            <h2 style="padding-bottom: 4px; padding-top: 4px;">Overview</h2>
-            <p><strong>Posts:</strong> <%= overview.posts; %></p>
-            <p><strong>Total Emails Sent:</strong> <%= overview.sent; %></p>
-            <p><strong>Total Emails Opened:</strong> <%= overview.opens; %>
-                <% if (overview.sent > 0) { %>
-                    (<%= Math.round(overview.opens / overview.sent * 100) %>%)
+            <h2 style="padding-bottom: 8px; color: #333; border-bottom: 2px solid #e2e2e2;">Overview</h2>
+
+            <p style="font-size: 16px; color: #555;">
+                <strong style="color: #17a2b8;">Posts:</strong> <%= overview.posts; %>
             </p>
-            <% } %>
+
+            <p style="font-size: 16px; color: #555;">
+                <strong style="color: #28a745;">Total Emails Sent:</strong> <%= overview.sent; %>
+            </p>
+
+            <p style="font-size: 16px; color: #555;">
+                <strong style="color: #007bff;">Total Emails Opened:</strong> <%= overview.opens; %>
+                <% if (overview.sent > 0) { %>
+                    (<span style="color: #ff851b;"><%= Math.round(overview.opens / overview.sent * 100) %>%</span>)
+                <% } %>
+            </p>
         </div>
+
     </div>
 
-    <p style="text-align: center; color: #666; line-height: 1.75">
+    <p style="text-align: center; color: #666; line-height: 1.75; margin-left: 12px; margin-right: 12px;">
         Here's a summary of your recent posts.
         <br>To resend a newsletter, simply <strong>Delete</strong> the desired post here and <strong>Re-Publish</strong>
-        it from the
-        Ghost
-        dashboard.
+        it from the Ghost dashboard.
     </p>
 
     <div class="table-container">
@@ -245,15 +252,11 @@
                     </td>
                     <td data-title="Newsletter Status"><%= element.stats.newsletterStatus; %></td>
                     <td data-title="Action">
-                        <% if (typeof element.stats.postContentTrackedLinks !== 'undefined'
-                                && element.stats.postContentTrackedLinks
-                                && element.stats.postContentTrackedLinks.length > 0) { %>
-                            <button type="button"
-                                    style="color: white; background-color: darkgreen; border-radius: 6px; padding: 10px; border: none; cursor: pointer; margin-right: 8px;"
-                                    onclick="window.location='/analytics/links/<%= element.id %>'"
-                            > Links
-                            </button>
-                        <% } %>
+                        <button type="button"
+                                style="color: white; background-color: darkgreen; border-radius: 6px; padding: 10px; border: none; cursor: pointer; margin-right: 8px;"
+                                onclick="window.location='/analytics/details/<%= element.id %>'"
+                        > Details
+                        </button>
 
                         <button type="button"
                                 style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none; cursor: pointer"

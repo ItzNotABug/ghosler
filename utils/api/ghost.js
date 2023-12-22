@@ -20,6 +20,42 @@ export default class Ghost {
     }
 
     /**
+     * Returns sentiment and feedback counts for a specific post.
+     *
+     * @param {string} postId - The ID of the post.
+     * @returns {Promise<{ sentiment: number, negative_feedback: number, positive_feedback: number }>} - An object containing sentiment data and feedback counts.
+     */
+    async postSentiments(postId) {
+        const ghost = await this.#ghost();
+        try {
+            const postInfo = await ghost.posts.read({
+                id: postId,
+                include: 'sentiment,count.positive_feedback,count.negative_feedback'
+            });
+
+            const {count, sentiment} = postInfo;
+            const {negative_feedback, positive_feedback} = count;
+
+            return {
+                sentiment,
+                negative_feedback,
+                positive_feedback
+            };
+        } catch (error) {
+            if (error.name !== 'NotFoundError') logError(logTags.Ghost, error);
+            else {
+                // ignore, the post is probably deleted or the provided ID is wrong.
+            }
+
+            return {
+                sentiment: 0,
+                negative_feedback: 0,
+                positive_feedback: 0
+            };
+        }
+    }
+
+    /**
      * Returns the registered members, currently subscribed to a newsletter.\
      * Uses pagination to get all the users, then filter them.
      *

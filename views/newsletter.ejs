@@ -568,8 +568,8 @@
                         </td>
                     </tr>
 
-                    <!-- Comment Section -->
-                    <% if (show_comments) { %>
+                    <!-- Feedback, Comment Section -->
+                    <% if (show_feedback || show_comments) { %>
                         <tr>
                             <td align="center" bgcolor="#ffffff"
                                 dir="ltr"
@@ -582,20 +582,54 @@
                                        style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; margin: auto; width: auto;"
                                        width="auto">
                                     <tr>
-                                        <!-- Comments -->
-                                        <td align="center" dir="ltr" nowrap
-                                            style="color: #15212A; display: inline-block; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer;"
-                                            valign="top">
-                                            <a href="<%= post.comments %>"
-                                               style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
-                                               target="_blank">
-                                                <img alt="Comment" border="0"
-                                                     height="36"
-                                                     src="https://static.ghost.org/v5.0.0/images/comment.png"
-                                                     style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
-                                                     width="122">
-                                            </a>
-                                        </td>
+                                        <% if (show_feedback) { %>
+                                            <!-- More like this -->
+                                            <td align="center" dir="ltr" nowrap
+                                                style="color: #15212A; display: inline-block; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer;"
+                                                valign="top">
+                                                <a href="<%= newsletter.feedbackLikeLink %>"
+                                                   target="_blank"
+                                                   style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;">
+                                                    <img alt="More like this" border="0"
+                                                         height="36"
+                                                         src="https://static.ghost.org/v5.0.0/images/more-like-this.png"
+                                                         style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                         width="145">
+                                                </a>
+                                            </td>
+
+                                            <!-- Less like this -->
+                                            <td align="center" dir="ltr" nowrap
+                                                style="color: #15212A; display: inline-block; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer;"
+                                                valign="top">
+                                                <a href="<%= newsletter.feedbackDislikeLink %>"
+                                                   target="_blank"
+                                                   style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;">
+                                                    <img alt="Less like this" border="0"
+                                                         height="36"
+                                                         src="https://static.ghost.org/v5.0.0/images/less-like-this.png"
+                                                         style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                         width="142">
+                                                </a>
+                                            </td>
+                                        <% } %>
+
+                                        <% if (show_comments) { %>
+                                            <!-- Comments -->
+                                            <td align="center" dir="ltr" nowrap
+                                                style="color: #15212A; display: inline-block; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer;"
+                                                valign="top">
+                                                <a href="<%= post.comments %>"
+                                                   style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                                   target="_blank">
+                                                    <img alt="Comment" border="0"
+                                                         height="36"
+                                                         src="https://static.ghost.org/v5.0.0/images/comment.png"
+                                                         style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                         width="122">
+                                                </a>
+                                            </td>
+                                        <% } %>
                                     </tr>
                                 </table>
 
@@ -606,23 +640,64 @@
                                        width="100%">
 
                                     <tr>
-                                        <!-- Comments -->
-                                        <td align="center" dir="ltr" nowrap
-                                            style="color: #15212A; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer; width: 33%;"
-                                            valign="top" width="33%">
-                                            <a href="<%= post.comments %>"
-                                               style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
-                                               target="_blank">
-                                                <img alt="Comment"
-                                                     border="0" height="42"
-                                                     src="https://static.ghost.org/v5.0.0/images/comment-mobile.png"
-                                                     style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
-                                                     width="42">
-                                                <p class="feedback-button-mobile-text"
-                                                   style="margin: 0 0 1.5em 0; line-height: 1.6em; color: #15212A; font-weight: 500; margin-bottom: 0; font-size: 13px;">
-                                                    Comment</p>
-                                            </a>
-                                        </td>
+                                        <% if (show_feedback) { %>
+                                            <!-- More like this -->
+                                            <td align="center" dir="ltr" nowrap
+                                                style="color: #15212A; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer; width: 33%;"
+                                                valign="top" width="33%">
+                                                <a href="<%= newsletter.feedbackLikeLink %>"
+                                                   style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                                   target="_blank">
+                                                    <img alt="More like this"
+                                                         border="0" height="42"
+                                                         src="https://static.ghost.org/v5.0.0/images/more-like-this-mobile.png"
+                                                         style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                         width="42">
+                                                    <p class="feedback-button-mobile-text"
+                                                       style="margin: 0 0 1.5em 0; line-height: 1.6em; color: #15212A; font-weight: 500; margin-bottom: 0; font-size: 13px;">
+                                                        More like this</p>
+                                                </a>
+                                            </td>
+
+                                            <!-- Less like this -->
+                                            <td align="center" dir="ltr" nowrap
+                                                style="color: #15212A; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer; width: 33%;"
+                                                valign="top" width="33%">
+                                                <a href="<%= newsletter.feedbackDislikeLink %>"
+                                                   style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                                   target="_blank">
+                                                    <img alt="Less like this"
+                                                         border="0" height="42"
+                                                         src="https://static.ghost.org/v5.0.0/images/less-like-this-mobile.png"
+                                                         style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                         width="42">
+                                                    <p class="feedback-button-mobile-text"
+                                                       style="margin: 0 0 1.5em 0; line-height: 1.6em; color: #15212A; font-weight: 500; margin-bottom: 0; font-size: 13px;">
+                                                        Less like this</p>
+                                                </a>
+                                            </td>
+
+                                        <% } %>
+
+                                        <% if (show_comments) { %>
+                                            <!-- Comments -->
+                                            <td align="center" dir="ltr" nowrap
+                                                style="color: #15212A; vertical-align: top; font-family: inherit; font-size: 14px; text-align: center; padding: 0 4px 4px; cursor: pointer; width: 33%;"
+                                                valign="top" width="33%">
+                                                <a href="<%= post.comments %>"
+                                                   style="color: <%= site.color %>; text-decoration: none; overflow-wrap: anywhere;"
+                                                   target="_blank">
+                                                    <img alt="Comment"
+                                                         border="0" height="42"
+                                                         src="https://static.ghost.org/v5.0.0/images/comment-mobile.png"
+                                                         style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;"
+                                                         width="42">
+                                                    <p class="feedback-button-mobile-text"
+                                                       style="margin: 0 0 1.5em 0; line-height: 1.6em; color: #15212A; font-weight: 500; margin-bottom: 0; font-size: 13px;">
+                                                        Comment</p>
+                                                </a>
+                                            </td>
+                                        <% } %>
                                     </tr>
                                 </table>
                             </td>
