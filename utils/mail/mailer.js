@@ -121,7 +121,7 @@ export default class NewsletterMailer {
      */
     #correctHTML(html, subscriber, post, index) {
         let source = html
-            .replace('{MEMBER_UUID}', subscriber.uuid)
+            .replace(/{MEMBER_UUID}/g, subscriber.uuid)
             .replace('Jamie Larson', subscriber.name) // default value due to preview
             .replace('19 September 2013', subscriber.created) // default value due to preview
             .replace('jamie@example.com', subscriber.email) // default value due to preview
