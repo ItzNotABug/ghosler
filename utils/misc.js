@@ -28,6 +28,8 @@ export default class Miscellaneous {
         logDebug(logTags.Express, '============================');
         logDebug(logTags.Express, 'View-engine set!');
 
+        // the site might be behind a proxy.
+        expressApp.enable('trust proxy');
         expressApp.all('*', async (req, res, next) => {
             const path = req.path;
             if (['/analytics', '/logs', '/settings', '/password'].some(prefix => path.startsWith(prefix))) {
