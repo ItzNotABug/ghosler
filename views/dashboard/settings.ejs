@@ -217,14 +217,13 @@
         function generateRandomString(length = 100) {
             let result = '';
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
             for (let i = 0; i < length; i++) {
                 result += characters.charAt(Math.floor(Math.random() * characters.length));
             }
 
+            // ID is always same, so we can directly update value.
             document.getElementById('ghost.secret').value = result;
         }
-
 
         function toggleCard(header, contentId) {
             const content = document.getElementById(contentId);
