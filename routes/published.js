@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
 
     const isSecure = await Miscellaneous.isPostSecure(req);
     if (!isSecure) {
-        return res.status(401).json({message: 'Invalid Authorization'});
+        return res.status(401).json({message: 'Invalid Authorization.'});
     }
 
     const post = Post.make(req.body);
