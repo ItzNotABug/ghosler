@@ -87,8 +87,8 @@ export default class Newsletter {
                 subscription: `${site.url}#/portal/account`,
                 trackingPixel: `${ghosler.url}/track/pixel.png?uuid={TRACKING_PIXEL_LINK}`,
                 unsubscribeLink: `${site.url}unsubscribe?uuid={MEMBER_UUID}`,
-                feedbackLikeLink: `${site.url}#/feedback/${post.id}/0/?uuid={MEMBER_UUID}`,
-                feedbackDislikeLink: `${site.url}#/feedback/${post.id}/1/?uuid={MEMBER_UUID}`
+                feedbackLikeLink: `${site.url}#/feedback/${post.id}/1/?uuid={MEMBER_UUID}`,
+                feedbackDislikeLink: `${site.url}#/feedback/${post.id}/0/?uuid={MEMBER_UUID}`
             },
         };
 
@@ -262,8 +262,8 @@ export default class Newsletter {
             newsletter: {
                 unsubscribeLink: 'https://bulletin.ghost.io/unsubscribe',
                 subscription: 'https://bulletin.ghost.io/#/portal/account',
-                feedbackLikeLink: 'https://bulletin.ghost.io/#/feedback/60d14faa9e72bc002f16c727/0/?uuid=example',
-                feedbackDislikeLink: 'https://bulletin.ghost.io/#/feedback/60d14faa9e72bc002f16c727/1/?uuid=example'
+                feedbackLikeLink: 'https://bulletin.ghost.io/#/feedback/60d14faa9e72bc002f16c727/1/?uuid=example',
+                feedbackDislikeLink: 'https://bulletin.ghost.io/#/feedback/60d14faa9e72bc002f16c727/0/?uuid=example'
             }
         };
 
