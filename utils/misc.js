@@ -3,7 +3,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import Files from './data/files.js';
 import ProjectConfigs from './data/configs.js';
-import {logDebug, logTags} from './log/logger.js';
+import {logDebug, logError, logTags} from './log/logger.js';
 
 /**
  * This class provides general utility methods.
@@ -129,9 +129,18 @@ export default class Miscellaneous {
      */
     static async isPostSecure(request) {
         const payload = JSON.stringify(request.body);
-        const signature = request.headers['x-ghost-signature'];
-
         const ghostConfigs = await ProjectConfigs.ghost();
+        const signatureWithDate = request.headers['x-ghost-signature'];
+
+        // Secret set on Ghosler but not recd. in the request headers.
+        if (ghostConfigs.secret && !signatureWithDate) {
+            logError(logTags.Express, 'The \'X-Ghost-Signature\' header not found in the request. Did you setup the Secret Key correctly?');
+            return false;
+        }
+
+        // @see: https://github.com/TryGhost/Ghost/blob/efb2b07c601cd557976bcbe12633f072da5c22a7/ghost/core/core/server/services/webhooks/WebhookTrigger.js#L98
+        const signature = signatureWithDate.split(', ')[0].replace('sha256=', '');
+        if (!signature) return false;
 
         const expectedSignature = crypto
             .createHmac('sha256', ghostConfigs.secret)
