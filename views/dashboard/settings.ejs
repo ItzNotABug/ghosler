@@ -214,6 +214,18 @@
             return secondID.slice(0, -2) + shiftedHex;
         }
 
+        function generateRandomString(length = 100) {
+            let result = '';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+
+            document.getElementById('ghost.secret').value = result;
+        }
+
+
         function toggleCard(header, contentId) {
             const content = document.getElementById(contentId);
             if (content.style.display === 'none') {
@@ -281,9 +293,9 @@
             cardContents.forEach((content) => content.style.display = 'none');
 
             const integrationElement = document.getElementById('integration');
-            const splitKey = '<%= configs.ghost.key.split(':')[0] %>';
+            const splitKey = '<%= configs.ghost.key.split(':')[0]; %>';
             const integrationId = integrationIdFromAdminKey(splitKey);
-            integrationElement.href = '<%= configs.ghost.url %>/ghost/#/settings/integrations/' + integrationId;
+            integrationElement.href = '<%= configs.ghost.url; %>/ghost/#/settings/integrations/' + integrationId;
         };
     </script>
 </head>
