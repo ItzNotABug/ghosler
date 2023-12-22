@@ -28,7 +28,7 @@ export default class Miscellaneous {
         logDebug(logTags.Express, '============================');
         logDebug(logTags.Express, 'View-engine set!');
 
-        expressApp.get('*', async (req, res, next) => {
+        expressApp.all('*', async (req, res, next) => {
             const path = req.path;
             if (['/analytics', '/logs', '/settings', '/password'].some(prefix => path.startsWith(prefix))) {
                 const authenticated = await Miscellaneous.authenticated(req);
