@@ -27,7 +27,7 @@ export default class Newsletter {
         }
 
         const fullRenderData = await this.#makeRenderingData(post, ghost);
-        const {trackedLinks, fullTemplate} = await this.renderTemplate(fullRenderData);
+        const {trackedLinks, modifiedHtml: fullTemplate} = await this.renderTemplate(fullRenderData);
 
         let payWalledTemplate;
         if (post.isPaid) {
@@ -168,18 +168,30 @@ export default class Newsletter {
         const pingUrl = `${ghosler.url}/track/link?postId=${renderingData.post.id}&redirect=`;
 
         const domainsToExclude = [
-            new URL(ghosler.url).host, // current domain
             new URL('https://static.ghost.org').host, // ghost static resources domain
         ];
+
+        // in a rare case, if this is empty then it will cause a Invalid URL.
+        if (ghosler.url && (ghosler.url.startsWith('http://') || ghosler.url.startsWith('https://'))) {
+            domainsToExclude.push(new URL(ghosler.url).host); // current domain
+        }
 
         /**
          * Exclude featured image urls and urls in feature image caption.
          */
-        let match;
-        let urlsToExclude = [he.decode(renderingData.post.featuredImage)];
-        const regex = /<a href="(https?:\/\/unsplash\.com[^"]*)"/g;
-        while ((match = regex.exec(renderingData.post.featuredImageCaption)) !== null) {
-            urlsToExclude.push(he.decode(match[1]));
+        let urlsToExclude = [];
+        // a post may not have a featured image.
+        if (renderingData.post.featuredImage) {
+            urlsToExclude.push(he.decode(renderingData.post.featuredImage));
+        }
+
+        // a post may also not have a caption.
+        if (renderingData.post.featuredImageCaption) {
+            let match;
+            const regex = /<a href="(https?:\/\/unsplash\.com[^"]*)"/g;
+            while ((match = regex.exec(renderingData.post.featuredImageCaption)) !== null) {
+                urlsToExclude.push(he.decode(match[1]));
+            }
         }
 
         /**
@@ -198,7 +210,8 @@ export default class Newsletter {
             renderingData.newsletter.unsubscribeLink,
             renderingData.newsletter.feedbackLikeLink,
             renderingData.newsletter.feedbackDislikeLink,
-            ...renderingData.post.latestPosts.map(post => post.featuredImage)
+            // featuredImage can be null, so we should to filter them.
+            ...renderingData.post.latestPosts.filter(post => post.featuredImage).map(post => post.featuredImage)
         ].forEach(internalLinks => urlsToExclude.push(he.decode(internalLinks)));
 
         // Extract the <body> content
