@@ -15,5 +15,22 @@
             <label>Admin Key</label>
             <input type="password" value="<%= configs.ghost.key; %>" name="ghost.key" required>
         </div>
+
+        <div class="form-group">
+            <label>Secret Key</label>
+            <input id="ghost.secret" type="password" value="<%= configs.ghost.secret; %>" name="ghost.secret" required>
+            <span style="font-size: 14px; color: #6c757d; line-height: 1.75;">
+                <button type="button" style="background-color: #28a745; color: white; padding: 12px 16px;"
+                        onclick="if (confirm('Are you sure to change the Secret key?\nRemember that you must DELETE the existing webhook first.\n\nClick OK if you\'ve done that & then Click on Save Changes.')) {
+                            generateRandomString();
+                        }">Click to Generate a Secure Key</button>
+                    <br>
+                <strong style="font-size: 16px;">To use a new Secret, delete the Webhook from the integration first.
+                    Click <a
+                            id="integration" href="<%= configs.ghost.url %>/ghost/#/settings/integrations/"
+                            target="_blank"
+                            style="color: darkred; text-decoration: none;">here</a> for deletion.</strong>
+            </span>
+        </div>
     </div>
 </div>

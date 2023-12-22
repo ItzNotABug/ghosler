@@ -119,6 +119,7 @@ export default class ProjectConfigs {
 
         const ghostUrl = formData['ghost.url'];
         const ghostAdminKey = formData['ghost.key'];
+        const ghostAdminSecret = formData['ghost.secret'];
         const newsletterTrackLinks = formData['newsletter.track_links'];
         const newsletterCenterTitle = formData['newsletter.center_title'];
         const newsletterShowFeedback = formData['newsletter.show_feedback'];
@@ -138,13 +139,18 @@ export default class ProjectConfigs {
         configs.ghosler.auth.user = user;
         if (configs.ghosler.url !== url) configs.ghosler.url = url;
 
-        if (ghostUrl === '' || ghostAdminKey === '') {
-            return {level: 'error', message: 'Ghost URL or Admin API Key is missing.'};
+        if (ghostUrl === '' || ghostAdminKey === '' || ghostAdminSecret === '') {
+            return {level: 'error', message: 'Ghost URL, Admin API Key or Secret is missing.'};
+        }
+
+        if (ghostAdminSecret.toString().length < 8) {
+            return {level: 'error', message: 'Secret should at-least be 8 characters long.'};
         }
 
         // ghost
         configs.ghost.url = ghostUrl;
         configs.ghost.key = ghostAdminKey;
+        configs.ghost.secret = ghostAdminSecret;
 
         // newsletter
         configs.newsletter.track_links = newsletterTrackLinks === 'on' ?? true;
