@@ -3,87 +3,52 @@
 <head>
     <title>Logs - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: serif;
-            background-color: #f4f4f4
-        }
-
-        .cardview {
-            padding: 20px;
-            text-align: left;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            max-width: 50%;
-        }
-
-        .header {
-            padding: 20px;
-            text-align: left;
-            font-size: 1.25rem;
-            background-color: #1b2d48;
-            color: #fff;
-            font-weight: 500
-        }
-
-        h3 {
-            margin: 1em 0;
-            color: #1b2d48;
-            font-weight: 700;
-        }
-
-        p {
-            line-height: 1.6;
-            color: #555;
-        }
-
-        .log-container {
-            font-family: 'Courier New', monospace;
-            background-color: #f3f3f3;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 10px;
-            overflow-x: auto;
-            white-space: pre;
-            line-height: 1.75;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .log-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        @media screen and (max-width: 480px) {
-            .cardview {
-                max-width: 80%;
-            }
-
-            h3, p {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-900 text-gray-300 font-sans flex flex-col min-h-screen font-serif">
 
-<body>
-<div class="header">Logs - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+<%- include('../partials/common/header.ejs') %>
 
-<div class="cardview">
+<main class="container mx-auto p-6 flex-grow">
+    <% const logLevel = level.charAt(0).toUpperCase() + level.slice(1); %>
 
-    <h3>Log level: <%= level.charAt(0).toUpperCase() + level.slice(1); %></h3>
+    <nav class="text-gray-400 mb-4">
+        <ul class="flex">
+            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li><a href="/logs" class="hover:text-white">Logs</a></li>
+            <li><span class="mx-2">></span></li>
+            <li><%= logLevel %></li>
+        </ul>
+    </nav>
 
-    <% if (content) { %>
-        <p>Displayed logs are sorted in reverse chronological order, with the most recent entries appearing at the
-            top.</p>
+    <div class="bg-gray-800 text-gray-300 p-6 rounded-lg shadow-lg">
+        <div class="flex flex-row space-x-4 items-center mb-4">
+            <h3 class="text-lg font-bold text-gray-300">Log level: <%= logLevel %></h3>
+            <% if (content) { %>
+                <button type="button"
+                        class="px-3 py-1 bg-red-800 hover:bg-red-900 text-white font-bold rounded transition duration-300"
+                        onclick="if (confirm('Do you really want to delete/clear these logs? Click OK to delete.')) {
+                                window.location = '/logs/clear/<%= logLevel.toLowerCase() %>'
+                                }">
+                    Clear
+                </button>
+            <% } %>
+        </div>
 
-        <pre class="log-container"><%= content; %></pre>
-    <% } else { %>
-        <p>No log content available.</p>
-    <% } %>
-</div>
+        <% if (content) { %>
+            <p class="text-gray-400 mb-4">Displayed logs are sorted in reverse chronological order, with the most recent
+                entries appearing at the top.</p>
+            <div class="overflow-x-auto bg-gray-700 rounded-lg p-4">
+                <pre class="text-gray-100 whitespace-pre leading-6"><%= content; %></pre>
+            </div>
+        <% } else { %>
+            <p class="text-gray-400">No log content available.</p>
+        <% } %>
+    </div>
+</main>
+
+<%- include('../partials/common/footer.ejs') %>
+
 </body>
 </html>

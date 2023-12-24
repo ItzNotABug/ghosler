@@ -10,6 +10,7 @@
     "@tryghost/admin-api": "^1.13.11",
     "ejs": "3.1.9",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "he": "^1.2.0",
     "jsonwebtoken": "^9.0.0",
     "nodemailer": "^6.9.5",

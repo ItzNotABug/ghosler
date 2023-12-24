@@ -1,275 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Analytics - Ghosler</title>
+    <title>Details - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: serif;
-            background-color: #f4f4f4
-        }
-
-        .cardview {
-            padding: 20px;
-            text-align: left;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            max-width: 50%;
-        }
-
-        .header {
-            padding: 20px;
-            text-align: left;
-            font-size: 1.25rem;
-            background-color: #1b2d48;
-            color: #fff;
-            font-weight: 500
-        }
-
-        h2 {
-            margin: .25em 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        td,
-        th {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #ddd
-        }
-
-        td:first-child,
-        th:first-child {
-            text-align: left
-        }
-
-        th {
-            background-color: #1b2d48
-        }
-
-        table {
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            width: auto;
-            max-width: 90%;
-            border-spacing: 0
-        }
-
-        thead tr:first-child th:first-child {
-            border-top-left-radius: 10px
-        }
-
-        thead tr:first-child th:last-child {
-            border-top-right-radius: 10px
-        }
-
-        tbody tr:last-child td:first-child {
-            border-bottom-left-radius: 10px
-        }
-
-        tbody tr:last-child td:last-child {
-            border-bottom-right-radius: 10px
-        }
-
-        thead {
-            color: #fff;
-            background-color: #333
-        }
-
-        a {
-            color: #333;
-            text-decoration: none
-        }
-
-        a:hover {
-            text-decoration: underline
-        }
-
-        .by-line {
-            color: #666;
-            font-size: 1rem
-        }
-
-        @media screen and (max-width: 480px) {
-
-            td,
-            tr {
-                padding: 10px
-            }
-
-            table {
-                border-radius: 0;
-                background-color: transparent;
-                box-shadow: none
-            }
-
-            .table-container {
-                overflow-x: auto
-            }
-
-            .cardview {
-                max-width: 80%
-            }
-
-            thead {
-                display: none
-            }
-
-            table,
-            tbody,
-            td,
-            tr {
-                display: block;
-                width: auto
-            }
-
-            h2 {
-                margin: .25em 0;
-                font-size: 1.25rem;
-                font-weight: 700
-            }
-
-            tr {
-                margin-bottom: 20px;
-                background-color: #fff;
-                box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-                border-radius: 8px
-            }
-
-            td {
-                text-align: left;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                border-bottom: 1px solid #ddd
-            }
-
-            tbody tr:last-child td:first-child {
-                border-bottom-left-radius: 0
-            }
-
-            tr td:last-child {
-                border-bottom: none
-            }
-
-            td[data-title]:not([data-title=Title])::before {
-                content: attr(data-title) ": ";
-                font-weight: 700;
-                margin-right: 8px
-            }
-
-            .post-title {
-                padding-bottom: 16px
-            }
-
-            .by-line,
-            .post-title {
-                margin: 0
-            }
-
-            td[data-title=Title] {
-                order: -1
-            }
-        }
-    </style>
-
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-900 text-gray-300 font-sans flex flex-col min-h-screen font-serif">
 
-<body>
-<div class="header">Analytics - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+<%- include('../partials/common/header.ejs') %>
 
-<% if (analytics.length === 0) { %>
-    <h2 style="text-align: center; color: #666; margin: 25px;">No data available!</h2>
-    <p style="text-align: center; color: #666; margin: 25px; line-height: 2">
-        Newsletter analytics will show up once you publish a post
-        after setting up Ghosler.
+<main class="container mx-auto p-6 flex-grow">
+    <nav class="text-gray-400 mb-4">
+        <ul class="flex">
+            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li>Analytics</li>
+        </ul>
+    </nav>
 
-        <br>Also make sure you've set up the <strong>Webhook</strong> with <strong>Publish Post</strong> event on Ghost
-        integration's screen.
-    </p>
-<% } else { %>
-    <div>
-        <div class="cardview">
-            <h2 style="padding-bottom: 8px; color: #333; border-bottom: 2px solid #e2e2e2;">Overview</h2>
+    <% if (analytics.length === 0) { %>
+        <h4 class="font-semibold text-center text-gray-400 my-6">Newsletter analytics will show up once you publish a
+            post after setting up Ghosler.<br>Also make sure you've set up the <strong>Webhook</strong> with <strong>Publish
+                Post</strong> event on Ghost integration's screen.</h4>
+    <% } else { %>
 
-            <p style="font-size: 16px; color: #555;">
-                <strong style="color: #17a2b8;">Posts:</strong> <%= overview.posts; %>
-            </p>
 
-            <p style="font-size: 16px; color: #555;">
-                <strong style="color: #28a745;">Total Emails Sent:</strong> <%= overview.sent; %>
-            </p>
-
-            <p style="font-size: 16px; color: #555;">
-                <strong style="color: #007bff;">Total Emails Opened:</strong> <%= overview.opens; %>
-                <% if (overview.sent > 0) { %>
-                    (<span style="color: #ff851b;"><%= Math.round(overview.opens / overview.sent * 100) %>%</span>)
-                <% } %>
-            </p>
+        <div class="bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+            <p class="text-gray-400 mb-2"><strong>Posts:</strong> <span
+                        class="text-green-500"><%= overview.posts; %></span></p>
+            <p class="text-gray-400 mb-2"><strong>Total Emails Sent:</strong> <span
+                        class="text-red-500"><%= overview.sent; %></span></p>
+            <p class="text-gray-400"><strong>Total Emails Opened:</strong> <span
+                        class="text-blue-500"> <%= overview.opens; %>
+                    <% if (overview.sent > 0) { %>
+                        (<span style="color: #ff851b;"><%= Math.round(overview.opens / overview.sent * 100) %>%</span>)
+                    <% } %>
+                </span></p>
         </div>
 
-    </div>
+        <p class="font-normal text-left text-gray-400 my-6">Here's an overview of your most recent posts.</p>
 
-    <p style="text-align: center; color: #666; line-height: 1.75; margin-left: 12px; margin-right: 12px;">
-        Here's a summary of your recent posts.
-        <br>To resend a newsletter, simply <strong>Delete</strong> the desired post here and <strong>Re-Publish</strong>
-        it from the Ghost dashboard.
-    </p>
+        <p class="font-normal text-left text-gray-400 my-6"><strong>Note:</strong> If you wish to resend a newsletter,
+            you can do so by
+            <strong>deleting</strong> the post here and then <strong>re-publishing</strong> it from the Ghost dashboard.
+        </p>
 
-    <div class="table-container">
-        <table>
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Members</th>
-                <th>Emails Sent</th>
-                <th>Emails Opened</th>
-                <th>Newsletter Status</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% analytics.forEach(element => { %>
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto rounded-lg">
+            <table class="w-full bg-gray-800 rounded-lg shadow-md">
+                <thead class="bg-gray-700 text-gray-300">
                 <tr>
-                    <td data-title="Title">
-                        <div class="post-title">
-                            <h2><a href="<%= element.url; %>" target="_blank"><%= element.title; %></a></h2>
-                            <div class="by-line">By <%= element.author; %>, <%= element.date; %> </div>
-                        </div>
-                    </td>
-                    <td data-title="Members"><%= element.stats.members; %></td>
-                    <td data-title="Emails Sent"><%= element.stats.emailsSent; %></td>
-                    <td data-title="Emails Opened"><%= element.stats.emailsOpened; %>
-                        <% if (element.stats.emailsSent > 0) { %>
-                            (<%= Math.round(element.stats.emailsOpened / element.stats.emailsSent * 100) %>%)
-                        <% } %>
-                    </td>
-                    <td data-title="Newsletter Status"><%= element.stats.newsletterStatus; %></td>
-                    <td data-title="Action">
-                        <button type="button"
-                                style="color: white; background-color: darkgreen; border-radius: 6px; padding: 10px; border: none; cursor: pointer; margin-right: 8px;"
-                                onclick="window.location='/analytics/details/<%= element.id %>'"
-                        > Details
-                        </button>
-
-                        <button type="button"
-                                style="color: white; background-color: darkred; border-radius: 6px; padding: 10px; border: none; cursor: pointer"
-                                onclick="if (confirm('Are you sure to delete this Post analytics?\nClick OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }"
-                        > Delete
-                        </button>
-                    </td>
+                    <th class="px-6 py-3 text-left">Title</th>
+                    <th class="text-center px-6 py-3 text-left">Members</th>
+                    <th class="text-center px-6 py-3 text-left">Emails Sent</th>
+                    <th class="text-center px-6 py-3 text-left">Emails Opened</th>
+                    <th class="text-center px-6 py-3 text-left">Newsletter Status</th>
+                    <th class="text-center px-6 py-3 text-left">Action</th>
                 </tr>
+                </thead>
+                <tbody class="text-gray-300">
+                <% analytics.forEach((element, index, array) => { %>
+                    <tr class="<%= index === array.length - 1 ? '' : 'border-b border-gray-600' %>">
+                        <td class="px-6 py-4">
+                            <a href="<%= element.url %>" target="_blank"
+                               class="text-xl text-blue-400 hover:text-blue-500"><%= element.title %></a>
+                            <div class="text-xs text-gray-500 py-1">
+                                <% var date = new Date(element.date); %>
+                                <% var formattedDate = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(); %>
+                                <span class="hidden sm:inline">By <%= element.author %>,</span>
+                                <span class="sm:hidden">By</span>
+                                <span class="sm:hidden"><%= element.author.split(' ')[0] %>,</span>
+                                <%= formattedDate %>
+                            </div>
+                        </td>
+                        <td class="text-center px-6 py-4"><%= element.stats.members %></td>
+                        <td class="text-center px-6 py-4"><%= element.stats.emailsSent %></td>
+                        <td class="text-center px-6 py-4"><%= element.stats.emailsOpened %></td>
+                        <td class="text-center px-6 py-4"><%= element.stats.newsletterStatus %></td>
+                        <td class="text-center px-6 py-4 relative">
+                            <!-- Three Dots Icon (visible on small and medium screens) -->
+                            <div class="lg:hidden text-center">
+                                <svg onclick="openModal('modal<%= element.id %>')"
+                                     class="h-6 w-6 text-gray-300 cursor-pointer hover:text-gray-400 inline-block"
+                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <circle cx="12" cy="5" r="1"></circle>
+                                    <circle cx="12" cy="19" r="1"></circle>
+                                </svg>
+                            </div>
+
+                            <!-- Modal (hidden by default) -->
+                            <div id="modal<%= element.id %>"
+                                 class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 overflow-y-auto h-full w-full z-50">
+                                <div class="relative top-1/4 mx-auto p-6 w-1/3 shadow-lg rounded-md bg-gray-900">
+                                    <div class="flex justify-between items-center pb-5">
+                                        <h3 class="text-lg font-medium text-gray-300">Available Actions</h3>
+                                        <svg onclick="closeModal('modal<%= element.id %>')"
+                                             class="h-5 w-5 text-gray-300 cursor-pointer hover:text-gray-400"
+                                             fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </div>
+                                    <button type="button"
+                                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full mb-2"
+                                            onclick="window.location='/analytics/details/<%= element.id %>'">Details
+                                    </button>
+                                    <button type="button"
+                                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
+                                            onclick="if (confirm('Are you sure to delete this Post analytics? Click OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Full Buttons (visible on large screens) -->
+                            <div class="hidden lg:flex space-x-2">
+                                <button type="button"
+                                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                        onclick="window.location='/analytics/details/<%= element.id %>'">Details
+                                </button>
+                                <button type="button"
+                                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                        onclick="if (confirm('Are you sure to delete this Post analytics? Click OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }">
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden">
+            <% analytics.forEach(element => { %>
+                <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+                    <div class="border-b border-gray-600 pb-2 mb-2">
+                        <a href="<%= element.url %>" target="_blank"
+                           class="text-xl text-blue-400 hover:text-blue-500"><%= element.title %></a>
+                        <div class="text-xs text-gray-500 py-1">By <%= element.author %>, <%= element.date %></div>
+                    </div>
+
+                    <div class="py-2 mb-2">Members: <%= element.stats.members %></div>
+                    <hr class="border-t border-gray-600">
+
+                    <div class="py-2 mb-2">Emails Sent: <%= element.stats.emailsSent %></div>
+                    <hr class="border-t border-gray-600">
+
+                    <div class="py-2 mb-2">Emails Opened: <%= element.stats.emailsOpened %></div>
+                    <hr class="border-t border-gray-600">
+
+                    <div class="py-2">Newsletter Status: <%= element.stats.newsletterStatus %></div>
+
+
+                    <div class="pt-4">
+                        <div class="space-x-2">
+                            <button type="button"
+                                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    onclick="window.location='/analytics/details/<%= element.id %>'">
+                                Details
+                            </button>
+
+                            <button type="button"
+                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    onclick="if (confirm('Are you sure to delete this Post analytics? Click OK to delete.')) { deletePostAnalytics('<%= element.id %>'); }">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
             <% }); %>
-            </tbody>
-        </table>
-    </div>
-<% } %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('../partials/common/footer.ejs') %>
 
 <script>
     function deletePostAnalytics(postId) {
@@ -277,6 +186,20 @@
             .then(() => window.location.reload())
             .catch((error) => console.log(error));
     }
+
+    function toggleButtons(menuId) {
+        const menu = document.getElementById(menuId);
+        menu.classList.toggle('hidden');
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).classList.remove('hidden');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
 </script>
+
 </body>
 </html>

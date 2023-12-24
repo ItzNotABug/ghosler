@@ -10,4 +10,10 @@ router.get('/:type', async (req, res) => {
     res.render('dashboard/logs', await Files.logs(logType ?? 'debug'));
 });
 
+router.get('/clear/:type', async (req, res) => {
+    const logType = req.params.type;
+    await Files.clearLogs(logType);
+    res.redirect(`/logs/${logType}`);
+});
+
 export default router;

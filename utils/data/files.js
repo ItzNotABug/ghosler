@@ -161,6 +161,23 @@ export default class Files {
     }
 
     /**
+     * Clear the logs for the log file.
+     *
+     * @param {string} type The type of log. Can be debug or error.
+     * @returns {Promise<boolean>} True if clear operation succeeded, false otherwise.
+     */
+    static async clearLogs(type) {
+        const filePath = path.join(this.#logsPath(), `${type}.log`);
+        try {
+            await fs.writeFile(filePath, '');
+            return true;
+        } catch (error) {
+            logError(logTags.Files, error);
+            return false;
+        }
+    }
+
+    /**
      * Get the logs from the log files.
      *
      * @param {string} type The type of log. Can be debug or error.

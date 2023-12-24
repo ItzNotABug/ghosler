@@ -1,211 +1,9 @@
 <!DOCTYPE html>
-<!--suppress HtmlFormInputWithoutLabel -->
 <html lang="en">
 <head>
     <title>Settings - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: serif;
-            background-color: #f4f4f4
-        }
-
-        .cardview, .message {
-            padding: 20px;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            max-width: 50%;
-            text-align: left;
-        }
-
-        .message {
-            padding: 18px;
-            box-shadow: none;
-            font-weight: 600;
-        }
-
-        button {
-            padding: 12px 25px;
-            border: none;
-            margin-left: 0;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            background-color: #1b2d48;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .header {
-            padding: 20px;
-            text-align: left;
-            font-size: 1.25rem;
-            background-color: #1b2d48;
-            color: #fff;
-            font-weight: 500
-        }
-
-        h3 {
-            margin: 0 0 1em;
-            color: #1b2d48;
-            font-weight: 700;
-        }
-
-        p {
-            line-height: 1.6;
-            color: #555;
-        }
-
-        input:not([type="submit"]), textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-
-            color: #888888;
-            font-family: serif;
-            font-size: 16px;
-            text-align: left;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-        }
-
-        .submit-button {
-            width: 100%;
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .submit-button:hover {
-            background-color: #45a049;
-        }
-
-        .form-group-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .form-group-row input[type="checkbox"] {
-            order: 1;
-        }
-
-        .form-group-row label {
-            margin-left: 10px;
-            order: 2;
-        }
-
-        input[type="checkbox"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-color: #fff;
-            border: 1px solid #cacece;
-            border-radius: 4px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        input[type="checkbox"]:checked {
-            background-color: #4CAF50;
-            border-color: #4CAF50;
-        }
-
-        input[type="checkbox"]:checked:after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            font-size: 14px;
-        }
-
-        textarea[name="newsletter.footer_content"] {
-            min-height: 150px;
-            font-family: 'Courier New', monospace;
-            background-color: #f3f3f3;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 10px;
-            overflow-x: auto;
-            line-height: 1.75;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #888;
-            font-family: serif;
-            font-style: italic;
-            font-size: 0.9em;
-        }
-
-        .card-header {
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .arrow {
-            border: solid black;
-            border-width: 0 2px 2px 0;
-            display: inline-block;
-            padding: 3px;
-            transition: transform .2s;
-            margin: 0 0 1em;
-        }
-
-        .down {
-            transform: rotate(45deg);
-            -webkit-transform: rotate(45deg);
-        }
-
-        .message-success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message-error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-
-        @media screen and (max-width: 480px) {
-            .cardview, .message {
-                max-width: 80%;
-            }
-
-            h3, p {
-                font-size: 1rem;
-            }
-        }
-    </style>
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function integrationIdFromAdminKey(secondID) {
             const lastTwo = secondID.slice(-2);
@@ -237,42 +35,42 @@
         function addMailConfig() {
             const mailConfigsDiv = document.getElementById('emailConfigsContainer');
             const newConfigDiv = document.createElement('div');
-            newConfigDiv.className = 'email-config';
+            newConfigDiv.className = 'bg-gray-700 rounded-lg p-4 mb-4';
             newConfigDiv.id = 'mailConfig' + mailConfigIndex;
             newConfigDiv.innerHTML = `
-        <div class="card-header" onclick="toggleCard(this, 'mailConfigInner${mailConfigIndex}')">
-            <h4>Email Configuration ${parseInt(mailConfigIndex) + 1}</h4>
-            <i class="arrow down"></i>
+        <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'mailConfigInner${mailConfigIndex}')">
+            <h4 class="text-md text-gray-300">Email Configuration ${parseInt(mailConfigIndex) + 1}</h4>
+            <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </div>
 
-        <div id="mailConfigInner${mailConfigIndex}" style="display: none;">
-            <div class="form-group">
-                <label>Reply To</label>
-                <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" name="email[${mailConfigIndex}][reply_to]" />
+        <div id="mailConfigInner${mailConfigIndex}" class="mt-4" style="display: none;">
+            <div class="form-group mb-4">
+                <label class="block text-gray-300 mb-1">Reply To</label>
+                <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" name="email[${mailConfigIndex}][reply_to]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
             </div>
-            <div class="form-group">
-                <label>From</label>
-                <input type="text" placeholder="'Author' <author@ghost.org>" name="email[${mailConfigIndex}][from]" />
+            <div class="form-group mb-4">
+                <label class="block text-gray-300 mb-1">From</label>
+                <input type="text" placeholder="'Author' <author@ghost.org>" name="email[${mailConfigIndex}][from]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
             </div>
-            <div class="form-group">
-                <label>Host</label>
-                <input type="text" placeholder="smtp.blog.com"" name="email[${mailConfigIndex}][host]" />
+            <div class="form-group mb-4">
+                <label class="block text-gray-300 mb-1">Host</label>
+                <input type="text" placeholder="smtp.blog.com" name="email[${mailConfigIndex}][host]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
             </div>
-            <div class="form-group">
-                <label>Port</label>
-                <input type="number" placeholder="587" name="email[${mailConfigIndex}][port]" />
+            <div class="form-group mb-4">
+                <label class="block text-gray-300 mb-1">Port</label>
+                <input type="number" placeholder="587" name="email[${mailConfigIndex}][port]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
             </div>
-            <div class="form-group">
-                <label>Auth User</label>
-                <input type="text" placeholder="Email Username" name="email[${mailConfigIndex}][auth_user]" />
+            <div class="form-group mb-4">
+                <label class="block text-gray-300 mb-1">Auth User</label>
+                <input type="text" placeholder="Email Username" name="email[${mailConfigIndex}][auth_user]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
             </div>
-            <div class="form-group">
-                <label>Auth Password</label>
-                <input type="password" placeholder="Email Password" name="email[${mailConfigIndex}][auth_pass]" />
+            <div class="form-group mb-4">
+                <label class="block text-gray-300 mb-1">Auth Password</label>
+                <input type="password" placeholder="Email Password" name="email[${mailConfigIndex}][auth_pass]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
             </div>
 
             <button type="button" onclick="removeMailConfig(${mailConfigIndex})"
-                    class="submit-button" style="background-color: red">
+                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">
                 Remove
             </button>
         </div>
@@ -298,39 +96,51 @@
         };
     </script>
 </head>
-<body>
+<body class="bg-gray-900 text-gray-300 font-sans flex flex-col min-h-screen font-serif">
 
-<div class="header">Settings - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+<%- include('../partials/common/header.ejs') %>
 
-<% if (!configs) { %>
-    <h3 style="text-align: center; color: #666; margin: 25px;">Unable to load settings.</h3>
-<% } else { %>
+<main class="container mx-auto p-6 flex-grow">
+    <nav class="text-gray-400 mb-4">
+        <ul class="flex">
+            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li>Settings</li>
+        </ul>
+    </nav>
 
-    <% if ((typeof message !== 'undefined' && message && message.toString().length > 0)) { %>
-        <div class="message <% if (level === 'success') { %> message-success <% } else { %> message-error <% } %>">
-            <%- message; %>
-        </div>
+    <% if (!configs) { %>
+        <h3 style="text-align: center; color: #666; margin: 25px;">Unable to load settings.</h3>
+    <% } else { %>
+
+        <%- include('../partials/common/message.ejs') %>
+
+        <form action="/settings" method="post">
+
+            <!-- Profile -->
+            <%- include('../partials/settings/profile.ejs') %>
+
+            <!-- Ghost -->
+            <%- include('../partials/settings/ghost.ejs') %>
+
+            <!-- Customise -->
+            <%- include('../partials/settings/customise.ejs') %>
+
+            <!-- Mails -->
+            <%- include('../partials/settings/mail.ejs') %>
+
+            <div class="flex justify-center mt-6">
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Save Changes
+                </button>
+            </div>
+        </form>
     <% } %>
 
-    <form action="/settings" method="post">
+</main>
 
-        <!-- Profile -->
-        <%- include('../partials/settings/profile.ejs') %>
-
-        <!-- Ghost -->
-        <%- include('../partials/settings/ghost.ejs') %>
-
-        <!-- Customise -->
-        <%- include('../partials/settings/customise.ejs') %>
-
-        <!-- Mails -->
-        <%- include('../partials/settings/mail.ejs') %>
-
-        <div style="text-align: center; max-width: 50%; margin: auto;">
-            <input type="submit" value="Save Changes" class="submit-button">
-        </div>
-    </form>
-<% } %>
+<%- include('../partials/common/footer.ejs') %>
 
 </body>
 </html>

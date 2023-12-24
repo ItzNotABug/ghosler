@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import Files from './data/files.js';
+import session from 'express-session';
 import ProjectConfigs from './data/configs.js';
 import {logDebug, logError, logTags} from './log/logger.js';
 
@@ -22,6 +23,11 @@ export default class Miscellaneous {
         expressApp.use(express.json({limit: '50mb'}));
         expressApp.use(express.urlencoded({extended: true, limit: '50mb'}));
 
+        // login sessions.
+        expressApp.use(session({
+            resave: true, saveUninitialized: true,
+            secret: 'c3d5d4a2-71b0-4713-8a3c-c19b303f6208',
+        }));
         // Safeguard
         Files.makeFilesDir().then();
 
@@ -32,15 +38,10 @@ export default class Miscellaneous {
         expressApp.enable('trust proxy');
         expressApp.all('*', async (req, res, next) => {
             const path = req.path;
-            if (['/analytics', '/logs', '/settings', '/password'].some(prefix => path.startsWith(prefix))) {
-                const authenticated = await Miscellaneous.authenticated(req);
+            if (path.includes('login')) return next();
 
-                if (authenticated) return next();
-                else {
-                    res.setHeader('WWW-Authenticate', 'Basic realm="401"');
-                    res.status(401).render('errors/401');
-                }
-            } else next();
+            if (req.session.user) return next();
+            res.status(401).redirect('/login');
         });
 
     }
@@ -60,20 +61,22 @@ export default class Miscellaneous {
      * Checks if the user is authenticated via Basic Auth.
      *
      * @param {*} req The express request object.
-     * @returns {Promise<boolean>} Authentication status.
+     * @returns {Promise<{level: string, message: string}>} Authentication status.
      */
     static async authenticated(req) {
-        const ghosler = await ProjectConfigs.ghosler();
-        const authHeader = req.headers['authorization'] || '';
-        const [type, encoded] = authHeader.split(' ');
-
-        if (type === 'Basic' && encoded) {
-            const decoded = this.decode(encoded);
-            const [usr, pwd] = decoded.split(':');
-            return usr === ghosler.auth.user && this.hash(pwd) === ghosler.auth.pass;
+        if (!req.body || !req.body.username || !req.body.password) {
+            return {level: 'error', message: 'Please enter both Username & the Password!'};
         }
 
-        return false;
+        const {username, password} = req.body;
+        const ghosler = await ProjectConfigs.ghosler();
+
+        if (username === ghosler.auth.user && this.hash(password) === ghosler.auth.pass) {
+            req.session.user = ghosler.auth.user;
+            return {level: 'success', message: 'Successfully logged in!'};
+        } else {
+            return {level: 'error', message: 'Username or the Password do not match!'};
+        }
     }
 
     /**
@@ -127,7 +130,7 @@ export default class Miscellaneous {
      * Validate if the incoming webhook contains valid secret key.
      *
      * @param {express.Request} request - The express request object.
-     * @return {Promise<boolean>} True if valid, false otherwise.
+     * @returns {Promise<boolean>} True if valid, false otherwise.
      */
     static async isPostSecure(request) {
         const payload = JSON.stringify(request.body);

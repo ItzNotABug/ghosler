@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en">
 <head>
     <title>Not Found - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: serif;
-            background-color: #f4f4f4;
-        }
-
-        .header {
-            padding: 20px;
-            background-color: #1b2d48;
-            color: #fff;
-            font-size: 1.25rem;
-            font-weight: 500;
-        }
-
-        h2 {
-            margin: .25em 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-900 text-gray-300 font-sans flex flex-col min-h-screen">
 
-<div class="header">Not Found - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
+<header class="bg-gradient-to-r from-gray-700 via-gray-750 to-gray-800 p-6 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+        <div>
+            <a href="/" class="text-2xl font-bold text-gray-300">Ghosler</a>
+            <p class="text-gray-400">Send newsletters to your Ghost subscribers!</p>
+        </div>
+        <nav>
+            <ul class="flex space-x-4 items-center">
+                <li>
+                    <a href="https://github.com/ItzNotABug/ghosler" target="_blank"
+                       class="text-gray-300 hover:text-white transition duration-300">
+                        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58 0-.29-.01-1.05-.02-2.06-3.34.73-4.03-1.61-4.03-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.09 1.83 1.23 1.83 1.23 1.07 1.83 2.81 1.3 3.5.99.11-.77.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.16 0 0 1.01-.32 3.3 1.23.96-.27 1.98-.4 3-.4s2.04.13 3 .4c2.29-1.55 3.3-1.23 3.3-1.23.66 1.64.24 2.86.12 3.16.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.29 0 .32.21.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-<h2 style="text-align: center; color: #666; margin: 25px;">Oops! Page Not Found.</h2>
-<p style="text-align: center; color: #666; margin: 25px; line-height: 2">
-    The page you're searching for seems to be missing.
-    <br>It might have been removed, had its name changed.
-    <br>Please check the URL for any typos or return to the
-    <a href="/" style="color: #007bff; ">homepage</a> to find your way.
-</p>
+<main class="container mx-auto p-6 flex-grow text-center">
+    <h2 class="text-6xl font-bold mb-4">404</h2>
+    <p class="mx-auto max-w-md mb-6">
+        The page you're searching for seems to be missing.
+        It might have been removed or might have had its name changed.
+    </p>
+
+    <p>
+        Please check the URL for any typos or
+        <br>return to the
+        <a href="/" class="text-blue-400 hover:text-blue-500">homepage</a> to find your way.
+    </p>
+</main>
+
+<footer class="bg-gray-800 text-gray-400 p-6 mt-8">
+    <div class="text-center">
+        © 2023 Ghosler. All rights reserved.
+    </div>
+</footer>
+
 </body>
 </html>

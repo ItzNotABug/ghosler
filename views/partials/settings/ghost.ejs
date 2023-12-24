@@ -1,36 +1,46 @@
 <!-- Ghost Site Settings -->
-<div class="cardview">
-    <div class="card-header" onclick="toggleCard(this, 'ghostSiteSettings')">
-        <h3>Ghost Site Settings</h3>
-        <i class="arrow down"></i>
+<div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+    <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'ghostSiteSettings')">
+        <h3 class="text-lg text-gray-300 font-bold">Ghost Settings</h3>
+        <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
     </div>
 
-    <div id="ghostSiteSettings" style="display: none;">
-        <div class="form-group">
-            <label>URL</label>
-            <input type="url" value="<%= configs.ghost.url; %>" name="ghost.url" required>
+    <div id="ghostSiteSettings" class="mt-4" style="display: none;">
+        <div class="mb-4">
+            <label class="block text-gray-400 mb-1">URL</label>
+            <input type="url" value="<%= configs.ghost.url; %>" name="ghost.url" required
+                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
         </div>
 
-        <div class="form-group">
-            <label>Admin Key</label>
-            <input type="password" value="<%= configs.ghost.key; %>" name="ghost.key" required>
+        <div class="mb-4">
+            <label class="block text-gray-400 mb-1">Admin Key</label>
+            <input type="password" value="<%= configs.ghost.key; %>" name="ghost.key" required
+                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
         </div>
 
-        <div class="form-group">
-            <label>Secret Key</label>
-            <input id="ghost.secret" type="password" value="<%= configs.ghost.secret; %>" name="ghost.secret" required>
-            <span style="font-size: 14px; color: #6c757d; line-height: 1.75;">
-                <button type="button" style="background-color: #28a745; color: white; padding: 12px 16px;"
-                        onclick="if (confirm('Are you sure to change the Secret key?\nRemember that you must DELETE the existing webhook first.\n\nClick OK if you\'ve done that & then Click on Save Changes.')) {
+        <div>
+            <label class="block text-gray-400 mb-1">Secret Key</label>
+            <input id="ghost.secret" type="password" value="<%= configs.ghost.secret; %>" name="ghost.secret" required
+                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
+
+            <div class="text-sm text-gray-500 mt-6">
+                <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onclick="if (confirm('Are you sure to change the Secret key?\\nRemember that you must DELETE the existing webhook first.\\n\\nClick OK if you\'ve done that & then Click on Save Changes.')) {
                             generateRandomString();
-                        }">Click to Generate a Secure Key</button>
-                    <br>
-                <strong style="font-size: 16px;">To use a new Secret, delete the Webhook from the integration first.
-                    Click <a
-                            id="integration" href="<%= configs.ghost.url %>/ghost/#/settings/integrations/"
-                            target="_blank"
-                            style="color: darkred; text-decoration: none;">here</a> for deletion.</strong>
-            </span>
+                        }">Click to Generate a Secure Key
+                </button>
+                <p class="mt-3 ml-1">
+                    <strong class="text-gray-300">To use a new Secret, delete the Webhook from the integration first.
+                        Click
+                        <a id="integration"
+                           href="<%= configs.ghost.url %>/ghost/#/settings/integrations/"
+                           target="_blank"
+                           class="text-red-700 hover:text-red-800">here</a> for deletion.</strong>
+                </p>
+            </div>
         </div>
     </div>
 </div>

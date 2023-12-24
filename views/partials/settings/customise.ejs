@@ -1,95 +1,134 @@
 <!-- Newsletter Settings -->
-<!--suppress ALL -->
-<div class="cardview">
-    <div class="card-header" onclick="toggleCard(this, 'newsletterSettings')">
-        <h3>Newsletter Settings</h3>
-        <i class="arrow down"></i>
+<div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+    <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'newsletterSettings')">
+        <h3 class="text-lg text-gray-300 font-bold">Newsletter Settings</h3>
+        <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
     </div>
 
-    <div id="newsletterSettings" style="display: none;">
-        <div class="form-group-row">
-            <label>Center Title</label>
-            <input type="checkbox" name="newsletter.center_title"
-            <% if (Boolean(configs.newsletter.center_title)) { %> checked
-                    <% } %>
-            >
-        </div>
-
-        <div class="form-group-row">
-            <label>Track URL Clicks
-                <span style="font-weight: normal; font-size: 12px; color: #738a94">
-                    (<a href="https://github.com/itznotabug/ghosler/pull/8" target="_blank"
-                        style="text-decoration: none; color: dodgerblue">See</a> what URLs are tracked)
-                </span>
+    <div id="newsletterSettings" class="mt-4" style="display: none;">
+        <!-- Center Title Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.center_title"
+                <% if (Boolean(configs.newsletter.center_title)) { %> checked
+                        <% } %>
+                >
+                Center Title
             </label>
-            <input type="checkbox" name="newsletter.track_links"
-            <% if (Boolean(configs.newsletter.track_links)) { %> checked
-                    <% } %>
-            >
         </div>
 
-        <div class="form-group-row">
-            <label>Show Feedback</label>
-            <input type="checkbox" name="newsletter.show_feedback"
-            <% if (Boolean(configs.newsletter.show_feedback)) { %> checked
-                    <% } %>
-            >
+        <!-- Track URL Clicks Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.track_links"
+                <% if (Boolean(configs.newsletter.track_links)) { %> checked
+                        <% } %>
+                >
+                Track URL Clicks
+            </label>
+            <a href="https://github.com/itznotabug/ghosler/pull/8" target="_blank"
+               class="text-xs text-blue-400 hover:text-blue-500">See what URLs are tracked</a>
         </div>
 
-        <div class="form-group-row">
-            <label>Show Comments</label>
-            <input type="checkbox" name="newsletter.show_comments"
-            <% if (Boolean(configs.newsletter.show_comments)) { %> checked
-                    <% } %>
-            >
+        <!-- Show Feedback Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_feedback"
+                <% if (Boolean(configs.newsletter.show_feedback)) { %> checked
+                        <% } %>
+                >
+                Show Feedback
+            </label>
         </div>
 
-        <div class="form-group-row">
-            <label>Show Latest Posts</label>
-            <input type="checkbox" name="newsletter.show_latest_posts"
-            <% if (Boolean(configs.newsletter.show_latest_posts)) { %> checked
-                    <% } %>
-            >
+        <!-- Show Comments Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_comments"
+                <% if (Boolean(configs.newsletter.show_comments)) { %> checked
+                        <% } %>
+                >
+                Show Comments
+            </label>
         </div>
 
-        <div class="form-group-row">
-            <label>Show Subscription</label>
-            <input type="checkbox" name="newsletter.show_subscription"
-            <% if (Boolean(configs.newsletter.show_subscription)) { %> checked
-                    <% } %>
-            >
+        <!-- Show Latest Posts Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_latest_posts"
+                <% if (Boolean(configs.newsletter.show_latest_posts)) { %> checked
+                        <% } %>
+                >
+                Show Latest Posts
+            </label>
         </div>
 
-        <div class="form-group-row">
-            <label>Show Featured Image</label>
-            <input type="checkbox" name="newsletter.show_featured_image"
-            <% if (Boolean(configs.newsletter.show_featured_image)) { %> checked
-                    <% } %>
-            >
+        <!-- Show Subscription Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_subscription"
+                <% if (Boolean(configs.newsletter.show_subscription)) { %> checked
+                        <% } %>
+                >
+                Show Subscription
+            </label>
         </div>
 
-        <div class="form-group-row">
-            <label>Show 'Powered by Ghost'</label>
-            <input type="checkbox" name="newsletter.show_powered_by_ghost"
-            <% if (Boolean(configs.newsletter.show_powered_by_ghost)) { %> checked
-                    <% } %>
-            >
+        <!-- Show Featured Image Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_featured_image"
+                <% if (Boolean(configs.newsletter.show_featured_image)) { %> checked
+                        <% } %>
+                >
+                Show Featured Image
+            </label>
         </div>
 
-        <div class="form-group-row">
-            <label>Show 'Newsletter delivered using Ghosler'</label>
-            <input type="checkbox" name="newsletter.show_powered_by_ghosler"
-            <% if (Boolean(configs.newsletter.show_powered_by_ghosler)) { %> checked
-                    <% } %>
-            >
+        <!-- Show 'Powered by Ghost' Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_powered_by_ghost"
+                <% if (Boolean(configs.newsletter.show_powered_by_ghost)) { %> checked
+                        <% } %>
+                >
+                Show 'Powered by Ghost'
+            </label>
         </div>
 
-        <div class="form-group">
-            <label>Footer Content</label>
-            <textarea name="newsletter.footer_content"><%= configs.newsletter.footer_content; %></textarea>
+        <!-- Show 'Newsletter delivered using Ghosler' Checkbox -->
+        <div class="form-group mb-4">
+            <label class="flex items-center text-gray-300">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       name="newsletter.show_powered_by_ghosler"
+                <% if (Boolean(configs.newsletter.show_powered_by_ghosler)) { %> checked
+                        <% } %>
+                >
+                Show 'Newsletter delivered using Ghosler'
+            </label>
         </div>
 
-        <p>Note: Save Changes before Preview</p>
-        <button type="button" class="submit-button" onclick="parent.open('/preview', '_blank')">Preview</button>
+        <!-- Footer Content Textarea -->
+        <div class="form-group mb-4">
+            <label class="block text-gray-300 font-bold mb-2">Footer Content</label>
+            <textarea name="newsletter.footer_content"
+                      class="bg-gray-700 text-white rounded border border-gray-600 w-full py-2 px-3 min-h-40"><%= configs.newsletter.footer_content; %></textarea>
+        </div>
+
+        <p class="text-gray-400 mb-4">Note: Save Changes before Preview</p>
+        <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onclick="parent.open('/preview', '_blank')">Preview
+        </button>
     </div>
 </div>
