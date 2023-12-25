@@ -7,7 +7,7 @@
   "type": "module",
   "author": "@itznotabug",
   "scripts": {
-    "dev": "nodemon -e ejs app.js",
+    "dev": "nodemon -e js,ejs app.js",
     "buildcss": "npx tailwindcss -i ./public/styles/tailwind.css -o ./public/styles/style.css --minify"
   },
   "dependencies": {
