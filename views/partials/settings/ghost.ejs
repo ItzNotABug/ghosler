@@ -10,25 +10,25 @@
 
     <div id="ghostSiteSettings" class="mt-4" style="display: none;">
         <div class="mb-4">
-            <label class="block text-gray-400 mb-1">URL</label>
-            <input type="url" value="<%= configs.ghost.url; %>" name="ghost.url" required
+            <label for="ghost.url" class="block text-gray-400 mb-1">URL</label>
+            <input type="url" value="<%= configs.ghost.url; %>" id="ghost.url" name="ghost.url" required
                    class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
         </div>
 
         <div class="mb-4">
-            <label class="block text-gray-400 mb-1">Admin Key</label>
-            <input type="password" value="<%= configs.ghost.key; %>" name="ghost.key" required
+            <label for="ghost.key" class="block text-gray-400 mb-1">Admin Key</label>
+            <input type="password" id="ghost.key" value="<%= configs.ghost.key; %>" name="ghost.key" required
                    class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
         </div>
 
         <div>
-            <label class="block text-gray-400 mb-1">Secret Key</label>
+            <label for="ghost.secret" class="block text-gray-400 mb-1">Secret Key</label>
             <input id="ghost.secret" type="password" value="<%= configs.ghost.secret; %>" name="ghost.secret" required
                    class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
 
             <div class="text-sm text-gray-500 mt-6">
                 <button type="button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onclick="if (confirm('Are you sure to change the Secret key?\\nRemember that you must DELETE the existing webhook first.\\n\\nClick OK if you\'ve done that & then Click on Save Changes.')) {
+                        onclick="if (confirm('Are you sure to change the Secret key?\nRemember that you must DELETE the existing webhook first.\n\nClick OK if you\'ve done that & then Click on Save Changes.')) {
                             generateRandomString();
                         }">Click to Generate a Secure Key
                 </button>
