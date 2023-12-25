@@ -12,7 +12,7 @@ router.get('/', async (_, res) => {
     ) {
         res.render('index', {
             level: 'error',
-            message: 'Update your admin username and password.<br><br>Default - <br>user: ghosler, pass: admin'
+            message: 'Update your username and password.<br><br>Default - <br>Username: ghosler, Password: admin'
         });
     } else if (configs.ghost.url === '' || configs.ghost.key === '') {
         res.render('index', {

@@ -3,219 +3,178 @@
 <head>
     <title>Details - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: serif;
-            background-color: #f4f4f4
-        }
+    <link href="/styles/style.css" rel="stylesheet"/>
+    <script>
+        window.onload = function () {
+            const sentiment = '<%= parseInt(postSentiments.sentiment) ?? 'N/A'; %>';
+            if (sentimentValue) {
+                const sentimentValue = document.getElementById('sentimentValue');
 
-        .cardview {
-            padding: 20px;
-            text-align: left;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            max-width: 50%;
-        }
+                if (sentiment === 'N/A') {
+                    sentimentValue.classList.add("text-gray-400");
+                    return;
+                }
 
-        .header {
-            padding: 20px;
-            text-align: left;
-            font-size: 1.25rem;
-            background-color: #1b2d48;
-            color: #fff;
-            font-weight: 500
-        }
-
-        h2 {
-            margin: .25em 0;
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        td,
-        th {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #ddd
-        }
-
-        td:first-child,
-        th:first-child {
-            text-align: left
-        }
-
-        th {
-            background-color: #1b2d48
-        }
-
-        table {
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            width: auto;
-            max-width: 90%;
-            border-spacing: 0
-        }
-
-        thead tr:first-child th:first-child {
-            border-top-left-radius: 10px
-        }
-
-        thead tr:first-child th:last-child {
-            border-top-right-radius: 10px
-        }
-
-        tbody tr:last-child td:first-child {
-            border-bottom-left-radius: 10px
-        }
-
-        tbody tr:last-child td:last-child {
-            border-bottom-right-radius: 10px
-        }
-
-        thead {
-            color: #fff;
-            background-color: #333
-        }
-
-        a {
-            color: #333;
-            text-decoration: none
-        }
-
-        a:hover {
-            text-decoration: underline
-        }
-
-        @media screen and (max-width: 480px) {
-            td,
-            tr {
-                padding: 10px;
+                if (sentiment >= 75) {
+                    sentimentValue.classList.add("text-green-500");
+                } else if (sentiment <= 25) {
+                    sentimentValue.classList.add("text-red-500");
+                } else {
+                    sentimentValue.classList.add("text-gray-400");
+                }
             }
-
-            table {
-                border-radius: 0;
-                background-color: transparent;
-                box-shadow: none
-            }
-
-            .table-container {
-                overflow-x: auto
-            }
-
-            .cardview {
-                max-width: 80%;
-            }
-
-            thead {
-                display: none
-            }
-
-            table,
-            tbody,
-            td,
-            tr {
-                display: block;
-                width: auto
-            }
-
-            td {
-                word-break: break-all;
-                white-space: pre-wrap;
-            }
-
-            h2 {
-                margin: .25em 0;
-                font-size: 1.25rem;
-                font-weight: 700
-            }
-
-            tr {
-                margin-bottom: 20px;
-                background-color: #fff;
-                box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-                border-radius: 8px
-            }
-
-            td {
-                text-align: left;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                border-bottom: 1px solid #ddd
-            }
-
-            tbody tr:last-child td:first-child {
-                border-bottom-left-radius: 0
-            }
-
-            tr td:last-child {
-                border-bottom: none
-            }
-
-            td[data-title]:not([data-title=Link])::before {
-                content: attr(data-title) ": ";
-                font-weight: 700;
-                margin-right: 8px
-            }
-
-        }
-    </style>
+        };
+    </script>
 </head>
 
-<body>
-<div class="header">Details - <a href="/" style="text-decoration: none; color: white">Ghosler</a></div>
-<div>
-    <div class="cardview">
-        <h2 style="padding-bottom: 6px; padding-top: 4px; color: #333; border-bottom: 2px solid #e2e2e2;">
-            Feedback for "<%= post ? post.title : 'NA' %>"
-        </h2>
+<body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
 
-        <p><strong style="font-size: 16px; color: #555;">Liked By:</strong>
-            <span style="color: #28a745;"><%= postSentiments.positive_feedback ?? 0; %></span>
-        </p>
+<%- include('../partials/common/header.ejs') %>
 
-        <p><strong style="font-size: 16px; color: #555;">Disliked By:</strong>
-            <span style="color: #dc3545;"><%= postSentiments.negative_feedback ?? 0; %></span>
-        </p>
+<main class="container mx-auto p-6 flex-grow">
+    <nav class="text-gray-400 mb-4">
+        <ul class="flex">
+            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li><a href="/analytics" class="hover:text-white">Analytics</a></li>
+            <li><span class="mx-2">></span></li>
+            <li><%= post ? post.title : 'NA'; %></li>
+        </ul>
+    </nav>
 
-        <p><strong style="font-size: 16px; color: #555;">Overall Sentiment:</strong>
-            <span style="color: #007bff;"><%= `${postSentiments.sentiment ?? 0}%`; %></span>
-        </p>
+    <!-- Feedback Card -->
+    <div class="bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <% if (postSentiments.positive_feedback === 0 && postSentiments.negative_feedback === 0) { %>
+            <h3 class="text-base font-bold text-gray-300 text-center md:text-left">No feedback available for
+                "<%= post ? post.title : 'NA'; %>" yet.</h3>
+        <% } else { %>
+
+            <h2 class="text-lg font-bold text-gray-300 mb-4 text-center md:text-left">Feedback for
+                "<%= post ? post.title : 'NA'; %>"</h2>
+
+            <div class="flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0">
+                <!-- Chart Container -->
+                <% if (postSentiments.positive_feedback === 0 && postSentiments.negative_feedback === 0) { %>
+
+                <% } else { %>
+                    <div class="flex flex-col items-center mb-8 md:mb-0">
+                        <canvas id="feedbackChart" width="200" height="200"></canvas>
+                    </div>
+                <% } %>
+
+                <!-- Sentiment and Additional Content Container -->
+                <div class="flex flex-col items-center md:items-start md:pl-8">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-lg font-bold text-gray-200 mb-2">Sentiment</h3>
+                        <p id="sentimentValue" class="text-xl font-semibold"><%= postSentiments.sentiment ?? 'N/A'; %>
+                            %</p>
+                    </div>
+
+                    <!-- Additional Content for Desktop -->
+                    <div class="hidden md:block text-gray-300 mt-4 text-sm">
+                        <p class="mb-2">Sentiment reflects the ratio of members who liked versus disliked this post in
+                            the
+                            newsletter.</p>
+                        <p class="mb-2">Key Insights:</p>
+                        <ul class="list-disc list-inside">
+                            <li>Likes indicate topics that resonate well with the readers.</li>
+                            <li>Dislikes help identify topics of less interest.</li>
+                            <li>Engagement levels can guide future content creation.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <% } %>
     </div>
-</div>
 
-<% if (typeof post === 'undefined' || typeof post.stats === 'undefined' || !post.stats || !post.stats.postContentTrackedLinks || post.stats.postContentTrackedLinks.length === 0) { %>
-    <h4 style="text-align: center; color: #666; margin: 25px;">No tracked URLs available for this post.</h4>
-<% } else { %>
-    <p style="text-align: center; color: #666; margin: 25px; line-height: 1.5">
-        <strong>URLs are tracked and incremented<br>every time they are clicked.</strong>
-    </p>
+    <!-- Table for Tracked URLs -->
+    <% if (typeof post === 'undefined' || typeof post.stats === 'undefined' || !post.stats || !post.stats.postContentTrackedLinks || post.stats.postContentTrackedLinks.length === 0) { %>
+        <h4 class="font-semibold text-center text-gray-400 my-6">No tracked URLs available for this post.</h4>
+    <% } else { %>
+        <p class="font-semibold text-center text-gray-400 my-6">URLs are tracked and incremented<br>every time they are
+            clicked.</p>
 
-    <div class="table-container">
-        <table>
-            <thead>
-            <tr>
-                <th>Links</th>
-                <th>Clicks</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% post.stats.postContentTrackedLinks.forEach(element => { %>
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto rounded-lg">
+            <table class="w-full bg-gray-800 rounded-lg shadow-md">
+                <thead class="bg-gray-700 text-gray-300">
                 <tr>
+                    <th class="px-6 py-3 text-left">Links</th>
+                    <th class="px-6 py-3 text-left">Clicks</th>
+                </tr>
+                </thead>
+                <tbody class="text-gray-300">
+                <% post.stats.postContentTrackedLinks.forEach((element, index, array) => { %>
+                    <tr class="<%= index === array.length - 1 ? '' : 'border-b border-gray-600' %>">
+                        <% const link = Object.keys(element)[0]; %>
+                        <% const clicks = element[link]; %>
+                        <td class=" px-6 py-4">
+                            <a href="<%= link; %>" target="_blank"
+                               class="text-blue-400 hover:text-blue-500"><%= link; %></a></td>
+                        <td class="px-6 py-4"><%= clicks; %></td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden">
+            <% post.stats.postContentTrackedLinks.forEach(element => { %>
+                <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
                     <% const link = Object.keys(element)[0]; %>
                     <% const clicks = element[link]; %>
-                    <td data-title="Link"><h4><a href="<%= link; %>" target="_blank"><%= link; %></a></h4></td>
-                    <td data-title="Clicks"><%= clicks; %></td>
-                </tr>
+                    <a href="<%= link; %>" target="_blank"
+                       class="font-semibold text-blue-400 hover:text-blue-500 block mb-2 truncate"><%= link; %></a>
+                    <hr class="border-t border-gray-600 my-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">Clicks:</span>
+                        <span class="font-semibold text-gray-300"><%= clicks; %></span>
+                    </div>
+                </div>
             <% }); %>
-            </tbody>
-        </table>
-    </div>
-<% } %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('../partials/common/footer.ejs') %>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    <% if (postSentiments.positive_feedback === 0 && postSentiments.negative_feedback === 0) { %>
+    <% } else { %>
+    const ctx = document.getElementById('feedbackChart').getContext('2d');
+    const feedbackChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Liked', 'Disliked'],
+            datasets: [{
+                label: 'Feedback',
+                data: [
+                    <%= postSentiments.positive_feedback ?? 0; %>,
+                    <%= postSentiments.negative_feedback ?? 0; %>
+                ],
+                backgroundColor: [
+                    'rgb(96 165 250)',
+                    'rgba(255, 99, 132)'
+                ],
+                borderColor: [
+                    'rgb(29 78 190)',
+                    'rgb(185, 28, 28)'
+                ],
+                hoverOffset: 2
+            }]
+        },
+        options: {
+            spacing: 1.5,
+            borderWidth: 1,
+            borderRadius: 4,
+            responsive: false,
+            maintainAspectRatio: false,
+        },
+    });
+    <% } %>
+</script>
+
 </body>
 </html>

@@ -1,65 +1,88 @@
 <!-- Email Settings Section -->
-<!--suppress ALL -->
-<div class="cardview">
-    <div class="card-header" onclick="toggleCard(this, 'emailSettings')">
-        <h3>Emails</h3>
-        <i class="arrow down"></i>
+<div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+    <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'emailSettings')">
+        <h3 class="text-lg text-gray-300 font-bold">Email Settings</h3>
+        <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
     </div>
 
-    <div id="emailSettings" style="display: none;">
+    <div id="emailSettings" class="mt-4" style="display: none;">
         <div id="emailConfigsContainer">
             <% configs.mail.forEach((config, index) => { %>
-                <div class="email-config" id="mailConfig<%= index; %>">
-                    <div class="card-header" onclick="toggleCard(this, 'mailConfigInner<%= index; %>')">
-                        <h4><%= (index + 1) + ". " + config.from.replaceAll('\'', ''); %></h4>
-                        <i class="arrow down"></i>
+                <div class="bg-gray-700 rounded-lg p-4 mb-4" id="mailConfig<%= index; %>">
+                    <div class="flex justify-between items-center cursor-pointer"
+                         onclick="toggleCard(this, 'mailConfigInner<%= index; %>')">
+                        <h4 class="text-md text-gray-300"><%= (index + 1) + ". " + config.from.replaceAll('\'', ''); %></h4>
+                        <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 9l-7 7-7-7"></path>
+                        </svg>
                     </div>
 
-                    <div id="mailConfigInner<%= index; %>" style="display: none;">
-                        <div class="form-group">
-                            <label>Reply To</label>
+                    <div id="mailConfigInner<%= index; %>" class="mt-4" style="display: none;">
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][reply_to]" class="block text-gray-300 mb-1">Reply
+                                To</label>
                             <input type="text" placeholder="'Author' <author@ghost.org> [Optional]"
-                                   name="email[<%= index; %>][reply_to]"
-                                   value="<%= config.reply_to; %>"/>
+                                   id="email[<%= index; %>][reply_to]" name="email[<%= index; %>][reply_to]"
+                                   value="<%= config.reply_to; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
                         </div>
-                        <div class="form-group">
-                            <label>From</label>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][from]" class="block text-gray-300 mb-1">From</label>
                             <input type="text" placeholder="'Author' <author@ghost.org>"
-                                   name="email[<%= index; %>][from]" value="<%= config.from; %>"/>
+                                   id="email[<%= index; %>][from]"
+                                   name="email[<%= index; %>][from]" value="<%= config.from; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
                         </div>
-                        <div class="form-group">
-                            <label>Host</label>
-                            <input type="text" placeholder="smtp.blog.com" name="email[<%= index; %>][host]"
-                                   value="<%= config.host; %>"/>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][host]" class="block text-gray-300 mb-1">Host</label>
+                            <input type="text" placeholder="smtp.blog.com"
+                                   id="email[<%= index; %>][host]"
+                                   name="email[<%= index; %>][host]" value="<%= config.host; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
                         </div>
-                        <div class="form-group">
-                            <label>Port</label>
-                            <input type="number" placeholder="587" name="email[<%= index; %>][port]"
-                                   value="<%= config.port; %>"/>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][port]" class="block text-gray-300 mb-1">Port</label>
+                            <input type="number" placeholder="587"
+                                   id="email[<%= index; %>][port]"
+                                   name="email[<%= index; %>][port]" value="<%= config.port; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
                         </div>
-                        <div class="form-group">
-                            <label>Auth User</label>
-                            <input type="text" placeholder="Email Username" name="email[<%= index; %>][auth_user]"
-                                   value="<%= config.auth.user; %>"/>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][auth_user]" class="block text-gray-300 mb-1">Auth
+                                User</label>
+                            <input type="text" placeholder="Email Username"
+                                   id="email[<%= index; %>][auth_user]"
+                                   name="email[<%= index; %>][auth_user]" value="<%= config.auth.user; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
                         </div>
-                        <div class="form-group">
-                            <label>Auth Password</label>
-                            <input type="password" placeholder="Email Password" name="email[<%= index; %>][auth_pass]"
-                                   value="<%= config.auth.pass; %>"/>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][auth_pass]" class="block text-gray-300 mb-1">Auth
+                                Password</label>
+                            <input type="password" placeholder="Email Password"
+                                   id="email[<%= index; %>][auth_pass]"
+                                   name="email[<%= index; %>][auth_pass]" value="<%= config.auth.pass; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
                         </div>
 
                         <button type="button" onclick="removeMailConfig(<%= index; %>)"
-                                class="submit-button" style="background-color: red">
-                            Remove
+                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Remove
                         </button>
                     </div>
-
                 </div>
             <% }); %>
         </div>
-        <button type="button" onclick="addMailConfig()" class="submit-button"
-                style="background-color: darkslategray">
-            Add New
+        <button type="button" onclick="addMailConfig()"
+                class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-4">Add New
         </button>
     </div>
 </div>

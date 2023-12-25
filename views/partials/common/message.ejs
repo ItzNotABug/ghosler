@@ -1,0 +1,20 @@
+<!-- Message Alert Section -->
+<% if ((typeof message !== 'undefined' && message && message.toString().length > 0)) { %>
+    <div class="mb-6 overflow-hidden transition-all duration-500" id="alertMessage" style="height: auto;">
+        <div class="p-4 border-l-4 <% if (level === 'success') { %> border-green-600 bg-gray-800 <% } else { %> border-red-600 bg-gray-800 <% } %>">
+            <p class="<% if (level === 'success') { %> text-green-400 <% } else { %> text-red-400 <% } %> font-bold"><%- message; %></p>
+        </div>
+    </div>
+
+    <script>
+        const alertMessage = document.getElementById('alertMessage');
+        setTimeout(function () {
+            alertMessage.style.opacity = '0';
+            setTimeout(function () {
+                alertMessage.style.height = '0';
+                alertMessage.style.margin = '0';
+                alertMessage.style.padding = '0';
+            }, 500);
+        }, 3000);
+    </script>
+<% } %>

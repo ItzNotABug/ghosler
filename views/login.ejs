@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login - Ghosler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="/styles/style.css" rel="stylesheet"/>
+</head>
+
+<body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
+
+<%- include('./partials/common/header.ejs', {showLogout: false}) %>
+
+<main class="container mx-auto p-6 flex-grow">
+
+    <%- include('./partials/common/message.ejs') %>
+
+    <div class="max-w-sm mx-auto bg-gray-800 rounded-lg shadow-md p-8">
+        <h2 class="text-xl font-bold text-gray-300 mb-4 text-left">Login</h2>
+        <hr class="border-gray-600 mb-6 md:hidden">
+
+        <form action="/login" method="post">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-300 font-bold mb-2">Username</label>
+                <input type="text" id="username" name="username" required
+                       class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
+            </div>
+
+            <div class="mb-8">
+                <label for="password" class="block text-gray-300 font-bold mb-2">Password</label>
+                <input type="password" id="password" name="password" required
+                       class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
+            </div>
+
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Log In
+            </button>
+        </form>
+    </div>
+</main>
+
+<%- include('./partials/common/footer.ejs') %>
+
+</body>
+</html>

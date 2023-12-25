@@ -3,104 +3,75 @@
 <head>
     <title>Home - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            font-family: serif;
-            background-color: #f4f4f4
-        }
-
-        .cardview, .message {
-            padding: 20px;
-            margin: 20px auto;
-            background-color: #fff;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, .1);
-            border-radius: 10px;
-            max-width: 50%;
-            text-align: left;
-        }
-
-        .message {
-            padding: 18px;
-            box-shadow: none;
-            font-weight: 600;
-        }
-
-        .header {
-            padding: 20px;
-            text-align: left;
-            font-size: 1.25rem;
-            background-color: #1b2d48;
-            color: #fff;
-            font-weight: 500
-        }
-
-        h3 {
-            margin: 1em 0;
-            color: #1b2d48;
-            font-weight: 700;
-        }
-
-        button {
-            padding: 12px 25px;
-            margin: 10px;
-            border: none;
-            border-radius: 12px;
-            background-color: #1b2d48;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        p {
-            line-height: 1.6;
-            color: #555;
-        }
-
-        .message-success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message-error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-
-        @media screen and (max-width: 480px) {
-            .cardview, .message {
-                max-width: 80%;
-            }
-
-            h3, p {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    <link href="/styles/style.css" rel="stylesheet"/>
 </head>
 
-<body>
-<div class="header">Home - Ghosler</div>
+<body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
 
-<% if ((typeof message !== 'undefined' && message && message.toString().length > 0)) { %>
-    <div class="message <% if (level === 'success') { %> message-success <% } else { %> message-error <% } %>">
-        <%- message; %>
+<%- include('./partials/common/header.ejs') %>
+
+<main class="container mx-auto p-6 flex-grow">
+
+    <%- include('./partials/common/message.ejs') %>
+
+    <!-- Card Sections -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Settings Card -->
+        <div class="flex flex-col justify-between bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out h-full">
+            <div>
+                <h3 class="text-lg font-bold text-gray-300 mb-4">Manage Your Settings</h3>
+                <p class="text-gray-400 mb-4">Adjust your overall & newsletter settings for optimal experience.</p>
+            </div>
+            <a href="/settings"
+               class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Settings</a>
+        </div>
+
+        <!-- Analytics Card -->
+        <div class="flex flex-col justify-between bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out h-full">
+            <div>
+                <h3 class="text-lg font-bold text-gray-300 mb-4">Analytics Dashboard</h3>
+                <p class="text-gray-400 mb-4">Explore comprehensive analytics for your newsletter.</p>
+            </div>
+            <a href="/analytics"
+               class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300">Analytics</a>
+        </div>
+
+        <!-- Debug Logs Card -->
+        <div class="flex flex-col justify-between bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out h-full">
+            <div>
+                <h3 class="text-lg font-bold text-gray-300 mb-4">Debug Logs</h3>
+                <p class="text-gray-400 mb-4">Check debug level logs for debugging or finding certain info.</p>
+            </div>
+            <a href="/logs/debug"
+               class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300">View
+                Logs</a>
+        </div>
+
+        <!-- Error Logs Card -->
+        <div class="flex flex-col justify-between bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out h-full">
+            <div>
+                <h3 class="text-lg font-bold text-gray-300 mb-4">Error Logs</h3>
+                <p class="text-gray-400 mb-4">Check error level logs to see if something went wrong.</p>
+            </div>
+            <a href="/logs/error"
+               class="inline-block bg-pink-900 hover:bg-pink-950 text-white font-bold py-2 px-4 rounded transition duration-300">View
+                Logs</a>
+        </div>
+
+        <!-- Issue Card -->
+        <div class="flex flex-col justify-between bg-gray-800 shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300 ease-in-out h-full">
+            <div>
+                <h3 class="text-lg font-bold text-gray-300 mb-4">Found an Issue?</h3>
+                <p class="text-gray-400 mb-4">Drop a message to Ghosler's Issue Tracker on GitHub.</p>
+            </div>
+            <a href="https://github.com/itznotabug/ghosler/issues" target="_blank"
+               class="inline-block bg-violet-600 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded transition duration-300">Report</a>
+        </div>
     </div>
-<% } %>
 
-<div class="cardview">
-    <p>Ghosler - Ghost Newsletters, enables easy sending of newsletter using your own email and SMTP credentials.</p>
-    <p>It bypasses the limitations of the hardcoded mail provider setup on Ghost and supports tracking email
-        deliverability and monitoring opens, with the capability to use multiple email accounts.</p>
+</main>
 
-    <h3>Edit Settings, Explore Analytics or Check Logs</h3>
-    <button onclick="window.location='/settings'">Settings</button>
-    <button onclick="window.location='/analytics'">Analytics</button>
-    <button onclick="window.location='/logs/debug'">Debug Logs</button>
-    <button onclick="window.location='/logs/error'">Error Logs</button>
-</div>
+<%- include('./partials/common/footer.ejs') %>
+
 </body>
 </html>

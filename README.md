@@ -1,16 +1,15 @@
 ## Ghosler - Ghost Newsletters 👻
 
-**Ghosler** enables easy sending of newsletter using your own email and SMTP credentials when you are just starting
-out & have a small to moderate user-base.
+**Ghosler** enables easy sending of newsletters using your own email and SMTP credentials.\
+This is ideal when you are just starting out and have a small to moderate user base.
 
 It is helpful for bypassing the limitations of the hardcoded Mailgun setup and supports many analytical features, along
 with the capability to use **multiple** email accounts.
 
 ##### Note:
 
-1. Currently, only one newsletter is supported. **If you have multiple active newsletters, do not use this for now.**
-2. The dashboard UI isn't too friendly on desktop as I do not have enough exp. in web, but gets the job done, if you are
-   someone who can improve the UI, please contribute.
+1. Currently, `Ghosler` supports only one newsletter at this time. **Please avoid using it if you manage multiple active
+   newsletters**.
 
 ### Key Features
 
@@ -33,7 +32,7 @@ Pre-requisites: `Node 18^` & `pm2` installed.
 1. Install the `CLI` -
 
    ```npm
-   npm -g i ghosler-cli
+   npm install -g ghosler-cli
    ```
 
 2. Go to the directory you want to install `Ghosler`, make sure its empty & run below command -
@@ -65,10 +64,27 @@ Now as soon as you publish your Post, it will be sent to your Subscribers who ha
 
 ### Testing Configurations
 
-Ghosler will always use a debug version of the configs i.e. `config.debug.json` if one exists. The JSON schema is the
-same as in the [config.production.json](./config.production.json) file.
+Ghosler defaults to using a debug configuration file, `config.debug.json`, if it exists. The structure of this file is
+identical to that in [config.production.json](./config.production.json) file.
 
-#### Custom Template
+**Local Builds:**
+Make sure to execute -
+
+   ```shell
+    npm run buildcss
+   ``` 
+
+to generate a minified css if you changed any `.ejs` files.
+If you don't, CSS based changes won't take effect. This also makes sure that the final CSS bundle includes only what's
+needed.
+
+And use below to run `Ghosler` -
+
+   ```shell
+    npm run dev
+   ```
+
+### Custom Template
 
 If you want to customize the newsletter template even more, follow the steps -
 

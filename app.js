@@ -6,6 +6,7 @@ import {logDebug, logTags} from './utils/log/logger.js';
 // route imports
 import logs from './routes/logs.js';
 import index from './routes/index.js';
+import login from './routes/login.js';
 import track from './routes/track.js';
 import preview from './routes/preview.js';
 import settings from './routes/settings.js';
@@ -19,6 +20,7 @@ Miscellaneous.setup(expressApp).then();
 // define routes
 logDebug('Express', 'Setting routes...');
 expressApp.use(track);
+expressApp.use(login);
 expressApp.use('/', index);
 expressApp.use('/logs', logs);
 expressApp.use('/preview', preview);
