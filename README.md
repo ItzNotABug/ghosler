@@ -6,10 +6,61 @@ This is ideal when you are just starting out and have a small to moderate user b
 It is helpful for bypassing the limitations of the hardcoded Mailgun setup and supports many analytical features, along
 with the capability to use **multiple** email accounts.
 
-##### Note:
+---
+**Note**: Currently, `Ghosler` supports only one newsletter at this time. **Please avoid using it if you manage multiple
+active newsletters**.
 
-1. Currently, `Ghosler` supports only one newsletter at this time. **Please avoid using it if you manage multiple active
-   newsletters**.
+---
+
+### Screenshots
+
+- **Newsletter**
+    <table>
+      <tr>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/8f909219-7d20-444c-af49-3a4d9b309e5b" alt="Ghosler - Newsletter Preview" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/9264b063-b064-4096-8c52-b10c4b0f4656" alt="Ghosler - Newsletter Preview" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/75798fa3-7246-44f0-867e-0e716a24a1f4" alt="Ghosler - Newsletter Preview" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/e5fdc7c9-f762-46f1-bee2-65a564909919" alt="Ghosler - Newsletter Preview" /></td>
+      </tr>
+    </table>
+
+- **Dashboard**
+
+    <details>
+    <summary>
+    Mobile View
+    </summary>
+    <table>
+      <tr>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/225d6929-68f1-474d-a694-257197c41424" alt="Ghosler - Login" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/39571ef5-d1f0-4145-b205-37963e28fda7" alt="Ghosler - Home" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/dc72d8c0-7943-44ce-8ffa-56fbac51c703" alt="Ghosler - Analytics" /></td>
+      </tr>
+      <tr>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/e06ac7aa-9e6b-4bd4-8227-d8ea76f58f64" alt="Ghosler - Analytics - Details" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/3c75cb17-dc0a-4662-aef3-b696d70cca65" alt="Ghosler - Settings" /></td>
+        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/55e45089-fac1-40ef-b818-a440465d7c9d" alt="Ghosler - Logs" /></td>
+      </tr>
+    </table>
+    </details>
+
+    <details>
+    <summary>
+    Desktop View
+    </summary>
+    <table>
+      <tr>
+        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/39e5a0b1-2053-4a5f-8efa-96c45f3e3369" alt="Ghosler - Login" /></td>
+        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/3f18b7a5-8fcd-4bed-821f-963237052d4f" alt="Ghosler - Home" /></td>
+        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/60e9c9ad-6ae6-46c3-8708-0b9d91a960d9" alt="Ghosler - Analytics" /></td>
+      </tr>
+      <tr>
+        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/eadacf4f-e9dd-45e3-b8f1-4aa18be4a41c" alt="Ghosler - Analytics - Details" /></td>
+        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/0061ac2b-7aa5-48ca-8de4-9383c7a5d81e" alt="Ghosler - Settings" /></td>
+        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/a6fa0f5e-8fd4-4fc4-ac01-e27b756ba749" alt="Ghosler - Logs" /></td>
+      </tr>
+    </table>
+    </details>
 
 ### Key Features
 
