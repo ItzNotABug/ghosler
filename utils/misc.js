@@ -25,9 +25,11 @@ export default class Miscellaneous {
 
         // login sessions.
         expressApp.use(session({
-            resave: true, saveUninitialized: true,
+            resave: true,
+            saveUninitialized: true,
             secret: 'c3d5d4a2-71b0-4713-8a3c-c19b303f6208',
         }));
+
         // Safeguard
         Files.makeFilesDir().then();
 
@@ -43,7 +45,6 @@ export default class Miscellaneous {
             if (req.session.user) return next();
             res.status(401).redirect('/login');
         });
-
     }
 
     /**
@@ -65,7 +66,7 @@ export default class Miscellaneous {
      */
     static async authenticated(req) {
         if (!req.body || !req.body.username || !req.body.password) {
-            return {level: 'error', message: 'Please enter both Username & the Password!'};
+            return {level: 'error', message: 'Please enter both Username & Password!'};
         }
 
         const {username, password} = req.body;
@@ -75,7 +76,7 @@ export default class Miscellaneous {
             req.session.user = ghosler.auth.user;
             return {level: 'success', message: 'Successfully logged in!'};
         } else {
-            return {level: 'error', message: 'Username or the Password do not match!'};
+            return {level: 'error', message: 'Username or Password does not match!'};
         }
     }
 
