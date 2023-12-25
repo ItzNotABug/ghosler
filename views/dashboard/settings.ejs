@@ -38,43 +38,49 @@
             newConfigDiv.className = 'bg-gray-700 rounded-lg p-4 mb-4';
             newConfigDiv.id = 'mailConfig' + mailConfigIndex;
             newConfigDiv.innerHTML = `
-        <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'mailConfigInner${mailConfigIndex}')">
-            <h4 class="text-md text-gray-300">Email Configuration ${parseInt(mailConfigIndex) + 1}</h4>
-            <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        </div>
+                <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'mailConfigInner${mailConfigIndex}')">
+                    <h4 class="text-md text-gray-300">Email Configuration ${parseInt(mailConfigIndex) + 1}</h4>
+                    <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
 
-        <div id="mailConfigInner${mailConfigIndex}" class="mt-4" style="display: none;">
-            <div class="form-group mb-4">
-                <label class="block text-gray-300 mb-1">Reply To</label>
-                <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" name="email[${mailConfigIndex}][reply_to]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-            </div>
-            <div class="form-group mb-4">
-                <label class="block text-gray-300 mb-1">From</label>
-                <input type="text" placeholder="'Author' <author@ghost.org>" name="email[${mailConfigIndex}][from]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-            </div>
-            <div class="form-group mb-4">
-                <label class="block text-gray-300 mb-1">Host</label>
-                <input type="text" placeholder="smtp.blog.com" name="email[${mailConfigIndex}][host]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-            </div>
-            <div class="form-group mb-4">
-                <label class="block text-gray-300 mb-1">Port</label>
-                <input type="number" placeholder="587" name="email[${mailConfigIndex}][port]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-            </div>
-            <div class="form-group mb-4">
-                <label class="block text-gray-300 mb-1">Auth User</label>
-                <input type="text" placeholder="Email Username" name="email[${mailConfigIndex}][auth_user]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-            </div>
-            <div class="form-group mb-4">
-                <label class="block text-gray-300 mb-1">Auth Password</label>
-                <input type="password" placeholder="Email Password" name="email[${mailConfigIndex}][auth_pass]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-            </div>
+                <div id="mailConfigInner${mailConfigIndex}" class="mt-4" style="display: none;">
+                    <div class="form-group mb-4">
+                        <label for="email[${mailConfigIndex}][reply_to]" class="block text-gray-300 mb-1">Reply To</label>
+                        <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" id="email[${mailConfigIndex}][reply_to]" name="email[${mailConfigIndex}][reply_to]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
 
-            <button type="button" onclick="removeMailConfig(${mailConfigIndex})"
-                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">
-                Remove
-            </button>
-        </div>
-    `;
+                    <div class="form-group mb-4">
+                        <label for="email[${mailConfigIndex}][from]" class="block text-gray-300 mb-1">From</label>
+                        <input type="text" placeholder="'Author' <author@ghost.org>" id="email[${mailConfigIndex}][from]" name="email[${mailConfigIndex}][from]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label id="email[${mailConfigIndex}][host]" class="block text-gray-300 mb-1">Host</label>
+                        <input type="text" placeholder="smtp.blog.com" id="email[${mailConfigIndex}][host]" name="email[${mailConfigIndex}][host]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="email[${mailConfigIndex}][port]" class="block text-gray-300 mb-1">Port</label>
+                        <input type="number" placeholder="587" id="email[${mailConfigIndex}][port]" name="email[${mailConfigIndex}][port]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="email[${mailConfigIndex}][auth_user]" class="block text-gray-300 mb-1">Auth User</label>
+                        <input type="text" placeholder="Email Username" id="email[${mailConfigIndex}][auth_user]" name="email[${mailConfigIndex}][auth_user]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label id="email[${mailConfigIndex}][auth_pass]" class="block text-gray-300 mb-1">Auth Password</label>
+                        <input type="password" placeholder="Email Password" id="email[${mailConfigIndex}][auth_pass]" name="email[${mailConfigIndex}][auth_pass]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
+
+                    <button type="button"
+                            onclick="removeMailConfig(${mailConfigIndex})"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Remove
+                    </button>
+                </div>
+            `;
+
             mailConfigsDiv.appendChild(newConfigDiv);
             mailConfigIndex = parseInt(mailConfigIndex) + 1;
         }
