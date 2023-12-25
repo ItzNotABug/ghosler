@@ -7,7 +7,7 @@ It is helpful for bypassing the limitations of the hardcoded Mailgun setup and s
 with the capability to use **multiple** email accounts.
 
 ---
-**Note**: Currently, `Ghosler` supports only one newsletter at this time. **Please avoid using it if you manage multiple
+**Note**: Ghosler` supports only **one** newsletter at this time. **Please avoid using it if you manage multiple
 active newsletters**.
 
 ---
