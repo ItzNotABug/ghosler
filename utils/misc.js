@@ -40,10 +40,10 @@ export default class Miscellaneous {
         expressApp.enable('trust proxy');
         expressApp.all('*', async (req, res, next) => {
             const path = req.path;
-            const isLoginOrPreview = /\/login$|\/preview$/.test(path);
+            const isUnrestrictedPath = /\/login$|\/preview$|\/track/.test(path);
             const isPostPublish = req.method === 'POST' && /\/published$/.test(path);
 
-            if (isLoginOrPreview || isPostPublish) return next();
+            if (isUnrestrictedPath || isPostPublish) return next();
 
             if (req.session.user) return next();
 
