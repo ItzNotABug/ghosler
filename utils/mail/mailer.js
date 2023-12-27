@@ -40,7 +40,7 @@ export default class NewsletterMailer {
                 const promises = chunk.map((subscriber, index) => {
                         const globalIndex = i * chunkSize + index;
                         const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
-                        this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, contentToSend, unsubscribeLink);
+                        return this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, contentToSend, unsubscribeLink);
                     }
                 );
                 allEmailSendPromises.push(...promises);
@@ -52,7 +52,7 @@ export default class NewsletterMailer {
             const transporter = await this.#transporter(mailConfigs[0]);
             const promises = subscribers.map((subscriber, index) => {
                     const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
-                    this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, contentToSend, unsubscribeLink);
+                    return this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, contentToSend, unsubscribeLink);
                 }
             );
 
@@ -61,7 +61,7 @@ export default class NewsletterMailer {
 
         // Wait for all email sending operations to complete
         const results = await Promise.allSettled(allEmailSendPromises);
-        const successfulEmails = results.filter(result => result).length;
+        const successfulEmails = results.filter(result => result.value === true).length;
 
         // Update the post status and save it
         post.stats.newsletterStatus = 'Sent';
@@ -100,6 +100,9 @@ export default class NewsletterMailer {
                         comment: 'Unsubscribe',
                         url: unsubscribeLink.replace('{MEMBER_UUID}', subscriber.uuid),
                     },
+                },
+                headers: {
+                    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
                 }
             });
 
