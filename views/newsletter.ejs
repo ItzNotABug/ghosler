@@ -146,8 +146,8 @@
         }
 
         .kg-callout-emoji {
-            padding-right: 12px;
             font-size: 20px;
+            padding-right: 12px;
         }
 
         .kg-callout-text {
@@ -250,7 +250,7 @@
 
         .kg-button-card a {
             overflow-wrap: anywhere;
-            border: solid 1px;
+            border: solid 1px<%= site.color; %>;
             border-radius: 5px;
             box-sizing: border-box;
             cursor: pointer;
@@ -302,6 +302,134 @@
 
         .kg-toggle-card-icon {
             display: none;
+        }
+
+        .post-content-row .kg-video-container {
+            width: 100%;
+            position: relative;
+            border-radius: 5px;
+        }
+
+        .post-content-row .kg-video-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .video-play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 2em;
+            width: 3em;
+            margin: 0 auto;
+            border-radius: 10px;
+            padding: 1em 0.8em 0.6em 1em;
+            font-size: 1em;
+            background-color: rgba(0, 0, 0, 0.85);
+            cursor: pointer;
+        }
+
+        .video-play-arrow {
+            display: block;
+            width: 0;
+            height: 0;
+            margin: 0 auto;
+            line-height: 0px;
+            border-color: transparent transparent transparent white;
+            border-style: solid;
+            border-width: 0.8em 0 0.8em 1.5em;
+        }
+
+        .audio-play-icon {
+            display: block;
+            box-sizing: border-box;
+            width: 16px;
+            height: 16px;
+            border-style: solid;
+            border-width: 8px 0 8px 16px;
+            border-color: transparent transparent transparent currentColor;
+            overflow-wrap: anywhere;
+            text-decoration: underline;
+            color: #15212A;
+        }
+
+        .kg-audio-card {
+            width: 100%;
+            border-radius: 3px;
+            mso-table-lspace: 0;
+            mso-table-rspace: 0;
+            margin: 0 auto 1.5em;
+            border-collapse: separate;
+            border: 1px solid #e5eff5;
+        }
+
+        .kg-audio-thumbnail {
+            overflow-wrap: anywhere;
+            color: <%= site.color; %>;
+            text-decoration: underline;
+            display: block;
+            width: 60px;
+            height: 60px;
+            padding: 4px 16px 4px 4px;
+            border-radius: 2px;
+        }
+
+        .kg-audio-thumbnail.placeholder {
+            border: none;
+            -ms-interpolation-mode: bicubic;
+            max-width: 100%;
+            width: 24px;
+            height: 24px;
+            padding: 18px;
+            border-radius: 2px;
+            background-color: <%= site.color; %>;
+        }
+
+        .kg-audio-title-overall {
+            overflow-wrap: anywhere;
+            color: <%= site.color; %>;
+            text-decoration: underline;
+            position: absolute;
+            display: block;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .kg-audio-title {
+            display: block;
+            padding-right: 20px;
+            padding-bottom: 4px;
+            padding-top: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 18px;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+            color: #15212A;
+        }
+
+        .kg-audio-play-button {
+            display: block;
+            box-sizing: border-box;
+            width: 16px;
+            height: 16px;
+            border-style: solid;
+            border-width: 8px 0 8px 16px;
+            border-color: transparent transparent transparent currentColor;
+            overflow-wrap: anywhere;
+            text-decoration: underline;
+            color: #15212A;
+        }
+
+        .kg-audio-duration {
+            display: block;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+            color: #15171A;
         }
 
         @media only screen and (max-width: 620px) {

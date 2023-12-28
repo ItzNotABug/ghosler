@@ -102,6 +102,30 @@ export default class Miscellaneous {
     }
 
     /**
+     * Converts to hh:mm:ss.xx format.
+     *
+     * @param durationInSeconds
+     * @returns {string} Time in hh:mm:ss.xx format.
+     */
+    static formatDuration(durationInSeconds) {
+        const totalSeconds = Number(durationInSeconds);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        let formattedDuration = `${String(seconds).padStart(2, '0')}`;
+        if (minutes > 0 || hours > 0 || totalSeconds < 60) {
+            formattedDuration = `${String(minutes).padStart(2, '0')}:${formattedDuration}`;
+        }
+
+        if (hours > 0) {
+            formattedDuration = `${hours}:${formattedDuration}`;
+        }
+
+        return formattedDuration;
+    }
+
+    /**
      * Encodes a given string to Base64 format.
      *
      * @param {string} data The string to be encoded.
