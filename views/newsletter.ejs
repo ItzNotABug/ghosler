@@ -172,7 +172,7 @@
             min-height: 148px;
             border: 1px solid #e5eff5;
             overflow-wrap: anywhere;
-            color: #2fb1ff;
+            color: <%= site.color; %>;
             text-decoration: none;
         }
 
@@ -430,6 +430,86 @@
             overflow-wrap: anywhere;
             text-decoration: none;
             color: #15171A;
+        }
+
+        .kg-audio-link {
+            color: #738a94 !important;
+            text-decoration: none !important;
+        }
+
+        .kg-file-title {
+            display: block;
+            width: 100%;
+            padding-left: 12px;
+            padding-top: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 1.3em;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+            color: #15212A;
+        }
+
+        .kg-file-description {
+            display: block;
+            width: 100%;
+            padding-left: 12px;
+            padding-top: 2px;
+            font-size: 15px;
+            line-height: 1.4em;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+            color: #738a94;
+        }
+
+        .kg-file-meta {
+            display: block;
+            width: 100%;
+            padding-left: 12px;
+            padding-top: 4px;
+            padding-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.4em;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+            color: #738a94;
+        }
+
+        .kg-file-name {
+            color: #15212A;
+            font-weight: 500;
+        }
+
+        .kg-file-thumbnail {
+            font-size: 18px;
+            color: #15212A;
+            position: relative;
+            vertical-align: middle;
+            text-align: center;
+            border-radius: 2px;
+            background-color: <%= site.color; %>;
+        }
+
+        .kg-file-thumbnail.placeholder {
+            border: none;
+            height: 24px;
+            width: 24px;
+            margin-top: 6px;
+            max-width: 24px;
+            -ms-interpolation-mode: bicubic;
+            background-color: <%= site.color; %>;
+        }
+
+        .kg-file-thumbnail a {
+            overflow-wrap: anywhere;
+            color: <%= site.color; %>;
+            text-decoration: underline;
+            position: absolute;
+            display: block;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
         }
 
         @media only screen and (max-width: 620px) {

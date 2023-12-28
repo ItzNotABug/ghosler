@@ -17,6 +17,7 @@ export default class Widgets {
         this.#bookmark($);
         this.#video($, postUrl);
         this.#audio($, postUrl);
+        this.#file($, postUrl);
         this.#applyTargetBlank($);
 
         return $.html();
@@ -70,7 +71,7 @@ export default class Widgets {
             const duration = Miscellaneous.formatDuration(audioFigure.find('.kg-audio-duration').text().trim());
 
             // this is pretty huge actually!
-            const replacementAudioElement = `
+            const audioElement = `
                 <table border="0" cellpadding="0" cellspacing="0" class="kg-audio-card" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; margin: 0 auto 1.5em; border-radius: 3px; border: 1px solid #e5eff5;" width="100%">
                 <tbody>
                     <tr>
@@ -112,7 +113,7 @@ export default class Widgets {
                                                                             <!-- Duration & Placeholder -->
                                                                             <td style="font-size: 18px; color: #15212A; vertical-align: middle;" valign="middle">
                                                                                 <a class="kg-audio-duration" href="${postUrl}" target="_blank">${duration}
-                                                                                    <span class="kg-audio-link" style="color: #738a94;"> • Click to play audio</span>
+                                                                                    <span class="kg-audio-link"> • Click to play audio</span>
                                                                                 </a>
                                                                             </td>
                                                                         </tr>
@@ -132,7 +133,76 @@ export default class Widgets {
             </table>
             `;
 
-            audioFigure.replaceWith(replacementAudioElement);
+            audioFigure.replaceWith(audioElement);
+        });
+    }
+
+    static #file($, postUrl) {
+        const files = $('.kg-card.kg-file-card');
+        files.each(function () {
+            const file = $(this);
+            const metaData = file.find('.kg-file-card-metadata');
+            const fileTitle = file.find('.kg-file-card-title').text().trim();
+            const fileCaption = file.find('.kg-file-card-caption').text().trim();
+            const fileName = metaData.find('.kg-file-card-filename').text().trim();
+            const fileSize = metaData.find('.kg-file-card-filesize').text().trim();
+
+            const fileElement = `
+                <table border="0" cellpadding="4" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; margin: 0 0 1.5em 0; border-radius: 3px; border: 1px solid #e5eff5;" width="100%">
+                    <tbody>
+                        <tr>
+                            <td style="font-size: 18px; vertical-align: top; color: #15212A;" valign="top">
+                                <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;" width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-size: 18px; color: #15212A; vertical-align: middle;" valign="middle">
+                                                <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;" width="100%">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-size: 18px; vertical-align: top; color: #15212A;" valign="top">
+                                                                <a class="kg-file-title" href="${postUrl}" target="_blank">${fileTitle}</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                
+                                                <table id="kg-file-caption-table" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;" width="100%">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A;" valign="top">
+                                                                <a class="kg-file-description" href="${postUrl}" target="_blank">${fileCaption}</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                
+                                                <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;" width="100%">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-size: 18px; vertical-align: top; color: #15212A;" valign="top">
+                                                                <a class="kg-file-meta" href="${postUrl}" target="_blank">
+                                                                    <span class="kg-file-name">${fileName}</span> • ${fileSize}</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            
+                                            <td align="center" class="kg-file-thumbnail" valign="middle" width="80">
+                                                <a href="${postUrl}" target="_blank"></a>
+                                                <img alt class="kg-file-thumbnail placeholder" height="24" src="https://static.ghost.org/v4.0.0/images/download-icon-darkmode.png" width="24">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            file.replaceWith(fileElement);
+            // remove description table if we don't have a caption.
+            if (!fileCaption) file.find('#kg-file-caption-table').remove();
         });
     }
 
