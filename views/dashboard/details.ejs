@@ -124,7 +124,7 @@
                 <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
                     <% const link = Object.keys(element)[0]; %>
                     <% const clicks = element[link]; %>
-                    <a href="<%= link; %>" target="_blank"
+                    <a href="<%= link.split(/[?#]/)[0]; %>" target="_blank"
                        class="font-semibold text-blue-400 hover:text-blue-500 block mb-2 truncate"><%= link; %></a>
                     <hr class="border-t border-gray-600 my-2">
                     <div class="flex justify-between items-center">

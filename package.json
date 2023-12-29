@@ -21,6 +21,7 @@
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^9.0.0",
     "nodemailer": "^6.9.5",
+    "probe-image-size": "^7.2.3",
     "winston": "^3.11.0"
   },
   "devDependencies": {

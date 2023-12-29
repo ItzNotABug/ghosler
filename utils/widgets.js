@@ -1,28 +1,52 @@
+// noinspection HtmlUnknownAttribute,CssOverwrittenProperties
+
+import {inline} from 'css-inline';
 import * as cheerio from 'cheerio';
+import probe from 'probe-image-size';
+import {minify} from 'html-minifier';
+
 import Miscellaneous from './misc.js';
 
 export default class Widgets {
 
     /**
-     * Adds, replaces Bookmarks, Video & Audio cards.
+     * Handles adding Bookmarks, Video, Audio, File, YouTube, Twitter, Image/Unsplash cards.
      *
-     * @param {string} content - The content to be modified.
-     * @param {string} postUrl - The url of the post for redirection is template contains video.
+     * @param {Object} renderingData
+     * @param {{trackedLinks: Set<string>, modifiedHtml: string}} injectedHtml
      *
-     * @returns {string} The modified content.
+     * @returns {Promise<{trackedLinks: string[], modifiedHtml: string}>}
      */
-    static replace(content, postUrl) {
-        const $ = cheerio.load(content);
+    static async replace(renderingData, injectedHtml) {
+        const $ = cheerio.load(injectedHtml.modifiedHtml);
+
+        const postId = renderingData.post.id;
+        const postUrl = renderingData.post.url;
+        const isTracking = renderingData.trackLinks;
+        let trackedLinks = new Set(injectedHtml.trackedLinks);
 
         this.#bookmark($);
-        this.#video($, postUrl);
-        this.#audio($, postUrl);
         this.#file($, postUrl);
+        this.#audio($, postUrl);
+        this.#video($, postUrl);
+
+        // embedded cards
+        this.#twitter_x($);
+        this.#youtube($, trackedLinks, isTracking);
+        await this.#unsplashOrImage($, postId, trackedLinks, isTracking);
+
+        // vimeo, codepen, spotify, soundcloud.
         this.#applyTargetBlank($);
 
-        return $.html();
+        //trackedLinks: [], modifiedHtml: template
+        return {trackedLinks: Array.from(trackedLinks), modifiedHtml: this.#inlineAndMinify($.html())};
     }
 
+    /**
+     * Add a bookmark card if raw format exists for it.
+     *
+     * @param $
+     */
     static #bookmark($) {
         const bookmarkPublisher = $('.kg-bookmark-publisher');
         bookmarkPublisher.html(`<span style="margin:0 6px">•</span>${bookmarkPublisher.html()}`);
@@ -42,6 +66,12 @@ export default class Widgets {
         });
     }
 
+    /**
+     * Add a video card if raw format exists for it.
+     *
+     * @param $
+     * @param {string} postUrl - Post url to add to anchor tag.
+     */
     static #video($, postUrl) {
         const videoFigures = $('.kg-card.kg-video-card');
         videoFigures.each(function () {
@@ -53,8 +83,22 @@ export default class Widgets {
             const videoContent = `
                 <a href="${postUrl}" target="_blank">
                     <div class="kg-video-container">
-                        <img src="${thumbnailUrl}" alt />
-                        <div class="video-play-icon"><div class="video-play-arrow"></div></div>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" background="${thumbnailUrl}" role="presentation" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; background-size: cover; min-height: 200px; background: url('${thumbnailUrl}') left top / cover; mso-hide: all;">
+                            <tbody>
+                                <tr style="mso-hide: all">
+                                    <td width="25%" style="font-size: 18px; vertical-align: top; color: #15212A; visibility: hidden; mso-hide: all;" valign="top">
+                                        <img src="https://img.spacergif.org/v1/150x338/0a/spacer.png" alt="" width="100%" border="0" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; height: auto; opacity: 0; visibility: hidden; mso-hide: all;" height="auto">
+                                    </td>
+                            
+                                    <td width="50%" align="center" valign="middle" style="font-size: 18px; color: #15212A; vertical-align: middle; mso-hide: all;">
+                                        <div class="kg-video-play-button">
+                                            <div class="video-play-arrow"></div>
+                                        </div>
+                                    </td>
+                                    <td width="25%" style="font-size: 18px; vertical-align: top; color: #15212A; mso-hide: all;" valign="top">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </a>
             `;
@@ -63,6 +107,12 @@ export default class Widgets {
         });
     }
 
+    /**
+     * Add an audio card if raw format exists for it.
+     *
+     * @param $
+     * @param {string} postUrl - Post url to add to anchor tag.
+     */
     static #audio($, postUrl) {
         const audioFigures = $('.kg-card.kg-audio-card');
         audioFigures.each(function () {
@@ -137,6 +187,12 @@ export default class Widgets {
         });
     }
 
+    /**
+     * Add a file card if raw format exists for it.
+     *
+     * @param $
+     * @param {string} postUrl - Post url to add to anchor tag.
+     */
     static #file($, postUrl) {
         const files = $('.kg-card.kg-file-card');
         files.each(function () {
@@ -166,7 +222,7 @@ export default class Widgets {
                                                     </tbody>
                                                 </table>
                                                 
-                                                <table id="kg-file-caption-table" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%;" width="100%">
+                                                <table id="kg-file-caption-table" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 90%;" width="90%">
                                                     <tbody>
                                                         <tr>
                                                             <td style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A;" valign="top">
@@ -206,7 +262,212 @@ export default class Widgets {
         });
     }
 
+    /**
+     * Add a youtube card if raw format exists for it.
+     *
+     * @param $
+     * @param {Set<string>} trackedLinks
+     * @param {boolean} isTracking
+     */
+    static #youtube($, trackedLinks, isTracking) {
+        const embedCards = $('.kg-card.kg-embed-card');
+        embedCards.each(function () {
+            const embedCard = $(this);
+            const iframe = embedCard.find('iframe');
+            if (!iframe.length || !iframe.attr('src').includes('youtube.com/embed/')) return;
+
+            const embedUrl = iframe.attr('src');
+
+            let videoLink = '';
+            let thumbnail = '';
+            let trackedVideoLink = embedUrl; // ???
+
+            const videoIdMatch = embedUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+            if (videoIdMatch && videoIdMatch[1]) {
+                const videoId = videoIdMatch[1];
+
+                videoLink = `https://youtu.be/${videoId}`;
+                thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                trackedVideoLink = videoLink;
+
+                trackedVideoLink = isTracking ? embedUrl.split('&redirect=')[0] + `&redirect=${videoLink}` : videoLink;
+            }
+
+            const youtubeElement = `
+                <div class="kg-card kg-embed-card" style="margin: 0 0 1.5em; padding: 0;">
+                    <!--[if !mso !vml]-->
+                        <a class="kg-video-preview" href="${trackedVideoLink}" target="_blank">
+                            <table background="${thumbnail}" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; background-size: cover; min-height: 200px; background: url('${thumbnail}') left top / cover; mso-hide: all;" width="100%">
+                                <tbody>
+                                    <tr style="mso-hide: all">
+                                        <td style="font-size: 18px; vertical-align: top; color: #15212A; visibility: hidden; mso-hide: all;" valign="top" width="25%">
+                                            <img alt="" border="0" height="auto" src="https://img.spacergif.org/v1/150x450/0a/spacer.png" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; height: auto; opacity: 0; visibility: hidden; mso-hide: all;" width="100%">
+                                        </td>
+                                        
+                                        <td align="center" style="font-size: 18px; color: #15212A; vertical-align: middle; mso-hide: all;" valign="middle" width="50%">
+                                            <div class="kg-video-play-button">
+                                                <div style="display: block; width: 0; height: 0; margin: 0 auto; line-height: 0; border-color: transparent transparent transparent white; border-style: solid; border-width: 0.8em 0 0.8em 1.5em; mso-hide: all;"></div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td style="font-size: 18px; vertical-align: top; color: #15212A; mso-hide: all;" valign="top" width="25%">&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </a>
+                    <!--[endif]-->
+    
+                    <!--[if vml]>
+                        <v:group xmlns:v="urn:schemas-microsoft-com:vml" coordsize="600,450" coordorigin="0,0" href="${videoLink}" style="width:600px;height:450px;">
+                            <v:rect fill="t" stroked="f" style="position:absolute;width:600;height:450;">
+                                <v:fill src="${thumbnail}" type="frame"/>
+                            </v:rect>
+                        
+                            <v:oval fill="t" strokecolor="white" strokeweight="4px" style="position:absolute;left:261;top:186;width:78;height:78">
+                                <v:fill color="black" opacity="30%"/>
+                            </v:oval>
+                        
+                            <v:shape coordsize="24,32" path="m,l,32,24,16,xe" fillcolor="white" stroked="f" style="position:absolute;left:289;top:208;width:30;height:34;"/>
+                        </v:group>
+                    <![endif]-->
+                </div>
+            `;
+            embedCard.replaceWith(youtubeElement);
+        });
+    }
+
+    /**
+     * Add a twitter card if raw format exists for it.
+     *
+     * @param $
+     */
+    static #twitter_x($) {
+        const embedCards = $('.kg-card.kg-embed-card');
+        embedCards.each(function () {
+            const embedCard = $(this);
+            const twitterTweet = embedCard.find('.twitter-tweet');
+            if (twitterTweet.length) {
+                const innerHtml = embedCard.html();
+
+                const replacementDiv = $('<div>')
+                    .addClass('kg-card kg-embed-card')
+                    .attr('style', 'margin: 0 0 1.5em; padding: 0;')
+                    .html(innerHtml);
+
+                embedCard.replaceWith(replacementDiv);
+            }
+        });
+    }
+
+    /**
+     * Add unsplash or default image card if the raw format exists for it.
+     *
+     * @param $
+     * @param {string} postId
+     * @param {Set<string>} trackedLinks
+     * @param {boolean} isTracking
+     */
+    static async #unsplashOrImage($, postId, trackedLinks, isTracking) {
+        // because we need to get the image size.
+        const imageFigures = $('.kg-card.kg-image-card').toArray();
+        const promises = imageFigures.map(async (element) => {
+            const figure = $(element);
+            let image = figure.find('img');
+            let imageUrl = image.attr('src');
+            let dimensions = {width: 600, height: 0};
+
+            const imageParent = image.parent();
+            const wasInsideAnchor = imageParent.is('a');
+
+            // this already includes a tracking link
+            const anchorHref = wasInsideAnchor ? imageParent.attr('href') : '';
+
+            const caption = figure.find('figcaption');
+
+            if (Miscellaneous.detectUnsplashImage(imageUrl)) {
+                imageUrl = new URL(imageUrl);
+                imageUrl.searchParams.delete('w');
+                imageUrl.searchParams.delete('h');
+
+                imageUrl.searchParams.set('w', (dimensions.width * 2).toFixed(0));
+                imageUrl = imageUrl.href;
+            }
+
+            let cleanImageUrl = imageUrl;
+            // replacing happens after the links have been added for tracking.
+            // so, we need to remove these links, like unsplash, other images & the caption.
+            if (cleanImageUrl.includes('/track/link?')) {
+                cleanImageUrl = Miscellaneous.getOriginalUrl(cleanImageUrl);
+                if (isTracking) trackedLinks.delete(cleanImageUrl);
+            }
+
+            // we need to remove the tracked links inside caption too!
+            $(caption).find('a').each(function () {
+                let anchorTag = $(this);
+                let href = anchorTag.attr('href');
+
+                // replacing happens after the links have been added for tracking.
+                // so, we need to remove these links, like unsplash & the caption.
+                if (href && href.includes('/track/link?')) {
+                    anchorTag.attr('href', cleanImageUrl);
+                    if (isTracking) trackedLinks.delete(Miscellaneous.getOriginalUrl(href));
+                }
+            });
+
+            const probeSize = await probe(cleanImageUrl);
+            dimensions.height = Math.round(probeSize.height * (dimensions.width / probeSize.width));
+
+            let imageHtml = `<img alt="${image.attr('alt')}" class="kg-image" height="${dimensions.height}" loading="lazy" src="${cleanImageUrl}" width="${dimensions.width}">`;
+
+            if (wasInsideAnchor) {
+                imageHtml = `<a href="${anchorHref}">${imageHtml}</a>`;
+            } else {
+                const trackedAnchorLink = isTracking
+                    ? await Miscellaneous.addTrackingToUrl(cleanImageUrl, postId)
+                    : cleanImageUrl;
+                imageHtml = `<a href="${trackedAnchorLink}">${imageHtml}</a>`;
+            }
+
+            const imageFigure = `
+                <div class="kg-card kg-image-card">
+                    ${imageHtml}
+                    <div class="kg-image-card-caption">${caption.html()}</div>
+                </div>
+            `;
+
+            figure.replaceWith(imageFigure);
+            if (!caption) figure.find('.kg-image-card-caption').remove();
+        });
+
+        await Promise.all(promises);
+    }
+
+    /**
+     * Add target _blank to all anchor tags.
+     *
+     * @param $
+     */
     static #applyTargetBlank($) {
         $('a').attr('target', '_blank');
+    }
+
+    /**
+     * Inline CSS and Minify the final html.
+     *
+     * @param content
+     * @returns {string}
+     */
+    static #inlineAndMinify(content) {
+        const inlinedCssHtml = inline(content, {
+            keep_style_tags: true,
+            inline_style_tags: true,
+        });
+
+        return minify(inlinedCssHtml, {
+            minifyCSS: true,
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true,
+        });
     }
 }

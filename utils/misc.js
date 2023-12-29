@@ -126,6 +126,47 @@ export default class Miscellaneous {
     }
 
     /**
+     * Check if a given image url is from Unsplash.
+     *
+     * @param imageUrl - The url of the image to check.
+     * @returns {boolean} True if the host name matches unsplash.
+     */
+    static detectUnsplashImage(imageUrl) {
+        return /images\.unsplash\.com/.test(imageUrl);
+    };
+
+    /**
+     * Removes the tracking if it exists and returns a clean url.
+     *
+     * @param {string} url - Url to clean.
+     * @returns {string}
+     */
+    static getOriginalUrl(url) {
+        let cleanUrl = url;
+        if (cleanUrl.includes('/track/link?')) {
+            const redirectIndex = cleanUrl.indexOf('&redirect=');
+            if (redirectIndex !== -1) {
+                cleanUrl = cleanUrl.slice(redirectIndex + '&redirect='.length);
+                cleanUrl = decodeURIComponent(cleanUrl);
+            }
+        }
+
+        return cleanUrl;
+    }
+
+    /**
+     * Adds the tracking prefix to a given url.
+     *
+     * @param {string} url - Url to track.
+     * @param {string} postId - The post id this url belongs to.
+     * @returns {Promise<string>}
+     */
+    static async addTrackingToUrl(url, postId) {
+        const ghosler = await ProjectConfigs.ghosler();
+        return `${ghosler.url}/track/link?postId=${postId}&redirect=${url}`;
+    }
+
+    /**
      * Encodes a given string to Base64 format.
      *
      * @param {string} data The string to be encoded.
