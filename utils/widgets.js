@@ -287,7 +287,12 @@ export default class Widgets {
                 thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
                 trackedVideoLink = videoLink;
 
-                trackedVideoLink = isTracking ? embedUrl.split('&redirect=')[0] + `&redirect=${videoLink}` : videoLink;
+                if (isTracking) {
+                    // delete oembed link.
+                    trackedLinks.delete(Miscellaneous.getOriginalUrl(embedUrl));
+                    trackedVideoLink = embedUrl.split('&redirect=')[0] + `&redirect=${videoLink}`;
+                    trackedLinks.add(videoLink);
+                }
             }
 
             const youtubeElement = `
