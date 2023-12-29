@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import Files from './data/files.js';
-import session from 'express-session';
+import cookieSession from 'cookie-session';
 import ProjectConfigs from './data/configs.js';
 import {logDebug, logError, logTags} from './log/logger.js';
 
@@ -24,10 +24,10 @@ export default class Miscellaneous {
         expressApp.use(express.urlencoded({extended: true, limit: '50mb'}));
 
         // login sessions.
-        expressApp.use(session({
-            resave: true,
-            saveUninitialized: true,
-            secret: 'c3d5d4a2-71b0-4713-8a3c-c19b303f6208',
+        expressApp.use(cookieSession({
+            name: 'ghosler',
+            maxAge: 24 * 60 * 60 * 1000,
+            secret: crypto.randomUUID(), // dynamic secret, always invalidated on a restart.
         }));
 
         // Safeguard
