@@ -1,4 +1,4 @@
-// noinspection HtmlUnknownAttribute,CssOverwrittenProperties
+// noinspection HtmlUnknownAttribute,CssOverwrittenProperties,JSJQueryEfficiency
 
 import {inline} from 'css-inline';
 import * as cheerio from 'cheerio';
@@ -35,11 +35,8 @@ export default class Widgets {
         this.#youtube($, trackedLinks, isTracking);
         await this.#unsplashOrImage($, postId, trackedLinks, isTracking);
 
-        // vimeo, codepen, spotify, soundcloud.
-        this.#applyTargetBlank($);
-
         //trackedLinks: [], modifiedHtml: template
-        return {trackedLinks: Array.from(trackedLinks), modifiedHtml: this.#inlineAndMinify($.html())};
+        return {trackedLinks: Array.from(trackedLinks), modifiedHtml: this.#inlineAndMinify($)};
     }
 
     /**
@@ -443,27 +440,48 @@ export default class Widgets {
     }
 
     /**
-     * Add target _blank to all anchor tags.
-     *
-     * @param $
-     */
-    static #applyTargetBlank($) {
-        $('a').attr('target', '_blank');
-    }
-
-    /**
      * Inline CSS and Minify the final html.
      *
-     * @param content
+     * @param $
      * @returns {string}
      */
-    static #inlineAndMinify(content) {
-        const inlinedCssHtml = inline(content, {
+    static #inlineAndMinify($) {
+        // a few things have been taken straight from Ghost's repo.
+        const originalImageSizes = $('img').get().map((image) => {
+            const src = image.attribs.src;
+            const width = image.attribs.width;
+            const height = image.attribs.height;
+            return {src, width, height};
+        });
+
+        const inlinedCssHtml = inline($.html(), {
             keep_style_tags: true,
             inline_style_tags: true,
         });
 
-        return minify(inlinedCssHtml, {
+        $ = cheerio.load(inlinedCssHtml);
+
+        const imageTags = $('img').get();
+
+        for (let i = 0; i < imageTags.length; i += 1) {
+            if (imageTags[i].attribs.src === originalImageSizes[i].src) {
+                if (imageTags[i].attribs.width === 'auto' && originalImageSizes[i].width) {
+                    imageTags[i].attribs.width = originalImageSizes[i].width;
+                }
+                if (imageTags[i].attribs.height === 'auto' && originalImageSizes[i].height) {
+                    imageTags[i].attribs.height = originalImageSizes[i].height;
+                }
+            }
+        }
+
+        // force all links to open in new tab
+        $('a').attr('target', '_blank');
+
+        // convert figure and figcaption to div so that Outlook applies margins.
+        // styles are already inlined at this point so its kinda fine to do this.
+        $('figure, figcaption').each((index, element) => !!(element.tagName = 'div'));
+
+        return minify($.html(), {
             minifyCSS: true,
             removeComments: true,
             collapseWhitespace: true,
