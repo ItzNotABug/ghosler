@@ -94,6 +94,12 @@
         <p class="font-semibold text-center text-gray-400 my-6">URLs are tracked and incremented<br>every time they are
             clicked.</p>
 
+        <% post.stats.postContentTrackedLinks.sort((a, b) => {
+            const clicksA = Object.values(a)[0];
+            const clicksB = Object.values(b)[0];
+            return clicksB - clicksA;
+        }); %>
+
         <!-- Desktop Table -->
         <div class="hidden md:block overflow-x-auto rounded-lg">
             <table class="w-full bg-gray-800 rounded-lg shadow-md">
