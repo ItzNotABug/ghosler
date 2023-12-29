@@ -59,10 +59,6 @@ export default class Widgets {
                 $(this).attr('style', `${currentStyle} background-image: url('${imageUrl}');`);
             }
         });
-
-        $('.kg-bookmark-container').each(function () {
-            $(this).attr('style', 'border-radius: 5px; overflow:hidden;');
-        });
     }
 
     /**
@@ -280,8 +276,8 @@ export default class Widgets {
             const isYoutube = embedUrl.includes('youtube.com/embed/');
             if (!isVimeo && !isYoutube) return;
 
+            let thumbnail;
             let videoLink = '';
-            let thumbnail = '';
             let trackedVideoLink = embedUrl;
 
             if (isYoutube) {
@@ -530,7 +526,7 @@ export default class Widgets {
         $('a').attr('target', '_blank');
 
         // convert figure and figcaption to div so that Outlook applies margins.
-        // styles are already inlined at this point so its kinda fine to do this.
+        // styles are already inlined at this point, so it's kinda fine to do this.
         $('figure, figcaption').each((index, element) => !!(element.tagName = 'div'));
 
         return minify($.html(), {
