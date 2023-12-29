@@ -148,7 +148,7 @@ export default class Newsletter {
             // add widgets, inline css and minify the html.
             return await Widgets.replace(renderingData, injectedHtml);
         } catch (error) {
-            logError(logTags.Newsletter, error.message);
+            logError(logTags.Newsletter, error);
             return undefined;
         }
     }
