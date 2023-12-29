@@ -535,7 +535,7 @@
             text-decoration: underline;
         }
 
-        .kg-image-card {
+        .kg-gallery-card, .kg-image-card {
             padding: 0;
             margin: 0 0 1.5em;
         }
@@ -553,6 +553,19 @@
             overflow-wrap: anywhere;
             color: <%= site.color; %>;
             text-decoration: underline;
+        }
+
+        .kg-gallery-container {
+            margin-top: -20px;
+        }
+
+        .kg-gallery-image img {
+            border: none;
+            max-width: 100%;
+            padding-top: 20px;
+            width: 100% !important;
+            height: auto !important;
+            -ms-interpolation-mode: bicubic;
         }
 
         @media only screen and (max-width: 620px) {
@@ -768,6 +781,19 @@
         @media all {
             .subscription-details p.user-subscription-name-field {
                 display: none !important;
+            }
+
+            .ExternalClass {
+                width: 100%;
+            }
+
+            .ExternalClass,
+            .ExternalClass p,
+            .ExternalClass span,
+            .ExternalClass font,
+            .ExternalClass td,
+            .ExternalClass div {
+                line-height: 100%;
             }
 
             .apple-link a {

@@ -30,9 +30,11 @@ export default class Widgets {
         this.#audio($, postUrl);
         this.#video($, postUrl);
 
+        await this.#gallery($, trackedLinks, isTracking);
+
         // embedded cards
         this.#twitter_x($);
-        this.#youtube($, trackedLinks, isTracking);
+        await this.#youtubeOrVimeo($, trackedLinks, isTracking);
         await this.#unsplashOrImage($, postId, trackedLinks, isTracking);
 
         //trackedLinks: [], modifiedHtml: template
@@ -266,34 +268,44 @@ export default class Widgets {
      * @param {Set<string>} trackedLinks
      * @param {boolean} isTracking
      */
-    static #youtube($, trackedLinks, isTracking) {
-        const embedCards = $('.kg-card.kg-embed-card');
-        embedCards.each(function () {
-            const embedCard = $(this);
+    static async #youtubeOrVimeo($, trackedLinks, isTracking) {
+        const embedCards = $('.kg-card.kg-embed-card').toArray();
+        const promises = embedCards.map(async (element) => {
+            const embedCard = $(element);
             const iframe = embedCard.find('iframe');
-            if (!iframe.length || !iframe.attr('src').includes('youtube.com/embed/')) return;
+            if (!iframe.length || !iframe.attr('src')) return;
 
             const embedUrl = iframe.attr('src');
+            const isVimeo = embedUrl.includes('vimeo.com/video/');
+            const isYoutube = embedUrl.includes('youtube.com/embed/');
+            if (!isVimeo && !isYoutube) return;
 
             let videoLink = '';
             let thumbnail = '';
-            let trackedVideoLink = embedUrl; // ???
+            let trackedVideoLink = embedUrl;
 
-            const videoIdMatch = embedUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
-            if (videoIdMatch && videoIdMatch[1]) {
-                const videoId = videoIdMatch[1];
-
-                videoLink = `https://youtu.be/${videoId}`;
-                thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-                trackedVideoLink = videoLink;
-
-                if (isTracking) {
-                    // delete oembed link.
-                    trackedLinks.delete(Miscellaneous.getOriginalUrl(embedUrl));
-                    trackedVideoLink = embedUrl.split('&redirect=')[0] + `&redirect=${videoLink}`;
-                    trackedLinks.add(videoLink);
+            if (isYoutube) {
+                const videoId = (embedUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/) || [])[1];
+                if (videoId) {
+                    videoLink = `https://youtu.be/${videoId}`;
+                    trackedVideoLink = videoLink;
+                }
+            } else if (isVimeo) {
+                const videoId = (embedUrl.match(/player\.vimeo\.com\/video\/([a-zA-Z0-9_-]+)/) || [])[1];
+                if (videoId) {
+                    videoLink = `https://vimeo.com/${videoId}`;
+                    trackedVideoLink = videoLink;
                 }
             }
+
+            // If tracking is enabled, update the tracking links
+            if (isTracking && videoLink) {
+                trackedLinks.delete(Miscellaneous.getOriginalUrl(embedUrl));
+                trackedVideoLink = `${embedUrl.split('&redirect=')[0]}&redirect=${videoLink}`;
+                trackedLinks.add(videoLink);
+            }
+
+            thumbnail = await Miscellaneous.thumbnail(videoLink);
 
             const youtubeElement = `
                 <div class="kg-card kg-embed-card" style="margin: 0 0 1.5em; padding: 0;">
@@ -336,6 +348,8 @@ export default class Widgets {
             `;
             embedCard.replaceWith(youtubeElement);
         });
+
+        await Promise.all(promises);
     }
 
     /**
@@ -359,6 +373,39 @@ export default class Widgets {
                 embedCard.replaceWith(replacementDiv);
             }
         });
+    }
+
+    /**
+     * Add a gallery card if raw format exists for it.
+     *
+     * @param $
+     * @param {Set<string>} trackedLinks
+     * @param {boolean} isTracking
+     */
+    static async #gallery($, trackedLinks, isTracking) {
+        const galleryImages = $('.kg-gallery-card .kg-gallery-image img').toArray();
+        const promises = galleryImages.map(async (element) => {
+            const image = $(element);
+            const sourceUrl = image.attr('src');
+            const originalLink = Miscellaneous.getOriginalUrl(sourceUrl);
+
+            let dimensions = {width: 600, height: 0};
+            const probeSize = await probe(sourceUrl);
+            dimensions.height = Math.round(probeSize.height * (dimensions.width / probeSize.width));
+
+            let anchorTrackableUrl = originalLink;
+            if (isTracking) anchorTrackableUrl = sourceUrl; // if tracking, this already is a tracked link!
+
+            const newImageElement = `
+                <a href="${anchorTrackableUrl}">
+                    <img alt width="${dimensions.width}" height="${dimensions.height}" loading="lazy" src="${originalLink}">
+                </a>
+            `;
+
+            image.replaceWith(newImageElement);
+        });
+
+        await Promise.all(promises);
     }
 
     /**

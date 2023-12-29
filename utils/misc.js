@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import Files from './data/files.js';
 import cookieSession from 'cookie-session';
 import ProjectConfigs from './data/configs.js';
+import {extract} from '@extractus/oembed-extractor';
 import {logDebug, logError, logTags} from './log/logger.js';
 
 /**
@@ -164,6 +165,17 @@ export default class Miscellaneous {
     static async addTrackingToUrl(url, postId) {
         const ghosler = await ProjectConfigs.ghosler();
         return `${ghosler.url}/track/link?postId=${postId}&redirect=${url}`;
+    }
+
+    /**
+     * Get thumbnail for a given oembed provided from url.
+     *
+     * @param url
+     * @returns {Promise<string>}
+     */
+    static async thumbnail(url) {
+        const extractedInfo = await extract(url);
+        return extractedInfo.thumbnail_url;
     }
 
     /**
