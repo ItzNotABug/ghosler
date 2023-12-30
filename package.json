@@ -1,7 +1,7 @@
 {
   "name": "ghosler",
   "description": "Send newsletter emails to your members, using your own email credentials!",
-  "version": "0.71",
+  "version": "0.8",
   "private": true,
   "main": "app.js",
   "type": "module",
