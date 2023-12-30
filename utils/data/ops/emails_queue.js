@@ -65,10 +65,17 @@ export default class EmailsQueue {
             const post = await Files.get(postId);
             if (!post) return;
 
+            let updateCounts = 0;
             const bitSet = new BitSet(post.stats.emailsOpened);
             memberIndexes.forEach(index => {
-                if (bitSet.get(index) === 0) bitSet.set(index, 1);
+                if (bitSet.get(index) === 0) {
+                    updateCounts++;
+                    bitSet.set(index, 1);
+                }
             });
+
+            // return if no new opens.
+            if (updateCounts === 0) return;
 
             post.stats.emailsOpened = bitSet.toString();
 
