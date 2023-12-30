@@ -75,6 +75,8 @@ active newsletters**.
   your members are interacting with added links.
 - **Newsletter Post Feedback**: Gain insights into reader preferences with detailed feedback on each post, including
   likes, dislikes, and overall sentiment.
+- **Ghost Native Widgets**: Ghosler supports major Ghost widgets (cards) for your newsletter, out of the box.\
+  See: [#17](https://github.com/ItzNotABug/ghosler/pull/17) for more info.
 
 ### Running Ghosler
 

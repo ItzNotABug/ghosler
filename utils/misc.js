@@ -2,8 +2,9 @@ import crypto from 'crypto';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import Files from './data/files.js';
-import session from 'express-session';
+import cookieSession from 'cookie-session';
 import ProjectConfigs from './data/configs.js';
+import {extract} from '@extractus/oembed-extractor';
 import {logDebug, logError, logTags} from './log/logger.js';
 
 /**
@@ -24,10 +25,10 @@ export default class Miscellaneous {
         expressApp.use(express.urlencoded({extended: true, limit: '50mb'}));
 
         // login sessions.
-        expressApp.use(session({
-            resave: true,
-            saveUninitialized: true,
-            secret: 'c3d5d4a2-71b0-4713-8a3c-c19b303f6208',
+        expressApp.use(cookieSession({
+            name: 'ghosler',
+            maxAge: 24 * 60 * 60 * 1000,
+            secret: crypto.randomUUID(), // dynamic secret, always invalidated on a restart.
         }));
 
         // Safeguard
@@ -99,6 +100,82 @@ export default class Miscellaneous {
         const year = date.getFullYear();
 
         return `${day} ${month} ${year}`;
+    }
+
+    /**
+     * Converts to hh:mm:ss.xx format.
+     *
+     * @param durationInSeconds
+     * @returns {string} Time in hh:mm:ss.xx format.
+     */
+    static formatDuration(durationInSeconds) {
+        const totalSeconds = Number(durationInSeconds);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        let formattedDuration = `${String(seconds).padStart(2, '0')}`;
+        if (minutes > 0 || hours > 0 || totalSeconds < 60) {
+            formattedDuration = `${String(minutes).padStart(2, '0')}:${formattedDuration}`;
+        }
+
+        if (hours > 0) {
+            formattedDuration = `${hours}:${formattedDuration}`;
+        }
+
+        return formattedDuration;
+    }
+
+    /**
+     * Check if a given image url is from Unsplash.
+     *
+     * @param imageUrl - The url of the image to check.
+     * @returns {boolean} True if the host name matches unsplash.
+     */
+    static detectUnsplashImage(imageUrl) {
+        return /images\.unsplash\.com/.test(imageUrl);
+    };
+
+    /**
+     * Removes the tracking if it exists and returns a clean url.
+     *
+     * @param {string} url - Url to clean.
+     * @returns {string}
+     */
+    static getOriginalUrl(url) {
+        let cleanUrl = url;
+        if (cleanUrl.includes('/track/link?')) {
+            const redirectIndex = cleanUrl.indexOf('&redirect=');
+            if (redirectIndex !== -1) {
+                cleanUrl = cleanUrl.slice(redirectIndex + '&redirect='.length);
+                cleanUrl = decodeURIComponent(cleanUrl);
+            }
+        }
+
+        return cleanUrl;
+    }
+
+    /**
+     * Adds the tracking prefix to a given url.
+     *
+     * @param {string} url - Url to track.
+     * @param {string} postId - The post id this url belongs to.
+     * @returns {Promise<string>}
+     */
+    static async addTrackingToUrl(url, postId) {
+        const ghosler = await ProjectConfigs.ghosler();
+        return `${ghosler.url}/track/link?postId=${postId}&redirect=${url}`;
+    }
+
+    /**
+     * Get thumbnail for a given oembed provided from url.
+     *
+     * @param url
+     * @returns {Promise<string>}
+     */
+    static async thumbnail(url) {
+        const extractedInfo = await extract(url);
+        return extractedInfo.thumbnail_url;
     }
 
     /**

@@ -1,7 +1,9 @@
 import he from 'he';
 import ejs from 'ejs';
 import path from 'path';
+import * as cheerio from 'cheerio';
 
+import Widgets from './widgets.js';
 import Ghost from './api/ghost.js';
 import Files from './data/files.js';
 import ProjectConfigs from './data/configs.js';
@@ -139,9 +141,12 @@ export default class Newsletter {
 
         try {
             const template = await ejs.renderFile(templatePath, renderingData);
-            return injectUrlTracking
+            const injectedHtml = injectUrlTracking
                 ? await this.#injectUrlTracking(renderingData, template)
-                : {trackedLinks: [], modifiedHtml: template};
+                : {trackedLinks: new Set(), modifiedHtml: template};
+
+            // add widgets, inline css and minify the html.
+            return await Widgets.replace(renderingData, injectedHtml);
         } catch (error) {
             logError(logTags.Newsletter, error);
             return undefined;
@@ -161,25 +166,22 @@ export default class Newsletter {
         return renderedPostData;
     }
 
-    // we cannot use the 'ping' attribute to anchor tags,
-    // so we add redirects to track url clicks in email clients.
+    /**
+     * @returns {Promise<{trackedLinks: Set<string>, modifiedHtml: string}>}
+     */
     static async #injectUrlTracking(renderingData, renderedPostData) {
         const ghosler = await ProjectConfigs.ghosler();
         const pingUrl = `${ghosler.url}/track/link?postId=${renderingData.post.id}&redirect=`;
 
         const domainsToExclude = [
-            new URL('https://static.ghost.org').host, // ghost static resources domain
-        ];
+            new URL('https://static.ghost.org').host,
+            ghosler.url && (
+                ghosler.url.startsWith('http://') || ghosler.url.startsWith('https://')
+            ) ? new URL(ghosler.url).host : null,
+        ].filter(Boolean);
 
-        // in a rare case, if this is empty then it will cause a Invalid URL.
-        if (ghosler.url && (ghosler.url.startsWith('http://') || ghosler.url.startsWith('https://'))) {
-            domainsToExclude.push(new URL(ghosler.url).host); // current domain
-        }
-
-        /**
-         * Exclude featured image urls and urls in feature image caption.
-         */
         let urlsToExclude = [];
+
         // a post may not have a featured image.
         if (renderingData.post.featuredImage) {
             urlsToExclude.push(he.decode(renderingData.post.featuredImage));
@@ -187,11 +189,10 @@ export default class Newsletter {
 
         // a post may also not have a caption.
         if (renderingData.post.featuredImageCaption) {
-            let match;
-            const regex = /<a href="(https?:\/\/unsplash\.com[^"]*)"/g;
-            while ((match = regex.exec(renderingData.post.featuredImageCaption)) !== null) {
-                urlsToExclude.push(he.decode(match[1]));
-            }
+            const $caption = cheerio.load(renderingData.post.featuredImageCaption);
+            $caption('a').each((_, elem) => {
+                urlsToExclude.push(he.decode($caption(elem).attr('href')));
+            });
         }
 
         /**
@@ -214,37 +215,34 @@ export default class Newsletter {
             ...renderingData.post.latestPosts.filter(post => post.featuredImage).map(post => post.featuredImage)
         ].forEach(internalLinks => urlsToExclude.push(he.decode(internalLinks)));
 
-        // Extract the <body> content
-        const bodyContentMatch = renderedPostData.match(/<body[^>]*>([\s\S]*)<\/body>/i);
-        if (!bodyContentMatch) return {trackedLinks: [], modifiedHtml: renderedPostData};
-        let bodyContent = bodyContentMatch[1];
+        const trackedLinks = new Set();
+        const $ = cheerio.load(renderedPostData);
 
-        // Define regex for link holder tags with URLs
-        const tagUrlRegex = /(<(?:a|img)\b[^>]*\b(?:href|src)=")(https?:\/\/[^"]+)(")/gi;
+        // these elements are added as a part of a main element.
+        // example: the bookmark can include a favicon and an img tag.
+        const elementsToExclude = ['.kg-bookmark-icon', '.kg-bookmark-thumbnail', '.kg-file-card-container'];
 
-        // Set to store original links
-        let trackedLinks = new Set();
+        // we don't need to worry about the urls in
+        // audio & video cards as we only target the anchor and image tags.
+        $('a[href], img[src], iframe[src]').each((_, element) => {
+            const isExcluded = elementsToExclude.some(cls => $(element).closest(cls).length > 0);
+            if (isExcluded) return;
 
-        // Function to process tag URLs
-        const processTagUrl = (match, prefix, url, suffix) => {
-            url = he.decode(url);
-            const urlHost = new URL(url).host;
+            const tag = $(element).is('a') ? 'href' : 'src';
+            let elementUrl = $(element).attr(tag);
+            if (elementUrl === '#' || !elementUrl) return;
 
-            if (!domainsToExclude.includes(urlHost) && !urlsToExclude.includes(url)) {
-                trackedLinks.add(url);
-                return `${prefix}${pingUrl}${url}${suffix}`;
+            elementUrl = he.decode(elementUrl);
+            const urlHost = new URL(elementUrl).host;
+
+            if (!domainsToExclude.includes(urlHost) && !urlsToExclude.includes(elementUrl)) {
+                trackedLinks.add(elementUrl);
+                $(element).attr(tag, `${pingUrl}${elementUrl}`);
             }
-            return match;
-        };
-
-        // Add ping attribute to tags and store original links
-        bodyContent = bodyContent.replace(tagUrlRegex, processTagUrl);
-
-        // Reconstruct the full HTML with the updated body content
-        const modifiedHtml = renderedPostData.replace(/<body[^>]*>([\s\S]*)<\/body>/i, `<body>${bodyContent}</body>`);
+        });
 
         // Convert the set to an array and return along with modified HTML
-        return {trackedLinks: Array.from(trackedLinks), modifiedHtml};
+        return {trackedLinks: trackedLinks, modifiedHtml: $.html()};
     }
 
     // Sample data for preview.
@@ -265,10 +263,10 @@ export default class Newsletter {
                 title: 'Welcome',
                 author: 'Ghost',
                 preview: 'We\'ve crammed the most important information to help you get started with Ghost into this one post. It\'s your cheat-sheet to get started, and your shortcut to advanced features.',
-                content: '<div><p><strong>Hey there</strong>, welcome to your new home on the web! </p><p>Unlike social networks, this one is all yours. Publish your work on a custom domain, invite your audience to subscribe, send them new content by email newsletter, and offer premium subscriptions to generate sustainable recurring revenue to fund your work. </p><p>Ghost is an independent, open source app, which means you can customize absolutely everything. Inside the admin area, you\'ll find straightforward controls for changing themes, colors, navigation, logos and settings — so you can set your site up just how you like it. No technical knowledge required.</p><p>If you\'re feeling a little more adventurous, there\'s really no limit to what\'s possible. With just a little bit of HTML and CSS you can modify or build your very own theme from scratch, or connect to Zapier to explore advanced integrations. Advanced developers can go even further and build entirely custom workflows using the Ghost API.</p><p>This level of customization means that Ghost grows with you. It\'s easy to get started, but there\'s always another level of what\'s possible. So, you won\'t find yourself outgrowing the app in a few months time and wishing you\'d chosen something more powerful!</p><hr><p>For now, you\'re probably just wondering what to do first. To help get you going as quickly as possible, we\'ve populated your site with starter content (like this post!) covering all the key concepts and features of the product.</p><p><blockquote>You\'ll find an outline of all the different topics below, with links to each section, so you can explore the parts that interest you most.</blockquote></p><p>Once you\'re ready to begin publishing and want to clear out these starter posts, you can delete the <code>"Ghost"</code> staff user. Deleting an author will automatically remove all of their posts, leaving you with a clean blank canvas.</p></div>',
+                content: '<div><p><strong>Hey there</strong>, welcome to your new home on the web!</p><hr><h3>Ghost</h3><p>Ghost is an independent, open source app, which means you can customize absolutely everything. Inside the admin area, you\'ll find straightforward controls for changing themes, colors, navigation, logos and settings — so you can set your site up just how you like it. No technical knowledge required.</p><hr><h3>Ghosler</h3><p>Ghosler is an open source project designed for those starting with Ghost or managing a small to moderate user base. It provides extensive control over newsletter settings and customization, enhancing your outreach with features like URL Click Tracking, Newsletter Feedback, Email Deliverability, and Email Open Rate Analytics. Additionally, Ghosler handles both Free & Paid members content management efficiently.</p><p>Moreover, Ghosler supports popular Ghost widgets, including Images/Unsplash, Audio, Video, File, Toggle, Callout Card, and social media integrations like Twitter (X), YouTube, Vimeo, along with Button, Bookmark, and Blockquote features.</p><hr><h3>Ending the Preview</h3><p>Once you\'re ready to begin publishing and want to clear out these starter posts, you can delete the Ghost staff user. Deleting an author will automatically remove all of their posts, leaving you with a clean blank canvas.</p></div>',
                 comments: 'https://bulletin.ghost.io/welcome/#ghost-comments',
                 featuredImage: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=2874&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                featuredImageCaption: '<span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@fakurian?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit" style="color: #2fb1ff; text-decoration: none; overflow-wrap: anywhere;"><span style="white-space: pre-wrap;">Milad Fakurian</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit" style="color: #2fb1ff; text-decoration: none; overflow-wrap: anywhere;"><span style="white-space: pre-wrap;">Unsplash</span></a>',
+                featuredImageCaption: '<span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@fakurian?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit" style="color: #ff247c; text-decoration: none; overflow-wrap: anywhere;"><span style="white-space: pre-wrap;">Milad Fakurian</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit" style="color: #ff247c; text-decoration: none; overflow-wrap: anywhere;"><span style="white-space: pre-wrap;">Unsplash</span></a>',
                 latestPosts: [],
                 showPaywall: true
             },

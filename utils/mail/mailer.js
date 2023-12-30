@@ -36,7 +36,7 @@ export default class NewsletterMailer {
                 const chunk = subscribers.slice(i * chunkSize, (i + 1) * chunkSize);
                 const transporter = await this.#transporter(mailConfigs[i]);
 
-                // Create promises for each subscriber in the chunk and add to allEmailSendPromises
+                // Create promises for each subscriber.
                 const promises = chunk.map((subscriber, index) => {
                         const globalIndex = i * chunkSize + index;
                         const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
@@ -59,11 +59,11 @@ export default class NewsletterMailer {
             allEmailSendPromises.push(...promises);
         }
 
-        // Wait for all email sending operations to complete
+        // Wait for all email sending operations to complete.
         const results = await Promise.allSettled(allEmailSendPromises);
         const successfulEmails = results.filter(result => result.value === true).length;
 
-        // Update the post status and save it
+        // Update post status and save it.
         post.stats.newsletterStatus = 'Sent';
         post.stats.emailsSent = successfulEmails;
         post.stats.emailsOpened = '0'.repeat(successfulEmails);

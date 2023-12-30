@@ -94,6 +94,8 @@
         <p class="font-semibold text-center text-gray-400 my-6">URLs are tracked and incremented<br>every time they are
             clicked.</p>
 
+        <% post.stats.postContentTrackedLinks.sort((a, b) => Object.values(b)[0] - Object.values(a)[0]); %>
+
         <!-- Desktop Table -->
         <div class="hidden md:block overflow-x-auto rounded-lg">
             <table class="w-full bg-gray-800 rounded-lg shadow-md">
@@ -110,7 +112,7 @@
                         <% const clicks = element[link]; %>
                         <td class=" px-6 py-4">
                             <a href="<%= link; %>" target="_blank"
-                               class="text-blue-400 hover:text-blue-500"><%= link; %></a></td>
+                               class="text-blue-400 hover:text-blue-500"><%= link.split(/[?#]/)[0]; %></a></td>
                         <td class="px-6 py-4"><%= clicks; %></td>
                     </tr>
                 <% }); %>
@@ -125,7 +127,7 @@
                     <% const link = Object.keys(element)[0]; %>
                     <% const clicks = element[link]; %>
                     <a href="<%= link; %>" target="_blank"
-                       class="font-semibold text-blue-400 hover:text-blue-500 block mb-2 truncate"><%= link; %></a>
+                       class="font-semibold text-blue-400 hover:text-blue-500 block mb-2 truncate"><%= link.split(/[?#]/)[0]; %></a>
                     <hr class="border-t border-gray-600 my-2">
                     <div class="flex justify-between items-center">
                         <span class="text-gray-300">Clicks:</span>
