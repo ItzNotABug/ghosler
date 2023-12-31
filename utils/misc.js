@@ -59,7 +59,7 @@ export default class Miscellaneous {
             if (req.session.user) return next();
 
             // redirect to page the user wanted to go to, after auth.
-            const redirect = path !== '/' ? `?redirect=${path}` : '';
+            const redirect = path !== '/' ? `?redirect=${encodeURIComponent(path)}` : '';
             res.status(401).redirect(`/login${redirect}`);
         });
     }
