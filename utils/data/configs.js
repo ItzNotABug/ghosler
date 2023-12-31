@@ -10,12 +10,23 @@ import {logError, logTags} from '../log/logger.js';
 export default class ProjectConfigs {
 
     /**
+     * A cached, in-memory object of our configuration.
+     *
+     * @type {{}}
+     */
+    static #cachedSettings = {};
+
+    /**
      * Retrieves the Ghosler (Ghost Newsletter Service) configuration.
      *
      * @returns {Promise<Object>} The Ghosler configuration object.
      * @throws {Error} If the configuration is missing or invalid.
      */
     static async ghosler() {
+        if (this.#cachedSettings.ghosler) {
+            return this.#cachedSettings.ghosler;
+        }
+
         const configs = await this.#getConfigs();
         return configs.ghosler;
     }
@@ -27,6 +38,10 @@ export default class ProjectConfigs {
      * @throws {Error} If the configuration is missing or invalid.
      */
     static async ghost() {
+        if (this.#cachedSettings.ghost) {
+            return this.#cachedSettings.ghost;
+        }
+
         const configs = await this.#getConfigs();
         return configs.ghost;
     }
@@ -38,6 +53,10 @@ export default class ProjectConfigs {
      * @throws {Error} If the configuration is missing or invalid.
      */
     static async newsletter() {
+        if (this.#cachedSettings.newsletter) {
+            return this.#cachedSettings.newsletter;
+        }
+
         const configs = await this.#getConfigs();
         return configs.newsletter;
     }
@@ -49,6 +68,10 @@ export default class ProjectConfigs {
      * @throws {Error} If the configuration is missing or invalid.
      */
     static async mail() {
+        if (this.#cachedSettings.mail) {
+            return this.#cachedSettings.mail;
+        }
+
         const configs = await this.#getConfigs();
         return configs.mail;
     }
@@ -71,9 +94,14 @@ export default class ProjectConfigs {
      */
     static async #getConfigs() {
         try {
-            const filePath = await this.#getConfigFilePath();
-            const data = await fs.readFile(filePath, 'utf8');
-            return JSON.parse(data);
+            const configFilePath = await this.#getConfigFilePath();
+            const fileContents = await fs.readFile(configFilePath, 'utf8');
+            const configs = JSON.parse(fileContents);
+
+            // Update the cached settings if they are not already set.
+            if (Miscellaneous.isObjectEmpty(this.#cachedSettings)) this.#cachedSettings = configs;
+
+            return configs;
         } catch (error) {
             logError(logTags.Configs, error);
             return {};
@@ -175,6 +203,7 @@ export default class ProjectConfigs {
             };
         })];
 
+        this.#cachedSettings = configs;
         const success = await this.#write(configs);
         if (success) return {level: 'success', message: 'Settings updated!'};
         else return {level: 'error', message: 'Error updating settings, check error logs for more info.'};
