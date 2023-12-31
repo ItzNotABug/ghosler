@@ -179,6 +179,16 @@ export default class Miscellaneous {
     }
 
     /**
+     * Check if a given object is empty.
+     *
+     * @param {Object} object
+     * @returns {boolean}
+     */
+    static isObjectEmpty(object) {
+        return Object.keys(object).length === 0;
+    }
+
+    /**
      * Encodes a given string to Base64 format.
      *
      * @param {string} data The string to be encoded.
