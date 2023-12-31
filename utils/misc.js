@@ -39,6 +39,22 @@ export default class Miscellaneous {
 
         // the site might be behind a proxy.
         expressApp.enable('trust proxy');
+
+        // disable bot crawling, without file.
+        expressApp.get('/robots.txt', (req, res) => {
+            res.type('text/plain');
+            res.send("User-agent: *\nDisallow: /");
+        });
+
+        // add no robots header tag to all.
+        expressApp.use((_, res, next) => {
+            res.header('X-Robots-Tag', 'noindex, nofollow');
+            next();
+        });
+
+        logDebug(logTags.Express, 'Robots managed!');
+
+        // password protect, ignore a few endpoints.
         expressApp.all('*', async (req, res, next) => {
             const path = req.path;
             const isUnrestrictedPath = /\/login$|\/preview$|\/track/.test(path);
