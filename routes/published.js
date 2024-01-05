@@ -8,12 +8,18 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     if (!req.body || !req.body.post || !req.body.post.current) {
-        res.json({message: "Post content seems to be missing!"});
+        res.json({message: 'Post content seems to be missing!'});
     }
 
+    // check if the request is authenticated.
     const isSecure = await Miscellaneous.isPostSecure(req);
     if (!isSecure) {
         return res.status(401).json({message: 'Invalid Authorization.'});
+    }
+
+    // check if contains the ignore tag.
+    if (Post.containsIgnoreTag(req.body)) {
+        return res.json({message: 'Post contains `ghosler_ignore` tag, ignoring.'});
     }
 
     const post = Post.make(req.body);
@@ -21,10 +27,10 @@ router.post('/', async (req, res) => {
     logDebug(logTags.Newsletter, 'Post received via webhook.');
 
     if (!created) {
-        res.json({message: "The post data could not be saved, or emails for this post have already been sent."});
+        res.json({message: 'The post data could not be saved, or emails for this post have already been sent.'});
     } else {
         Newsletter.send(post).then(); // schedule sending.
-        res.json({message: "Newsletter will be sent shortly."});
+        res.json({message: 'Newsletter will be sent shortly.'});
     }
 });
 

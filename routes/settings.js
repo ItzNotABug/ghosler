@@ -20,9 +20,10 @@ router.post('/', async (req, res) => {
 
     if (configs.ghost.url && configs.ghost.key) {
         const ghost = new Ghost();
-        const response = await ghost.registerWebhook();
+        const tagResponse = await ghost.registerIgnoreTag();
+        const webhookResponse = await ghost.registerWebhook();
 
-        if (response.level === 'error') {
+        if (tagResponse.level === 'error' || webhookResponse.level === 'error') {
             level = response.level;
             message = response.message;
         }

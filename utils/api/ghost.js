@@ -176,6 +176,59 @@ export default class Ghost {
     }
 
     /**
+     * Add a private, internal tag to ignore a post for newsletter.
+     *
+     * **Note:** Ignored when running on localhost.
+     *
+     * @returns {Promise<{level: string, message: string}>}
+     */
+    async registerIgnoreTag() {
+        const ghosler = await ProjectConfigs.ghosler();
+        if (ghosler.url === '' || ghosler.url.includes('localhost')) {
+            return {level: 'warning', message: 'Ignore tag check.'};
+        }
+
+        try {
+            const ghost = await this.#ghost();
+            const ignoreTagSlug = 'ghosler_ignore';
+
+            // check if one already exists with given slug.
+            const exists = await this.#ignoreTagExists(ghost, ignoreTagSlug);
+            if (exists) return {level: 'success', message: 'Ghosler ignore tag already exists.'};
+
+            await ghost.tags.add({
+                slug: ignoreTagSlug,
+                name: '#GhoslerIgnore',
+                visibility: 'internal', // using # anyway makes it internal.
+                accent_color: '#0f0f0f',
+                description: 'Any post using this tag will be ignore by Ghosler & will not be sent as a newsletter email.'
+            });
+
+            return {level: 'success', message: 'Ignore tag created successfully.'};
+        } catch (error) {
+            logError(logTags.Ghost, error);
+            return {level: 'error', message: 'Ignore tag creation failed, see error logs.'};
+        }
+    }
+
+    /**
+     * Check if a given exists or not.
+     *
+     * @param {GhostAdminAPI} ghost
+     * @param {string} tagSlug
+     *
+     * @returns {Promise<boolean>}
+     */
+    async #ignoreTagExists(ghost, tagSlug) {
+        try {
+            await ghost.tags.read({slug: tagSlug});
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
      * Read the site's settings. We especially check if the site has comments enabled.
      *
      * **Be Careful: This api is not officially baked into GhostAdminAPI & is added manually!
@@ -198,7 +251,7 @@ export default class Ghost {
         return jsonResponse.settings;
     }
 
-    // GhostAdminAPI
+    /** @returns {Promise<GhostAdminAPI>} */
     async #ghost() {
         const ghost = await ProjectConfigs.ghost();
         return new GhostAdminAPI({

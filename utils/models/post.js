@@ -89,6 +89,18 @@ export default class Post {
     }
 
     /**
+     * Check if we should ignore the post based on the tags it contains.
+     *
+     * @param payload - The payload to check against.
+     * @returns {boolean} True if the internal tag is found, false otherwise.
+     */
+    static containsIgnoreTag(payload) {
+        // it is always an array.
+        const postTags = payload.post.current.tags;
+        return postTags.some(tag => tag.slug === 'ghosler_ignore');
+    }
+
+    /**
      * Save the data when first received from the webhook.
      *
      * @returns {Promise<boolean>} A promise that resolves to true if file creation succeeded, false otherwise.
