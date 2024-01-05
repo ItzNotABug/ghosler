@@ -112,6 +112,8 @@ Pre-requisites: `Node 18^` & `pm2` installed.
       Upon clicking **Save Changes**, Ghosler will automatically create a new `Webhook` in the Ghost Integration (if it
       doesn't already exist).
       This webhook enables **Ghosler** to receive information about posts when they are published.
+4. **Only publishing a Post**: If you want to only publish a post & not send it via email, just add the `#GhoslerIgnore`
+   tag to a post. The internal tag is created for you on the initial setup.
 
 Now as soon as you publish your Post, it will be sent to your Subscribers who have enabled receiving emails.
 
