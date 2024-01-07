@@ -19,9 +19,12 @@
         <hr class="border-gray-600 mb-6 md:hidden">
 
         <form action="/login" method="post">
-            <div class="hidden">
-                <input type="hidden" name="redirect" value="<%= redirect %>">
-            </div>
+            <!-- check is required in case of wrong credentials -->
+            <% if (typeof redirect !== 'undefined' && redirect) { %>
+                <div class="hidden">
+                    <input type="hidden" name="redirect" value="<%= redirect; %>">
+                </div>
+            <% } %>
 
             <div class="mb-4">
                 <label for="username" class="block text-gray-300 font-bold mb-2">Username</label>
