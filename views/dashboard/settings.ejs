@@ -46,44 +46,44 @@
                 <div id="mailConfigInner${mailConfigIndex}" class="mt-4" style="display: none;">
                     <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][reply_to]" class="block text-gray-300 mb-1">Reply To</label>
-                        <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" id="email[${mailConfigIndex}][reply_to]" name="email[${mailConfigIndex}][reply_to]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" id="email[${mailConfigIndex}][reply_to]" name="email[${mailConfigIndex}][reply_to]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][from]" class="block text-gray-300 mb-1">From</label>
-                        <input type="text" placeholder="'Author' <author@ghost.org>" id="email[${mailConfigIndex}][from]" name="email[${mailConfigIndex}][from]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" placeholder="'Author' <author@ghost.org>" id="email[${mailConfigIndex}][from]" name="email[${mailConfigIndex}][from]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label id="email[${mailConfigIndex}][host]" class="block text-gray-300 mb-1">Host</label>
-                        <input type="text" placeholder="smtp.blog.com" id="email[${mailConfigIndex}][host]" name="email[${mailConfigIndex}][host]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" placeholder="smtp.blog.com" id="email[${mailConfigIndex}][host]" name="email[${mailConfigIndex}][host]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][port]" class="block text-gray-300 mb-1">Port</label>
-                        <input type="number" inputmode="numeric" placeholder="587" id="email[${mailConfigIndex}][port]" name="email[${mailConfigIndex}][port]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="number" inputmode="numeric" placeholder="587" id="email[${mailConfigIndex}][port]" name="email[${mailConfigIndex}][port]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][auth_user]" class="block text-gray-300 mb-1">Auth User</label>
-                        <input type="text" placeholder="Email Username" id="email[${mailConfigIndex}][auth_user]" name="email[${mailConfigIndex}][auth_user]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" placeholder="Email Username" id="email[${mailConfigIndex}][auth_user]" name="email[${mailConfigIndex}][auth_user]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label id="email[${mailConfigIndex}][auth_pass]" class="block text-gray-300 mb-1">Auth Password</label>
-                        <input type="password" placeholder="Email Password" id="email[${mailConfigIndex}][auth_pass]" name="email[${mailConfigIndex}][auth_pass]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="password" placeholder="Email Password" id="email[${mailConfigIndex}][auth_pass]" name="email[${mailConfigIndex}][auth_pass]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label id="email[${mailConfigIndex}][batch_size]" class="block text-gray-300 mb-1">Emails per batch</label>
-                        <input type="text" inputmode="numeric" placeholder="Emails to group & send at a time" id="email[${mailConfigIndex}][batch_size]" name="email[${mailConfigIndex}][batch_size]" value="10" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" inputmode="numeric" placeholder="Emails to group & send at a time" id="email[${mailConfigIndex}][batch_size]" name="email[${mailConfigIndex}][batch_size]" value="10" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                         <span class="text-xs text-gray-400">Sand-boxed environments may have a lower \`<strong>emails per second</strong>\` limits. Even 1 email per second.</span>
                     </div>
 
                     <div class="form-group mb-4">
                         <label id="email[${mailConfigIndex}][delay_per_batch]" class="block text-gray-300 mb-1">Delay per batch (milliseconds)</label>
-                        <input type="text" inputmode="numeric" placeholder="Delay per batch in milliseconds" id="email[${mailConfigIndex}][delay_per_batch]" name="email[${mailConfigIndex}][delay_per_batch]" value="1250" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
-                        <span class="text-xs text-gray-400">1000 = 1 second, Default is 1.25 seconds.</span>
+                        <input type="text" inputmode="numeric" placeholder="Delay per batch in milliseconds" id="email[${mailConfigIndex}][delay_per_batch]" name="email[${mailConfigIndex}][delay_per_batch]" value="1250" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <span class="text-xs text-gray-400">1000 = 1 second, Default is 1.25 seconds.<br>Higher the value, better the chances of deliverability, but at the cost of speed.</span>
                     </div>
 
                     <button type="button"
