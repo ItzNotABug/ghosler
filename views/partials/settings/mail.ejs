@@ -50,7 +50,7 @@
 
                         <div class="form-group mb-4">
                             <label for="email[<%= index; %>][port]" class="block text-gray-300 mb-1">Port</label>
-                            <input type="number" placeholder="587"
+                            <input type="number" inputmode="numeric" placeholder="587"
                                    id="email[<%= index; %>][port]"
                                    name="email[<%= index; %>][port]" value="<%= config.port; %>"
                                    class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
@@ -72,6 +72,28 @@
                                    id="email[<%= index; %>][auth_pass]"
                                    name="email[<%= index; %>][auth_pass]" value="<%= config.auth.pass; %>"
                                    class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][batch_size]" class="block text-gray-300 mb-1">Emails per
+                                batch</label>
+                            <input type="number" inputmode="numeric" placeholder="Emails to group & send at a time"
+                                   id="email[<%= index; %>][batch_size]"
+                                   name="email[<%= index; %>][batch_size]"
+                                   value="<%= config.batch_size ?? 10; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
+                            <span class="text-xs text-gray-400">Sand-boxed environments may have a lower `<strong>emails per second</strong>` limits. Even 1 email per second.</span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="email[<%= index; %>][delay_per_batch]" class="block text-gray-300 mb-1">Delay
+                                per batch (milliseconds)</label>
+                            <input type="number" inputmode="numeric" placeholder="Delay per batch in milliseconds"
+                                   id="email[<%= index; %>][delay_per_batch]"
+                                   name="email[<%= index; %>][delay_per_batch]"
+                                   value="<%= config.delay_per_batch ?? 1250; %>"
+                                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
+                            <span class="text-xs text-gray-400">1000 = 1 second, Default is 1.25 seconds.</span>
                         </div>
 
                         <button type="button" onclick="removeMailConfig(<%= index; %>)"

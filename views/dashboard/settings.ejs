@@ -61,7 +61,7 @@
 
                     <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][port]" class="block text-gray-300 mb-1">Port</label>
-                        <input type="number" placeholder="587" id="email[${mailConfigIndex}][port]" name="email[${mailConfigIndex}][port]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="number" inputmode="numeric" placeholder="587" id="email[${mailConfigIndex}][port]" name="email[${mailConfigIndex}][port]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
@@ -72,6 +72,18 @@
                     <div class="form-group mb-4">
                         <label id="email[${mailConfigIndex}][auth_pass]" class="block text-gray-300 mb-1">Auth Password</label>
                         <input type="password" placeholder="Email Password" id="email[${mailConfigIndex}][auth_pass]" name="email[${mailConfigIndex}][auth_pass]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label id="email[${mailConfigIndex}][batch_size]" class="block text-gray-300 mb-1">Emails per batch</label>
+                        <input type="text" inputmode="numeric" placeholder="Emails to group & send at a time" id="email[${mailConfigIndex}][batch_size]" name="email[${mailConfigIndex}][batch_size]" value="10" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <span class="text-xs text-gray-400">Sand-boxed environments may have a lower \`<strong>emails per second</strong>\` limits. Even 1 email per second.</span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label id="email[${mailConfigIndex}][delay_per_batch]" class="block text-gray-300 mb-1">Delay per batch (milliseconds)</label>
+                        <input type="text" inputmode="numeric" placeholder="Delay per batch in milliseconds" id="email[${mailConfigIndex}][delay_per_batch]" name="email[${mailConfigIndex}][delay_per_batch]" value="1250" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <span class="text-xs text-gray-400">1000 = 1 second, Default is 1.25 seconds.</span>
                     </div>
 
                     <button type="button"
