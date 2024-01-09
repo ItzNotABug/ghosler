@@ -1,7 +1,7 @@
 import Miscellaneous from '../misc.js';
 import * as nodemailer from 'nodemailer';
 import ProjectConfigs from '../data/configs.js';
-import {logDebug, logError, logTags} from '../log/logger.js';
+import {logDebug, logError, logTags, logToConsole} from '../log/logger.js';
 
 /**
  * Class responsible for sending newsletters to subscribers.
@@ -24,7 +24,7 @@ export default class NewsletterMailer {
 
         logDebug(logTags.Newsletter, 'Initializing sending emails.');
 
-        let allEmailSendPromises = [];
+        let totalEmailsSent = 0;
         const mailConfigs = await ProjectConfigs.mail();
         let tierIds = post.isPaid ? [...post.tiers.map(tier => tier.id)] : [];
 
@@ -33,40 +33,38 @@ export default class NewsletterMailer {
 
             const chunkSize = Math.ceil(subscribers.length / mailConfigs.length);
             for (let i = 0; i < mailConfigs.length; i++) {
-                const chunk = subscribers.slice(i * chunkSize, (i + 1) * chunkSize);
-                const transporter = await this.#transporter(mailConfigs[i]);
 
-                // Create promises for each subscriber.
-                const promises = chunk.map((subscriber, index) => {
-                        const globalIndex = i * chunkSize + index;
-                        const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
-                        return this.#sendEmailToSubscriber(transporter, mailConfigs[i], subscriber, globalIndex, post, contentToSend, unsubscribeLink);
-                    }
-                );
-                allEmailSendPromises.push(...promises);
+                // settings
+                const mailConfig = mailConfigs[i];
+                const emailsPerBatch = mailConfig.batch_size ?? 10;
+                const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
+                const chunkedSubscribers = subscribers.slice(i * chunkSize, (i + 1) * chunkSize);
+
+                // create a batch and send.
+                const transporter = await this.#transporter(mailConfig);
+                const batches = this.#createBatches(chunkedSubscribers, emailsPerBatch);
+
+                // we increment this stat as we are inside a loop.
+                totalEmailsSent += await this.#processBatches(transporter, mailConfig, batches, chunkSize, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
             }
         } else {
             logDebug(logTags.Newsletter, 'Single user or email config found, sending email(s).');
 
-            // Handling a single mail configuration
-            const transporter = await this.#transporter(mailConfigs[0]);
-            const promises = subscribers.map((subscriber, index) => {
-                    const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
-                    return this.#sendEmailToSubscriber(transporter, mailConfigs[0], subscriber, index, post, contentToSend, unsubscribeLink);
-                }
-            );
+            // settings
+            const mailConfig = mailConfigs[0];
+            const emailsPerBatch = mailConfig.batch_size ?? 10;
+            const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
 
-            allEmailSendPromises.push(...promises);
+            // create a batch and send.
+            const transporter = await this.#transporter(mailConfig);
+            const batches = this.#createBatches(subscribers, emailsPerBatch);
+            totalEmailsSent = await this.#processBatches(transporter, mailConfig, batches, emailsPerBatch, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
         }
-
-        // Wait for all email sending operations to complete.
-        const results = await Promise.allSettled(allEmailSendPromises);
-        const successfulEmails = results.filter(result => result.value === true).length;
 
         // Update post status and save it.
         post.stats.newsletterStatus = 'Sent';
-        post.stats.emailsSent = successfulEmails;
-        post.stats.emailsOpened = '0'.repeat(successfulEmails);
+        post.stats.emailsSent = totalEmailsSent;
+        post.stats.emailsOpened = '0'.repeat(totalEmailsSent);
         await post.update();
 
         logDebug(logTags.Newsletter, 'Email sending complete.');
@@ -76,7 +74,7 @@ export default class NewsletterMailer {
      * Sends an email to a single subscriber.
      *
      * @param {*} transporter - The nodemailer transporter.
-     * @param {Object} mailConfigs - Configs for the email.
+     * @param {Object} mailConfig - Configs for the email.
      * @param {Subscriber} subscriber - The subscriber to send the email to.
      * @param {number} index - The index of the subscriber in the subscribers array.
      * @param {Post} post - The post related to the newsletter.
@@ -85,13 +83,13 @@ export default class NewsletterMailer {
      *
      * @returns {Promise<boolean>} - Promise resolving to true if email was sent successfully, false otherwise.
      */
-    async #sendEmailToSubscriber(transporter, mailConfigs, subscriber, index, post, html, unsubscribeLink) {
+    async #sendEmailToSubscriber(transporter, mailConfig, subscriber, index, post, html, unsubscribeLink) {
         const correctHTML = this.#correctHTML(html, subscriber, post, index);
 
         try {
             const info = await transporter.sendMail({
-                from: mailConfigs.from,
-                replyTo: mailConfigs.reply_to,
+                from: mailConfig.from,
+                replyTo: mailConfig.reply_to,
                 to: `"${subscriber.name}" <${subscriber.email}>`,
                 subject: post.title,
                 html: correctHTML,
@@ -120,6 +118,7 @@ export default class NewsletterMailer {
      * @param {Subscriber} subscriber - The subscriber for whom the email is being sent.
      * @param {Post} post - The post related to the newsletter.
      * @param {number} index - The index of the subscriber in the subscribers array.
+     *
      * @returns {string} - The HTML content with placeholders replaced.
      */
     #correctHTML(html, subscriber, post, index) {
@@ -147,6 +146,7 @@ export default class NewsletterMailer {
      * Creates and configures a nodemailer transporter.
      *
      * @param {Object} mailConfigs - Configs for the email.
+     *
      * @returns {Promise<*>} - The configured transporter.
      */
     async #transporter(mailConfigs) {
@@ -156,5 +156,54 @@ export default class NewsletterMailer {
             port: mailConfigs.port,
             auth: {user: mailConfigs.auth.user, pass: mailConfigs.auth.pass}
         });
+    }
+
+    /**
+     * Creates batches of given subscribers.
+     *
+     * @param {Subscriber[]} subscribers - The array of subscribers to be batched.
+     * @param {number} batchSize - The number of subscribers in each batch.
+     *
+     * @returns {Subscriber[][]} An array of subscriber arrays, where each inner array is a batch.
+     */
+    #createBatches(subscribers, batchSize) {
+        const batches = [];
+        for (let i = 0; i < subscribers.length; i += batchSize) {
+            batches.push(subscribers.slice(i, i + batchSize));
+        }
+
+        logDebug(logTags.Newsletter, `Created ${batches.length} batches.`);
+        return batches;
+    }
+
+    /**
+     * Send emails in batches with appropriate delay.
+     *
+     * @returns {Promise<number>} Total emails sent.
+     */
+    async #processBatches(transporter, mailConfig, batches, chunkSize, tierIds, post, fullContent, partialContent, unsubscribeLink, delayBetweenBatches) {
+        let emailsSent = 0;
+
+        const totalBatchLength = batches.length;
+        for (let batchIndex = 0; batchIndex < totalBatchLength; batchIndex++) {
+            const batch = batches[batchIndex];
+            const startIndex = batchIndex * chunkSize;
+
+            const promises = [
+                ...batch.map((subscriber, index) => {
+                    const globalIndex = startIndex + index;
+                    const contentToSend = post.isPaid ? subscriber.isPaying(tierIds) ? fullContent : partialContent ?? fullContent : fullContent;
+                    return this.#sendEmailToSubscriber(transporter, mailConfig, subscriber, globalIndex, post, contentToSend, unsubscribeLink);
+                })
+            ];
+
+            const batchResults = await Promise.allSettled(promises);
+            emailsSent += batchResults.filter(result => result.value === true).length;
+
+            logToConsole(logTags.Newsletter, `Batch ${batchIndex + 1}/${totalBatchLength} complete.`);
+            if (batchIndex < batches.length - 1) await Miscellaneous.sleep(delayBetweenBatches);
+        }
+
+        return emailsSent;
     }
 }
