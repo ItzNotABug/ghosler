@@ -201,6 +201,16 @@ export default class Miscellaneous {
     }
 
     /**
+     * Sleep for a given period of time.
+     *
+     * @param {number} ms Milliseconds to sleep.
+     * @returns {Promise<void>}
+     */
+    static sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    /**
      * Encodes a given string to Base64 format.
      *
      * @param {string} data The string to be encoded.
