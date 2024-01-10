@@ -40,7 +40,7 @@ export default class NewsletterMailer {
                 const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
                 const chunkedSubscribers = subscribers.slice(i * chunkSize, (i + 1) * chunkSize);
 
-                // create a batch and send.
+                // create required batches and send.
                 const batches = this.#createBatches(chunkedSubscribers, emailsPerBatch);
 
                 // we need increment this stat as we are inside a loop.
@@ -54,7 +54,7 @@ export default class NewsletterMailer {
             const emailsPerBatch = mailConfig.batch_size ?? 10;
             const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
 
-            // create a batch and send.
+            // create required batches and send.
             const batches = this.#createBatches(subscribers, emailsPerBatch);
             totalEmailsSent = await this.#processBatches(mailConfig, batches, emailsPerBatch, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
         }
