@@ -41,11 +41,10 @@ export default class NewsletterMailer {
                 const chunkedSubscribers = subscribers.slice(i * chunkSize, (i + 1) * chunkSize);
 
                 // create a batch and send.
-                const transporter = await this.#transporter(mailConfig);
                 const batches = this.#createBatches(chunkedSubscribers, emailsPerBatch);
 
-                // we increment this stat as we are inside a loop.
-                totalEmailsSent += await this.#processBatches(transporter, mailConfig, batches, chunkSize, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
+                // we need increment this stat as we are inside a loop.
+                totalEmailsSent += await this.#processBatches(mailConfig, batches, chunkSize, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
             }
         } else {
             logDebug(logTags.Newsletter, 'Single user or email config found, sending email(s).');
@@ -56,9 +55,8 @@ export default class NewsletterMailer {
             const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
 
             // create a batch and send.
-            const transporter = await this.#transporter(mailConfig);
             const batches = this.#createBatches(subscribers, emailsPerBatch);
-            totalEmailsSent = await this.#processBatches(transporter, mailConfig, batches, emailsPerBatch, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
+            totalEmailsSent = await this.#processBatches(mailConfig, batches, emailsPerBatch, tierIds, post, fullContent, partialContent, unsubscribeLink, delayPerBatch);
         }
 
         // Update post status and save it.
@@ -145,16 +143,16 @@ export default class NewsletterMailer {
     /**
      * Creates and configures a nodemailer transporter.
      *
-     * @param {Object} mailConfigs - Configs for the email.
+     * @param {Object} mailConfig - Config for the email.
      *
      * @returns {Promise<*>} - The configured transporter.
      */
-    async #transporter(mailConfigs) {
+    async #transporter(mailConfig) {
         return nodemailer.createTransport({
             secure: true,
-            host: mailConfigs.host,
-            port: mailConfigs.port,
-            auth: {user: mailConfigs.auth.user, pass: mailConfigs.auth.pass}
+            host: mailConfig.host,
+            port: mailConfig.port,
+            auth: {user: mailConfig.auth.user, pass: mailConfig.auth.pass}
         });
     }
 
@@ -181,10 +179,11 @@ export default class NewsletterMailer {
      *
      * @returns {Promise<number>} Total emails sent.
      */
-    async #processBatches(transporter, mailConfig, batches, chunkSize, tierIds, post, fullContent, partialContent, unsubscribeLink, delayBetweenBatches) {
+    async #processBatches(mailConfig, batches, chunkSize, tierIds, post, fullContent, partialContent, unsubscribeLink, delayBetweenBatches) {
         let emailsSent = 0;
-
         const totalBatchLength = batches.length;
+        const transporter = await this.#transporter(mailConfig);
+
         for (let batchIndex = 0; batchIndex < totalBatchLength; batchIndex++) {
             const batch = batches[batchIndex];
             const startIndex = batchIndex * chunkSize;
