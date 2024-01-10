@@ -193,9 +193,11 @@ export default class ProjectConfigs {
         configs.newsletter.footer_content = newsletterFooterContent;
 
         // mail configurations
-        configs.mail = [...email.map(({auth_user, auth_pass, ...rest}) => {
+        configs.mail = [...email.map(({batch_size, delay_per_batch, auth_user, auth_pass, ...rest}) => {
             return {
                 ...rest,
+                batch_size: parseInt(batch_size),
+                delay_per_batch: parseInt(delay_per_batch),
                 auth: {
                     user: auth_user,
                     pass: auth_pass
