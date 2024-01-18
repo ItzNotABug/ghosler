@@ -10,98 +10,99 @@
 
     <div id="newsletterSettings" class="mt-4" style="display: none;">
         <!-- Center Title Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.center_title" class="flex items-center text-gray-300">Center Title</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.center_title" name="newsletter.center_title"
             <% if (Boolean(configs.newsletter.center_title)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.center_title" class="text-gray-300">Center Title</label>
         </div>
 
         <!-- Track URL Clicks Checkbox -->
         <div class="form-group mb-4">
-            <label for="newsletter.track_links" class="flex items-center text-gray-300">Track URL Clicks</label>
-            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
-                   id="newsletter.track_links" name="newsletter.track_links"
-            <% if (Boolean(configs.newsletter.track_links)) { %> checked
-                    <% } %>
-            >
+            <div class="flex items-center">
+                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                       id="newsletter.track_links" name="newsletter.track_links"
+                <% if (Boolean(configs.newsletter.track_links)) { %> checked
+                        <% } %>
+                >
+                <label for="newsletter.track_links" class="text-gray-300">Track URL Clicks</label>
+            </div>
+
             <a href="https://github.com/itznotabug/ghosler/pull/8" target="_blank"
-               class="text-xs text-blue-400 hover:text-blue-500">See what URLs are tracked</a>
+               class="text-xs text-blue-300 hover:text-blue-500">Click to see what URLs are tracked</a>
         </div>
 
         <!-- Show Feedback Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_feedback" class="flex items-center text-gray-300">Show Feedback</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_feedback" name="newsletter.show_feedback"
             <% if (Boolean(configs.newsletter.show_feedback)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_feedback" class="text-gray-300">Show Feedback</label>
         </div>
 
         <!-- Show Comments Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_comments" class="flex items-center text-gray-300">Show Comments</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_comments" name="newsletter.show_comments"
             <% if (Boolean(configs.newsletter.show_comments)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_comments" class="text-gray-300">Show Comments</label>
         </div>
 
         <!-- Show Latest Posts Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_latest_posts" class="flex items-center text-gray-300">Show Latest Posts</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_latest_posts" name="newsletter.show_latest_posts"
             <% if (Boolean(configs.newsletter.show_latest_posts)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_latest_posts" class="text-gray-300">Show Latest Posts</label>
         </div>
 
         <!-- Show Subscription Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_subscription" class="flex items-center text-gray-300">Show Subscription</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_subscription" name="newsletter.show_subscription"
             <% if (Boolean(configs.newsletter.show_subscription)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_subscription" class="text-gray-300">Show Subscription</label>
         </div>
 
         <!-- Show Featured Image Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_featured_image" class="flex items-center text-gray-300">Show Featured
-                Image</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_featured_image" name="newsletter.show_featured_image"
             <% if (Boolean(configs.newsletter.show_featured_image)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_featured_image" class="text-gray-300">Show Featured Image</label>
         </div>
 
         <!-- Show 'Powered by Ghost' Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_powered_by_ghost" class="flex items-center text-gray-300">Show 'Powered by
-                Ghost'</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_powered_by_ghost" name="newsletter.show_powered_by_ghost"
             <% if (Boolean(configs.newsletter.show_powered_by_ghost)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_powered_by_ghost" class="text-gray-300">Show 'Powered by Ghost'</label>
         </div>
 
         <!-- Show 'Newsletter delivered using Ghosler' Checkbox -->
-        <div class="form-group mb-4">
-            <label for="newsletter.show_powered_by_ghosler" class="flex items-center text-gray-300">Show 'Newsletter
-                delivered using Ghosler'</label>
+        <div class="form-group mb-4 flex items-center">
             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                    id="newsletter.show_powered_by_ghosler" name="newsletter.show_powered_by_ghosler"
             <% if (Boolean(configs.newsletter.show_powered_by_ghosler)) { %> checked
                     <% } %>
             >
+            <label for="newsletter.show_powered_by_ghosler" class="text-gray-300">Show 'Newsletter
+                delivered using Ghosler'</label>
         </div>
 
         <!-- Custom Subject Input -->
