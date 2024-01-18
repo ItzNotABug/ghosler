@@ -83,13 +83,14 @@ export default class NewsletterMailer {
      */
     async #sendEmailToSubscriber(transporter, mailConfig, subscriber, index, post, html, unsubscribeLink) {
         const correctHTML = this.#correctHTML(html, subscriber, post, index);
+        const customSubject = await this.#makeEmailSubject(post, subscriber);
 
         try {
             const info = await transporter.sendMail({
                 from: mailConfig.from,
                 replyTo: mailConfig.reply_to,
                 to: `"${subscriber.name}" <${subscriber.email}>`,
-                subject: post.title,
+                subject: customSubject,
                 html: correctHTML,
                 list: {
                     unsubscribe: {
@@ -141,6 +142,37 @@ export default class NewsletterMailer {
     }
 
     /**
+     * Parse the custom subject pattern if exists.
+     *
+     * @param {Post} post
+     * @param {Subscriber} subscriber
+     *
+     * @returns {Promise<string>} The parsed subject.
+     */
+    async #makeEmailSubject(post, subscriber) {
+        // already cached => fast path.
+        const newsletterConfig = await ProjectConfigs.newsletter();
+        let customSubject = newsletterConfig.custom_subject_pattern || post.title;
+
+        customSubject = customSubject
+            .replace('{{post_title}}', post.title)
+            .replace('{{primary_author}}', post.primaryAuthor);
+
+        // a post may not have a primary tag.
+        if (customSubject.includes('{{primary_tag}}')) {
+            if (post.primaryTag) customSubject = customSubject.replace('{{primary_tag}}', post.primaryTag);
+            else customSubject = customSubject.replace(/( • #| • )?{{primary_tag}}/, '');
+        }
+
+        if (customSubject.includes('{{newsletter_name}}')) {
+            // the name of the first active newsletter because we currently only support one newsletter.
+            customSubject = customSubject.replace('{{newsletter_name}}', subscriber.newsletters.filter(nls => nls.status === "active")[0].name);
+        }
+
+        return customSubject;
+    }
+
+    /**
      * Creates and configures a nodemailer transporter.
      *
      * @param {Object} mailConfig - Config for the email.
@@ -166,6 +198,10 @@ export default class NewsletterMailer {
      */
     #createBatches(subscribers, batchSize) {
         const batches = [];
+        if (subscribers.length <= batchSize) {
+            return [subscribers];
+        }
+
         for (let i = 0; i < subscribers.length; i += batchSize) {
             batches.push(subscribers.slice(i, i + batchSize));
         }
@@ -199,7 +235,10 @@ export default class NewsletterMailer {
             const batchResults = await Promise.allSettled(promises);
             emailsSent += batchResults.filter(result => result.value === true).length;
 
-            logToConsole(logTags.Newsletter, `Batch ${batchIndex + 1}/${totalBatchLength} complete.`);
+            if (totalBatchLength !== 1) {
+                logToConsole(logTags.Newsletter, `Batch ${batchIndex + 1}/${totalBatchLength} complete.`);
+            }
+
             if (batchIndex < batches.length - 1) await Miscellaneous.sleep(delayBetweenBatches);
         }
 

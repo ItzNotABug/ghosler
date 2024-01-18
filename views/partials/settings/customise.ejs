@@ -104,6 +104,34 @@
             >
         </div>
 
+        <!-- Custom Subject Input -->
+        <div class="form-group mb-6">
+            <label for="newsletter.custom_subject_pattern" class="block text-gray-300 font-bold mb-1">Custom Email
+                Subject Pattern</label>
+            <input type="text" inputmode="text" placeholder="Default is Post Title"
+                   id="newsletter.custom_subject_pattern"
+                   name="newsletter.custom_subject_pattern" autocomplete="off"
+                   value="<%= configs.newsletter.custom_subject_pattern || '{{post_title}}'; %>"
+                   class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white">
+
+            <div class="text-xs text-gray-400 my-2 ml-0.5">Only '•' is supported as a separator.
+                <br>
+                <strong>Note</strong>: Primary Tag may not always be available for a Post.
+                Primary Tag can have a '#' as prefix.
+            </div>
+
+            <div class="flex flex-wrap gap-x-2 text-xs text-gray-300 mt-2">
+                <pre class="rounded-lg bg-gray-600 p-2 cursor-pointer hover:bg-gray-700 mb-2 md:mb-0"
+                     onclick="handleSubjectItemClick('{{post_title}}')"><code>{{post_title}}</code></pre>
+                <pre class="rounded-lg bg-gray-600 p-2 cursor-pointer hover:bg-gray-700 mb-2 md:mb-0"
+                     onclick="handleSubjectItemClick('{{primary_tag}}')"><code>{{primary_tag}}</code></pre>
+                <pre class="rounded-lg bg-gray-600 p-2 cursor-pointer hover:bg-gray-700 mb-2 md:mb-0"
+                     onclick="handleSubjectItemClick('{{primary_author}}')"><code>{{primary_author}}</code></pre>
+                <pre class="rounded-lg bg-gray-600 p-2 cursor-pointer hover:bg-gray-700 mb-2 md:mb-0"
+                     onclick="handleSubjectItemClick('{{newsletter_name}}')"><code>{{newsletter_name}}</code></pre>
+            </div>
+        </div>
+
         <!-- Footer Content Textarea -->
         <div class="form-group mb-4">
             <label for="newsletter.footer_content" class="block text-gray-300 font-bold mb-2">Footer Content</label>
@@ -118,3 +146,43 @@
         </button>
     </div>
 </div>
+
+<script>
+    // keep a global reference.
+    const input = document.getElementById('newsletter.custom_subject_pattern');
+
+    function handleSubjectItemClick(selectedValue) {
+        // don't add placeholder if it already exists.
+        if (input.value.includes(selectedValue)) return;
+
+        // Define the value to be inserted with the bullet
+        let valueToInsert = ` • ${selectedValue}`;
+        if (selectedValue === '{{primary_tag}}') {
+            // we support hashtags for primary tag.
+            valueToInsert = ` • #${selectedValue}`;
+        }
+
+        // Check if the input is the active (focused) element
+        const isInputFocused = (input === document.activeElement);
+
+        let cursorPos = input.selectionStart;
+        const inputValue = input.value;
+
+        if (isInputFocused) {
+            // Input is focused, insert at the cursor position
+            const textBefore = inputValue.substring(0, cursorPos);
+            const textAfter = inputValue.substring(cursorPos);
+
+            input.value = textBefore + valueToInsert + textAfter;
+            cursorPos += valueToInsert.length;
+        } else {
+            // Input is not focused, append at the end
+            input.value = inputValue + valueToInsert;
+            cursorPos = input.value.length;
+        }
+
+        input.selectionStart = cursorPos;
+        input.selectionEnd = cursorPos;
+        input.focus();
+    }
+</script>

@@ -77,6 +77,8 @@ active newsletters**.
   likes, dislikes, and overall sentiment.
 - **Ghost Native Widgets**: Ghosler supports major Ghost widgets (cards) for your newsletter, out of the box.\
   See: [#17](https://github.com/ItzNotABug/ghosler/pull/17) for more info.
+- **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.\
+  See: [#28](https://github.com/ItzNotABug/ghosler/pull/28) for more info.
 
 ### Running Ghosler
 
