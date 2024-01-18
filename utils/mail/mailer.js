@@ -235,7 +235,7 @@ export default class NewsletterMailer {
             const batchResults = await Promise.allSettled(promises);
             emailsSent += batchResults.filter(result => result.value === true).length;
 
-            if (totalBatchLength !== 1) {
+            if (totalBatchLength > 1) {
                 logToConsole(logTags.Newsletter, `Batch ${batchIndex + 1}/${totalBatchLength} complete.`);
             }
 
