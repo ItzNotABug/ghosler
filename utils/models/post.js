@@ -14,6 +14,7 @@ export default class Post {
      * @param {string} [date=''] - The date of the Post.
      * @param {string} [title=''] - The title of the Post.
      * @param {string} [content=''] - The content of the Post in HTML format.
+     * @param {string} [primaryTag=''] - The primary tag of the Post.
      * @param {string} [excerpt=''] - The short excerpt of the Post.
      * @param {string} [featureImage=''] - The URL of the feature image of the Post.
      * @param {string} [featureImageCaption=''] - The caption of the feature image.
@@ -29,6 +30,7 @@ export default class Post {
         date = '',
         title = '',
         content = '',
+        primaryTag = '',
         excerpt = '',
         featureImage = '',
         featureImageCaption = '',
@@ -43,6 +45,7 @@ export default class Post {
         this.date = date;
         this.title = title;
         this.content = content;
+        this.primaryTag = primaryTag;
         this.excerpt = excerpt;
         this.featureImage = featureImage;
         this.featureImageCaption = featureImageCaption;
@@ -77,6 +80,7 @@ export default class Post {
             Miscellaneous.formatDate(post.published_at),
             post.title,
             post.html,
+            post.primary_tag?.name ?? '',
             post.custom_excerpt ?? post.excerpt ?? post.plaintext.substring(0, 75),
             post.feature_image,
             post.feature_image_caption,

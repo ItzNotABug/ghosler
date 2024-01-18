@@ -156,6 +156,7 @@ export default class ProjectConfigs {
         const newsletterShowSubscription = formData['newsletter.show_subscription'];
         const newsletterShowFeaturedImage = formData['newsletter.show_featured_image'];
         const newsletterFooterContent = formData['newsletter.footer_content'];
+        const newsletterCustomSubject = formData['newsletter.custom_subject_pattern'];
         const newsletterPoweredByGhost = formData['newsletter.show_powered_by_ghost'];
         const newsletterPoweredByGhosler = formData['newsletter.show_powered_by_ghosler'];
 
@@ -191,6 +192,7 @@ export default class ProjectConfigs {
         configs.newsletter.show_powered_by_ghost = newsletterPoweredByGhost === 'on' ?? true;
         configs.newsletter.show_powered_by_ghosler = newsletterPoweredByGhosler === 'on' ?? true;
         configs.newsletter.footer_content = newsletterFooterContent;
+        configs.newsletter.custom_subject_pattern = newsletterCustomSubject;
 
         // mail configurations
         configs.mail = [...email.map(({batch_size, delay_per_batch, auth_user, auth_pass, ...rest}) => {
