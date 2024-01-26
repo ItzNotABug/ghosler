@@ -46,17 +46,20 @@
             <strong>deleting</strong> the post here and then <strong>re-publishing</strong> it from the Ghost dashboard.
         </p>
 
+        <!-- sort dates, latest up on top -->
+        <% analytics.sort((a, b) => new Date(b.date) - new Date(a.date)); %>
+
         <!-- Desktop Table -->
         <div class="hidden md:block overflow-x-auto rounded-lg">
             <table class="w-full bg-gray-800 rounded-lg shadow-md">
                 <thead class="bg-gray-700 text-gray-300">
                 <tr>
-                    <th class="px-6 py-3 text-left">Title</th>
-                    <th class="text-center px-6 py-3 text-left">Members</th>
-                    <th class="text-center px-6 py-3 text-left">Emails Sent</th>
-                    <th class="text-center px-6 py-3 text-left">Emails Opened</th>
-                    <th class="text-center px-6 py-3 text-left">Newsletter Status</th>
-                    <th class="text-center px-6 py-3 text-left">Action</th>
+                    <th class="text-left px-6 py-3">Title</th>
+                    <th class="text-center px-6 py-3">Members</th>
+                    <th class="text-center px-6 py-3">Emails Sent</th>
+                    <th class="text-center px-6 py-3">Emails Opened</th>
+                    <th class="text-center px-6 py-3">Newsletter Status</th>
+                    <th class="text-center px-6 py-3">Action</th>
                 </tr>
                 </thead>
                 <tbody class="text-gray-300">
