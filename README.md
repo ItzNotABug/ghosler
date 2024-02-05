@@ -7,10 +7,6 @@ It is helpful for bypassing the limitations of the hardcoded Mailgun setup and s
 with the capability to use **multiple** email accounts.
 
 ---
-**Note**: `Ghosler` supports only **one** newsletter at this time. **Please avoid using it if you manage multiple
-active newsletters**.
-
----
 
 ### Screenshots
 
@@ -79,6 +75,9 @@ active newsletters**.
   See: [#17](https://github.com/ItzNotABug/ghosler/pull/17) for more info.
 - **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.\
   See: [#28](https://github.com/ItzNotABug/ghosler/pull/28) for more info.
+- **Multiple Newsletters**: Ghosler supports managing multiple newsletters! Publish a post & select the newsletter to
+  associate with & instantly send emails.\
+  See: [#32](https://github.com/ItzNotABug/ghosler/pull/32) for more info.
 
 ### Running Ghosler
 
@@ -152,7 +151,7 @@ If you want to customize the newsletter template even more, follow the steps -
 
 ### TODOs
 
-1. Add support for multiple newsletters.
+1. <s>Add support for multiple newsletters</s>.
 2. <s>Add feedback support in newsletter template</s>.
 3. <s>Build a `CLI` to install, update & other options to manage Ghosler instance</s>.
 
