@@ -140,6 +140,12 @@ And use below to run `Ghosler` -
     npm run dev
    ```
 
+You can use below for combining the above commands -
+
+   ```shell
+    npm run cleanstart
+   ```
+
 ### Custom Template
 
 If you want to customize the newsletter template even more, follow the steps -
