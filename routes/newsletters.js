@@ -11,13 +11,6 @@ router.get('/', (req, res) => res.redirect('/'));
 router.get('/:postId', async (req, res) => {
     const postId = req.params.postId;
 
-    if (!postId) {
-        return res.render('dashboard/newsletters', {
-            level: 'error',
-            message: 'Post Id missing!'
-        });
-    }
-
     const postObject = await Files.get(postId);
     if (!postObject) {
         return res.render('dashboard/newsletters', {
