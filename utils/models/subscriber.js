@@ -48,4 +48,16 @@ export default class Subscriber {
         // https://forum.ghost.org/t/one-tier-or-multiple-tiers-per-user/25848/2
         return hasTier && this.subscriptions[0].status === 'active';
     }
+
+    /**
+     * Check if this subscriber is subscribed to a given newsletter id.
+     *
+     * @param {string|null} newsletterId The id of the newsletter to check against.
+     * @returns {boolean} True if the subscriber has subscribed to the given newsletter id, or true by default if newsletterId is null.
+     */
+    isSubscribedTo(newsletterId = null) {
+        // probably only one newsletter exists.
+        if (newsletterId === null) return true;
+        else return this.newsletters.some(newsletter => newsletter.id === newsletterId);
+    }
 }
