@@ -20,6 +20,30 @@ export default class Ghost {
     }
 
     /**
+     * Returns the number of 'active' newsletters.
+     *
+     * @returns {Promise<number>} The number of active newsletters.
+     */
+    async newslettersCount() {
+        const newsletters = await this.newsletters();
+        return newsletters.meta?.pagination?.total ?? 0;
+    }
+
+    /**
+     * Returns all the 'active' newsletters.
+     *
+     * @returns {Promise<Array<{id: string, name: string}>>} An array of newsletter objects.
+     */
+    async newsletters() {
+        const ghost = await this.#ghost();
+        return await ghost.newsletters.browse({
+            limit: 'all',
+            filter: 'status:active',
+            fields: 'id,name,description',
+        });
+    }
+
+    /**
      * Returns sentiment and feedback counts for a specific post.
      *
      * @param {string} postId - The ID of the post.
@@ -59,33 +83,34 @@ export default class Ghost {
      * Returns the registered members, currently subscribed to a newsletter.\
      * Uses pagination to get all the users, then filter them.
      *
+     * @param {string|null} newsletterId The newsletter id to get members associated with it.
      * @returns {Promise<Subscriber[]>} List of Subscribers.
      */
-    async members() {
+    async members(newsletterId = null) {
         let page = 1;
-        let members = [];
+        let subscribedMembers = [];
 
         const ghost = await this.#ghost();
 
         while (true) {
-            const registeredMembers = await ghost.members.browse({page: page});
-            members.push(...registeredMembers);
+            const registeredMembers = await ghost.members.browse({
+                    page: page,
+                    filter: 'subscribed:true'
+                }
+            );
 
-            if (registeredMembers.meta.pagination.next !== null) {
+            subscribedMembers.push(...registeredMembers);
+
+            if (registeredMembers.meta.pagination.next) {
                 page = registeredMembers.meta.pagination.next;
             } else {
                 break;
             }
         }
 
-        // hardcoded to the first newsletter!
-        // TODO: support multiple newsletters?
-        //  We could use internal tags system.
-        return members.reduce((activeSubscribers, member) => {
+        return subscribedMembers.reduce((activeSubscribers, member) => {
             const subscriber = Subscriber.make(member);
-            const isActive = subscriber.newsletters.some(nls => nls.status === "active");
-
-            if (isActive) activeSubscribers.push(subscriber);
+            if (subscriber.isSubscribedTo(newsletterId)) activeSubscribers.push(subscriber);
             return activeSubscribers;
         }, []);
     }
