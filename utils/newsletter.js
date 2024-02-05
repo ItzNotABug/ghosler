@@ -16,10 +16,11 @@ export default class Newsletter {
      * Send email to members of the site.
      *
      * @param {Post} post
+     * @param {{id: string, name: string}|null} newsletterInfo
      */
-    static async send(post) {
+    static async send(post, newsletterInfo = null) {
         const ghost = new Ghost();
-        const subscribers = await ghost.members();
+        const subscribers = await ghost.members(newsletterInfo?.id);
 
         if (subscribers.length === 0) {
             logDebug(logTags.Newsletter, 'Site has no registered or subscribed users, cancelling sending emails!');
@@ -43,11 +44,12 @@ export default class Newsletter {
             });
         }
 
-        await new NewsletterMailer().send(
+        await new NewsletterMailer(
             post, subscribers,
+            newsletterInfo?.name,
             fullTemplate, payWalledTemplate,
             fullRenderData.newsletter.unsubscribeLink
-        );
+        ).send();
     }
 
     /**
