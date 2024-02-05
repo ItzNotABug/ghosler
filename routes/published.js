@@ -1,4 +1,5 @@
 import express from 'express';
+import Ghost from '../utils/api/ghost.js';
 import Post from '../utils/models/post.js';
 import Miscellaneous from '../utils/misc.js';
 import Newsletter from '../utils/newsletter.js';
@@ -8,7 +9,7 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     if (!req.body || !req.body.post || !req.body.post.current) {
-        res.json({message: 'Post content seems to be missing!'});
+        return res.status(400).json({message: 'Post content seems to be missing!'});
     }
 
     // check if the request is authenticated.
@@ -19,18 +20,25 @@ router.post('/', async (req, res) => {
 
     // check if contains the ignore tag.
     if (Post.containsIgnoreTag(req.body)) {
-        return res.json({message: 'Post contains `ghosler_ignore` tag, ignoring.'});
+        return res.status(200).json({message: 'Post contains `ghosler_ignore` tag, ignoring.'});
     }
 
-    const post = Post.make(req.body);
-    const created = await post.save();
     logDebug(logTags.Newsletter, 'Post received via webhook.');
 
+    const post = Post.make(req.body);
+    const newslettersCount = await new Ghost().newslettersCount();
+    const created = await post.save(newslettersCount > 1);
+
     if (!created) {
-        res.json({message: 'The post data could not be saved, or emails for this post have already been sent.'});
+        res.status(500).json({message: 'The post data could not be saved, or emails for this post have already been sent.'});
     } else {
-        Newsletter.send(post).then(); // schedule sending.
-        res.json({message: 'Newsletter will be sent shortly.'});
+        if (newslettersCount === 1) {
+            Newsletter.send(post).then();
+            res.status(200).json({message: 'Newsletter will be sent shortly.'});
+        } else {
+            // we have multiple active newsletters, just save the post.
+            res.status(200).json({message: 'Multiple active Newsletters found, current Post saved for manual action.'});
+        }
     }
 });
 
