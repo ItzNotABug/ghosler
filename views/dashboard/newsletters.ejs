@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Newsletters - Ghosler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles/style.css" rel="stylesheet"/>
+</head>
+
+<body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
+
+<%- include('../partials/common/header.ejs') %>
+
+<main class="container mx-auto p-6 flex-grow">
+    <nav class="text-gray-400 mb-4">
+        <ul class="flex">
+            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li>Newsletters</li>
+        </ul>
+    </nav>
+
+    <%- include('../partials/common/message.ejs') %>
+
+    <% if (typeof newsletters === 'undefined' || newsletters.length === 0) { %>
+        <% if (typeof message === 'undefined') { %>
+            <h4 class="font-semibold text-center text-gray-400 my-6">No Newsletters found!</h4>
+        <% } %>
+    <% } else { %>
+
+        <p class="text-gray-400 mb-4">
+            Select a newsletter for Post - <strong><%= post.title; %></strong>
+        </p>
+
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto rounded-lg">
+            <table class="w-full bg-gray-800 rounded-lg shadow-md">
+                <thead class="bg-gray-700 text-gray-300">
+                <tr>
+                    <th class="text-left px-6 py-3">Name</th>
+                    <th class="text-center px-6 py-3">Action</th>
+                </tr>
+                </thead>
+                <tbody class="text-gray-300">
+                <% newsletters.forEach((element, index, array) => { %>
+                    <tr class="<%= index === array.length - 1 ? '' : 'border-b border-gray-600'; %>">
+                        <td class="text-left px-6 py-4">
+                            <%= element.name; %>
+                            <div class="text-xs text-gray-500 py-1"><%= element.description; %></div>
+                        </td>
+                        <td class="text-center px-6 py-4 relative">
+                            <form action="/newsletters/send" method="post">
+                                <input type="hidden" name="postId" value="<%= post.id %>">
+                                <input type="hidden" name="newsletterId" value="<%= element.id %>">
+                                <input type="hidden" name="newsletterName" value="<%= element.name %>">
+
+                                <button type="submit"
+                                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                                        onclick="">
+                                    Send
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden">
+            <% newsletters.forEach(element => { %>
+                <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+                    <div class="border-b border-gray-600 pb-2 mb-2">
+                        <div class="text-xl"><%= element.name; %></div>
+                        <div class="text-xs text-gray-500 py-1"><%= element.description %></div>
+                    </div>
+
+                    <div class="pt-4">
+                        <div class="space-x-2">
+                            <form action="/newsletters/send" method="post">
+                                <input type="hidden" name="postId" value="<%= post.id %>">
+                                <input type="hidden" name="newsletterId" value="<%= element.id %>">
+                                <input type="hidden" name="newsletterName" value="<%= element.name %>">
+
+                                <button type="button"
+                                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        onclick="">
+                                    Send
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('../partials/common/footer.ejs') %>
+
+<% if (typeof level !== 'undefined') { %>
+    <script>setTimeout(() => window.location = '/analytics', 1750)</script>
+<% } %>
+
+</body>
+</html>

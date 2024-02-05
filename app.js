@@ -13,6 +13,7 @@ import settings from './routes/settings.js';
 import password from './routes/password.js';
 import published from './routes/published.js';
 import analytics from './routes/analytics.js';
+import newsletters from './routes/newsletters.js';
 
 const expressApp = express();
 Miscellaneous.setup(expressApp).then();
@@ -28,6 +29,7 @@ expressApp.use('/settings', settings);
 expressApp.use('/password', password);
 expressApp.use('/analytics', analytics);
 expressApp.use('/published', published);
+expressApp.use('/newsletters', newsletters);
 
 // custom 404 after all the pages have been set up.
 expressApp.use((req, res) => res.status(404).render('errors/404'));
