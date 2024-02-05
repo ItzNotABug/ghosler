@@ -19,7 +19,6 @@ export default class Post {
      * @param {string} [featureImage=''] - The URL of the feature image of the Post.
      * @param {string} [featureImageCaption=''] - The caption of the feature image.
      * @param {string} [primaryAuthor=''] - The primary author of the Post.
-     * @param {string} [authors=''] - The authors of the Post.
      * @param {string} [visibility=''] - The visibility of the Post.
      * @param {Object[]} [tiers] - The tiers of the Post.
      * @param {Stats}  [stats=new Stats()] - The statistics related to this Post.
@@ -35,7 +34,6 @@ export default class Post {
         featureImage = '',
         featureImageCaption = '',
         primaryAuthor = '',
-        authors = '',
         visibility = '',
         tiers = [],
         stats = new Stats()
@@ -50,7 +48,6 @@ export default class Post {
         this.featureImage = featureImage;
         this.featureImageCaption = featureImageCaption;
         this.primaryAuthor = primaryAuthor;
-        this.authors = authors;
         this.visibility = visibility;
         this.tiers = tiers;
         this.stats = stats;
@@ -85,11 +82,22 @@ export default class Post {
             post.feature_image,
             post.feature_image_caption,
             post.primary_author.name,
-            post.authors.filter(author => author.id !== post.primary_author.id).map(author => author.name).join(', '),
             post.visibility,
             post.tiers,
             new Stats()
         );
+    }
+
+    /**
+     * Convert the saved post object to class.
+     *
+     * @param {Object} object - The saved Post object on disk.
+     * @returns {Post} The newly created Post object.
+     */
+    static fromRaw(object) {
+        const instance = new Post();
+        Object.assign(instance, object);
+        return instance;
     }
 
     /**
@@ -107,19 +115,38 @@ export default class Post {
     /**
      * Save the data when first received from the webhook.
      *
+     * @param {boolean} complete Whether to save the post object completely.
      * @returns {Promise<boolean>} A promise that resolves to true if file creation succeeded, false otherwise.
      */
-    async save() {
-        return await Files.create(this.#saveable());
+    async save(complete = false) {
+        let contentToSave = complete ? this : this.#saveable();
+
+        if (complete) {
+            // explicitly use 'Unsent' else the
+            // 'Send' button won't show up in dashboard.
+            contentToSave.stats.newsletterStatus = 'Unsent';
+
+            // persisted data stores 'author' key.
+            contentToSave.author = contentToSave.primaryAuthor;
+        }
+
+        return await Files.create(contentToSave);
     }
 
     /**
      * Saves the updated data.
      *
+     * @param {boolean} complete Whether to save the post object completely.
      * @returns {Promise<boolean>} A promise that resolves to true if file creation succeeded, false otherwise.
      */
-    async update() {
-        return await Files.create(this.#saveable(), true);
+    async update(complete = false) {
+        const contentToSave = complete ? this : this.#saveable();
+        if (complete) {
+            // persisted data stores 'author' key.
+            contentToSave.author = contentToSave.primaryAuthor;
+        }
+
+        return await Files.create(contentToSave, true);
     }
 
     /**
