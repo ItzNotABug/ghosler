@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
             Newsletter.send(post).then();
             res.status(200).json({message: 'Newsletter will be sent shortly.'});
         } else {
-            // we have multiple active newsletters, just save the post.
+            // we probably have multiple active newsletters or none at all, so just save the post.
             res.status(200).json({message: 'Multiple active Newsletters found, current Post saved for manual action.'});
         }
     }
