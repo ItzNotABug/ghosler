@@ -8,6 +8,7 @@
   "author": "@itznotabug",
   "scripts": {
     "dev": "nodemon -e js,ejs app.js",
+    "cleanStart": "npm run buildcss && npm run dev",
     "buildcss": "npx tailwindcss -i ./public/styles/tailwind.css -o ./public/styles/style.css --minify"
   },
   "dependencies": {
