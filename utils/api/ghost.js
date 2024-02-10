@@ -32,7 +32,7 @@ export default class Ghost {
     /**
      * Returns all the 'active' newsletters.
      *
-     * @returns {Promise<Array<{id: string, name: string}>>} An array of newsletter objects.
+     * @returns {Promise<Array<{id: string, name: string, description: string}>>} An array of newsletter objects.
      */
     async newsletters() {
         const ghost = await this.#ghost();
