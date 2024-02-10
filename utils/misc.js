@@ -40,9 +40,15 @@ export default class Miscellaneous {
         // the site might be behind a proxy.
         expressApp.enable('trust proxy');
 
-        // add no robots header tag to all.
+        // add common data for response.
         expressApp.use((_, res, next) => {
+            // add project version info for all render pages.
+            res.locals.version = ProjectConfigs.ghoslerVersion;
+
+            // add no robots header tag to all.
             res.header('X-Robots-Tag', 'noindex, nofollow');
+
+            // finally move ahead.
             next();
         });
 

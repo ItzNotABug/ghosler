@@ -55,10 +55,11 @@
                 <thead class="bg-gray-700 text-gray-300">
                 <tr>
                     <th class="text-left px-6 py-3">Title</th>
+                    <th class="text-center px-6 py-3">Newsletter</th>
                     <th class="text-center px-6 py-3">Members</th>
                     <th class="text-center px-6 py-3">Emails Sent</th>
                     <th class="text-center px-6 py-3">Emails Opened</th>
-                    <th class="text-center px-6 py-3">Newsletter Status</th>
+                    <th class="text-center px-6 py-3">Status</th>
                     <th class="text-center px-6 py-3">Action</th>
                 </tr>
                 </thead>
@@ -73,10 +74,19 @@
                                 <% var formattedDate = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(); %>
                                 <span class="hidden sm:inline">By <%= element.author %>,</span>
                                 <span class="sm:hidden">By</span>
-                                <span class="sm:hidden"><%= element.author.split(' ')[0] %>,</span>
+                                <span class="sm:hidden"><%= element.author %>,</span>
                                 <%= formattedDate %>
                             </div>
                         </td>
+
+                        <td class="text-center px-6 py-4">
+                            <% if (element.stats.newsletterName) { %>
+                                <%= element.stats.newsletterName %>
+                            <% } else { %>
+                                N/A
+                            <% } %>
+                        </td>
+
                         <td class="text-center px-6 py-4"><%= element.stats.members %></td>
                         <td class="text-center px-6 py-4"><%= element.stats.emailsSent %></td>
                         <td class="text-center px-6 py-4"><%= element.stats.emailsOpened %></td>
@@ -110,7 +120,10 @@
                                     </div>
                                     <button type="button"
                                             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full mb-2"
-                                            onclick="window.location='/analytics/details/<%= element.id %>'">Details
+                                            onclick="postItemClick(<%= JSON.stringify(element) %>)">
+                                        <% if (element.stats.newsletterStatus === 'Unsent') { %>Send
+                                        <% } else { %>Info.
+                                        <% } %>
                                     </button>
                                     <button type="button"
                                             class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
@@ -124,7 +137,10 @@
                             <div class="hidden lg:flex space-x-2">
                                 <button type="button"
                                         class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                        onclick="window.location='/analytics/details/<%= element.id %>'">Details
+                                        onclick="postItemClick(<%= JSON.stringify(element) %>)">
+                                    <% if (element.stats.newsletterStatus === 'Unsent') { %>Send
+                                    <% } else { %>Info.
+                                    <% } %>
                                 </button>
                                 <button type="button"
                                         class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -158,15 +174,25 @@
                     <div class="py-2 mb-2">Emails Opened: <%= element.stats.emailsOpened %></div>
                     <hr class="border-t border-gray-600">
 
-                    <div class="py-2">Newsletter Status: <%= element.stats.newsletterStatus %></div>
+                    <div class="py-2">Status: <%= element.stats.newsletterStatus %></div>
+                    <hr class="border-t border-gray-600">
 
+                    <div class="py-2 mb-2">Newsletter:
+                        <% if (element.stats.newsletterName) { %>
+                            <%= element.stats.newsletterName %>
+                        <% } else { %>
+                            N/A
+                        <% } %>
+                    </div>
 
                     <div class="pt-4">
                         <div class="space-x-2">
                             <button type="button"
                                     class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    onclick="window.location='/analytics/details/<%= element.id %>'">
-                                Details
+                                    onclick="postItemClick(<%= JSON.stringify(element) %>)">
+                                <% if (element.stats.newsletterStatus === 'Unsent') { %>Send
+                                <% } else { %>Info.
+                                <% } %>
                             </button>
 
                             <button type="button"
@@ -191,9 +217,12 @@
             .catch((error) => console.log(error));
     }
 
-    function toggleButtons(menuId) {
-        const menu = document.getElementById(menuId);
-        menu.classList.toggle('hidden');
+    function postItemClick(element) {
+        closeModal(`modal${element.id}`);
+
+        let location = 'analytics/details';
+        if (element.stats.newsletterStatus === 'Unsent') location = 'newsletters'
+        window.location = `/${location}/${element.id}`
     }
 
     function openModal(modalId) {
@@ -201,7 +230,9 @@
     }
 
     function closeModal(modalId) {
-        document.getElementById(modalId).classList.add('hidden');
+        const modal = document.getElementById(modalId);
+        // hide modal if it is currently visible on the screen.
+        if (!modal.classList.contains('hidden')) modal.classList.add('hidden');
     }
 </script>
 

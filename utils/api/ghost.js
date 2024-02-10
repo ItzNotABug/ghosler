@@ -10,6 +10,19 @@ import {logError, logTags, logToConsole} from '../log/logger.js';
 export default class Ghost {
 
     /**
+     * A hardcoded 'Generic' newsletter type.
+     *
+     * The `id` is an MD5 Hash of string value 'ghosler'.
+     *
+     * @type {{id: string, name: string, description: string}}
+     */
+    static genericNewsletterItem = {
+        id: '6de8d1d3d29a03060e1c4fa745e0eba7',
+        name: 'Generic',
+        description: 'This option sends the post to all users, irrespective of their subscribed newsletter.'
+    };
+
+    /**
      * Returns the ghost site data.
      *
      * @returns {Promise<Object>} The ghost site data.
@@ -17,6 +30,30 @@ export default class Ghost {
     async site() {
         const ghost = await this.#ghost();
         return await ghost.site.read();
+    }
+
+    /**
+     * Returns the number of 'active' newsletters.
+     *
+     * @returns {Promise<number>} The number of active newsletters.
+     */
+    async newslettersCount() {
+        const newsletters = await this.newsletters();
+        return newsletters.meta?.pagination?.total ?? 0;
+    }
+
+    /**
+     * Returns all the 'active' newsletters.
+     *
+     * @returns {Promise<Array<{id: string, name: string, description: string}>>} An array of newsletter objects.
+     */
+    async newsletters() {
+        const ghost = await this.#ghost();
+        return await ghost.newsletters.browse({
+            limit: 'all',
+            filter: 'status:active',
+            fields: 'id,name,description',
+        });
     }
 
     /**
@@ -59,33 +96,34 @@ export default class Ghost {
      * Returns the registered members, currently subscribed to a newsletter.\
      * Uses pagination to get all the users, then filter them.
      *
+     * @param {string|null} newsletterId The newsletter id to get members associated with it.
      * @returns {Promise<Subscriber[]>} List of Subscribers.
      */
-    async members() {
+    async members(newsletterId = null) {
         let page = 1;
-        let members = [];
+        let subscribedMembers = [];
 
         const ghost = await this.#ghost();
 
         while (true) {
-            const registeredMembers = await ghost.members.browse({page: page});
-            members.push(...registeredMembers);
+            const registeredMembers = await ghost.members.browse({
+                    page: page,
+                    filter: 'subscribed:true'
+                }
+            );
 
-            if (registeredMembers.meta.pagination.next !== null) {
+            subscribedMembers.push(...registeredMembers);
+
+            if (registeredMembers.meta.pagination.next) {
                 page = registeredMembers.meta.pagination.next;
             } else {
                 break;
             }
         }
 
-        // hardcoded to the first newsletter!
-        // TODO: support multiple newsletters?
-        //  We could use internal tags system.
-        return members.reduce((activeSubscribers, member) => {
+        return subscribedMembers.reduce((activeSubscribers, member) => {
             const subscriber = Subscriber.make(member);
-            const isActive = subscriber.newsletters.some(nls => nls.status === "active");
-
-            if (isActive) activeSubscribers.push(subscriber);
+            if (subscriber.isSubscribedTo(newsletterId)) activeSubscribers.push(subscriber);
             return activeSubscribers;
         }, []);
     }
