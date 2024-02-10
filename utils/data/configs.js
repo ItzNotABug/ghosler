@@ -17,6 +17,13 @@ export default class ProjectConfigs {
     static #cachedSettings = {};
 
     /**
+     * Current ghosler version from `package.json` file.
+     *
+     * @type {string}
+     */
+    static ghoslerVersion = '';
+
+    /**
      * Retrieves the Ghosler (Ghost Newsletter Service) configuration.
      *
      * @returns {Promise<Object>} The Ghosler configuration object.
@@ -93,6 +100,8 @@ export default class ProjectConfigs {
      * @throws {Error} If there's an issue reading or parsing the configuration file.
      */
     static async #getConfigs() {
+        this.#fetchGhoslerVersion();
+
         try {
             const configFilePath = await this.#getConfigFilePath();
             const fileContents = await fs.readFile(configFilePath, 'utf8');
@@ -247,5 +256,16 @@ export default class ProjectConfigs {
         } catch {
             return prodConfigPath;
         }
+    }
+
+    /**
+     * Updates the {@link ghoslerVersion} from the `package.json` file.
+     */
+    static #fetchGhoslerVersion() {
+        const __dirname = path.dirname(fileURLToPath(import.meta.url));
+        const packageFilePath = path.resolve(__dirname, '../../package.json');
+        fs.readFile(packageFilePath, 'utf8').then(fileContent => {
+            this.ghoslerVersion = JSON.parse(fileContent).version;
+        }).catch((_) => this.ghoslerVersion = '');
     }
 }
