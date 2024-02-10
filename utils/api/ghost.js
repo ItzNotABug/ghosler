@@ -10,6 +10,19 @@ import {logError, logTags, logToConsole} from '../log/logger.js';
 export default class Ghost {
 
     /**
+     * A hardcoded 'Generic' newsletter type.
+     *
+     * The `id` is an MD5 Hash of string value 'ghosler'.
+     *
+     * @type {{id: string, name: string, description: string}}
+     */
+    static genericNewsletterItem = {
+        id: '6de8d1d3d29a03060e1c4fa745e0eba7',
+        name: 'Generic',
+        description: 'This option sends the post to all users, irrespective if their subscribed newsletter.'
+    };
+
+    /**
      * Returns the ghost site data.
      *
      * @returns {Promise<Object>} The ghost site data.

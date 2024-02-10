@@ -20,8 +20,11 @@ router.get('/:postId', async (req, res) => {
     }
 
     if (postObject && postObject.stats && postObject.stats.newsletterStatus === 'Unsent') {
-        const newsletters = await new Ghost().newsletters();
-        delete newsletters.meta; // we don't need meta here.
+        const newsletterItems = await new Ghost().newsletters();
+        delete newsletterItems.meta; // we don't need meta here.
+
+        // add the Generic Newsletter item as first.
+        const newsletters = [Ghost.genericNewsletterItem, ...newsletterItems];
 
         res.render('dashboard/newsletters', {
             post: postObject,

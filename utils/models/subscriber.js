@@ -1,3 +1,4 @@
+import Ghost from '../api/ghost.js';
 import Miscellaneous from '../misc.js';
 
 /**
@@ -56,8 +57,9 @@ export default class Subscriber {
      * @returns {boolean} True if the subscriber has subscribed to the given newsletter id, or true by default if newsletterId is null.
      */
     isSubscribedTo(newsletterId = null) {
-        // probably only one newsletter exists.
+        // probably no/one newsletter exists.
         if (newsletterId === null) return true;
+        else if (newsletterId === Ghost.genericNewsletterItem.id) return true;
         else return this.newsletters.some(newsletter => newsletter.id === newsletterId);
     }
 }
