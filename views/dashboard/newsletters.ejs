@@ -45,7 +45,7 @@
                     <tr class="<%= index === array.length - 1 ? '' : 'border-b border-gray-600'; %>">
                         <td class="text-left px-6 py-4">
                             <%= element.name; %>
-                            <div class="text-xs text-gray-500 py-1"><%= element.description; %></div>
+                            <div class="text-sm text-gray-500 py-1"><%= element.description; %></div>
                         </td>
                         <td class="text-center px-6 py-4 relative">
                             <form action="/newsletters/send" method="post">
@@ -72,7 +72,7 @@
                 <div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
                     <div class="border-b border-gray-600 pb-2 mb-2">
                         <div class="text-xl"><%= element.name; %></div>
-                        <div class="text-xs text-gray-500 py-1"><%= element.description %></div>
+                        <div class="text-sm text-gray-500 py-1"><%= element.description %></div>
                     </div>
 
                     <div class="pt-4">
@@ -99,7 +99,7 @@
 <%- include('../partials/common/footer.ejs') %>
 
 <% if (typeof level !== 'undefined') { %>
-    <script>setTimeout(() => window.location = '/analytics', 1750)</script>
+    <script>setTimeout(() => window.location = '/analytics', 1750);</script>
 <% } %>
 
 </body>
