@@ -61,7 +61,18 @@ router.post('/send', async (req, res) => {
 
     const post = Post.fromRaw(postObject);
 
-    if (post && post.stats && post.stats.newsletterStatus === 'Unsent') {
+    /**
+     * If `post.content` is not available or empty,
+     * then an 'empty email' is sent to the members which isn't right.
+     *
+     * Therefore, we ensure below checks -
+     *
+     * 1. A valid Post is available
+     * 2. Post contains some content
+     * 3. Post contains stats object &
+     * 4. Post's Stats newsletter status is 'Unsent'.
+     */
+    if (post && post.content && post.stats && post.stats.newsletterStatus === 'Unsent') {
         /**
          * Mark the post's current status as 'Sending'
          * This is done to prevent re-sending until Ghosler fetches members.
@@ -80,10 +91,10 @@ router.post('/send', async (req, res) => {
         });
 
     } else {
-        res.render('dashboard/newsletters', {
-            level: 'error',
-            message: 'This post is already sent as a newsletter via email.'
-        });
+        let message = 'This post is already sent as a newsletter via email.';
+        if (!post || !post.content || !post.stats) message = 'Post does not seem to be valid.';
+
+        res.render('dashboard/newsletters', {level: 'error', message: message});
     }
 });
 
