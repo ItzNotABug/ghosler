@@ -19,7 +19,7 @@ export default class Ghost {
     static genericNewsletterItem = {
         id: '6de8d1d3d29a03060e1c4fa745e0eba7',
         name: 'Generic',
-        description: 'This option sends the post to all users, irrespective if their subscribed newsletter.'
+        description: 'This option sends the post to all users, irrespective of their subscribed newsletter.'
     };
 
     /**
