@@ -147,8 +147,11 @@ export default class ProjectConfigs {
             configs.ghosler.auth.pass = Miscellaneous.hash(newPass);
 
             const success = await this.#write(configs);
-            if (success) return {level: 'success', message: 'Password updated!'};
-            else return {level: 'error', message: 'Error updating password, check error logs for more info.'};
+            if (success) {
+                // update password in cache.
+                this.#cachedSettings = configs;
+                return {level: 'success', message: 'Password updated!'};
+            } else return {level: 'error', message: 'Error updating password, check error logs for more info.'};
         }
 
         const url = formData['ghosler.url'];
@@ -216,10 +219,12 @@ export default class ProjectConfigs {
             };
         })];
 
-        this.#cachedSettings = configs;
         const success = await this.#write(configs);
-        if (success) return {level: 'success', message: 'Settings updated!'};
-        else return {level: 'error', message: 'Error updating settings, check error logs for more info.'};
+        if (success) {
+            // update the config. cache.
+            this.#cachedSettings = configs;
+            return {level: 'success', message: 'Settings updated!'};
+        } else return {level: 'error', message: 'Error updating settings, check error logs for more info.'};
     }
 
     /**
