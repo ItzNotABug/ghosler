@@ -105,7 +105,9 @@ Pre-requisites: `Node 18^` & `pm2` installed.
     - Name the integration (e.g., Newsletters) and click **Add**.
     - **Copy** the **Admin API Key** displayed.
 3. **Configure Ghosler**:
-    - Fire up the Ghosler front-end by going to `https://your-domain.com`. Default `PORT` is `2369`.
+    - Fire up the Ghosler front-end by going to `https://your-domain.com`.
+        - Default `PORT` is `2369`
+        - Default login credentials are - Username: `ghosler`, Password - `admin`
     - Click on **Settings** button.
     - Click on **Ghost Settings** & add your **Ghost Site Url** & **Admin API Key**.
     - Add mail configurations in **Emails** section.
