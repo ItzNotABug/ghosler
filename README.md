@@ -157,10 +157,15 @@ If you want to customize the newsletter template even more, follow the steps -
 3. That's it! Ghosler will use the new template for preview & sending newsletter.
 4. Rename the file to anything if you don't want to use the custom template.
 
-### TODOs
+#### Looking for a dockerized solution?
 
-1. <s>Add support for multiple newsletters</s>.
-2. <s>Add feedback support in newsletter template</s>.
-3. <s>Build a `CLI` to install, update & other options to manage Ghosler instance</s>.
+See this [issue](https://github.com/ItzNotABug/ghosler/issues/31), and
+this [comment](https://github.com/ItzNotABug/ghosler/issues/31#issuecomment-1987150626) which mentions an article
+written by **[@viriatusX](https://github.com/viriatusX)** for containerizing Ghosler.
+
+*Please note that due to my limited experience with Docker, I haven't tested this yet. For any issues, feel free to add
+comments on the above linked issue.*
+
+---
 
 #### And don't forget to `⭐` the project!
