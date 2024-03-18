@@ -213,9 +213,8 @@ export default class Newsletter {
             renderingData.newsletter.unsubscribeLink,
             renderingData.newsletter.feedbackLikeLink,
             renderingData.newsletter.feedbackDislikeLink,
-            // featuredImage can be null, so we should to filter them.
-            ...renderingData.post.latestPosts.filter(post => post.featuredImage).map(post => post.featuredImage)
-        ].forEach(internalLinks => urlsToExclude.push(he.decode(internalLinks)));
+            ...renderingData.post.latestPosts.map(post => post.featuredImage)
+        ].forEach(linkToTrack => linkToTrack && urlsToExclude.push(he.decode(linkToTrack)));
 
         const trackedLinks = new Set();
         const $ = cheerio.load(renderedPostData);
