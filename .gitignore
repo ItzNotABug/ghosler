@@ -2,9 +2,13 @@
 .idea
 *.iml
 
+# vs code
+.vscode
+
 # logs
 .logs
 *.log
+.DS_Store
 
 # project specific data files folder
 files
