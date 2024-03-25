@@ -16,8 +16,5 @@ RUN npm install pm2 -g
 # Install dependencies
 RUN npm ci --omit-dev
 
-# Expose port
-EXPOSE 2369
-
 # Start your app
 CMD ["pm2-runtime", "start", "app.js", "--name", "ghosler-app"]
