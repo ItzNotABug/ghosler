@@ -25,3 +25,6 @@ custom-template.ejs
 # tailwind files
 tailwind.config.js
 public/styles/tailwind.css
+
+# installer
+docker-install.sh
