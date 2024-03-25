@@ -17,7 +17,7 @@ files
 node_modules
 
 # debug configuration
-config.debug.json
+configuration/config.debug.json
 
 # custom template used for tests
 custom-template.ejs
