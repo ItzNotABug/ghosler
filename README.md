@@ -48,6 +48,7 @@ with the capability to use **multiple** email accounts.
 - **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.\
 - **Multiple Newsletters**: Ghosler supports managing multiple newsletters! Publish a post & select the newsletter to
   associate with & instantly send emails.
+- **Docker Support**: Ghosler also supports a straight forward Docker container.
 
 ### Running Ghosler
 
