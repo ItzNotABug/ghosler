@@ -1,13 +1,18 @@
 #!/bin/bash
 
 # Define color codes
+NC='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-NC='\033[0m' # No Color
+BOLD_GREEN='\033[1;32m'
 
 # Set default values
 DEFAULT_PORT=2369
 DEFAULT_CONTAINER_NAME="ghosler"
+
+echo ""
+echo -e "${BOLD_GREEN}Note: If you are UPDATING, use the same PORT & CONTAINER NAME!${NC}"
+echo ""
 
 # Prompt for port number with default
 echo -e "${GREEN}Provide a port for Ghosler [Default: $DEFAULT_PORT]${NC} : "

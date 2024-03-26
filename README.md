@@ -69,7 +69,7 @@ Pre-requisites: `Node 18^` & `pm2` installed.
 
 #### 2. Installation with `Docker`
 
-Execute this script to install `Ghosler` via `Docker` -
+Execute this script to install or update `Ghosler` via `Docker` -
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/ItzNotABug/ghosler/master/docker-install.sh | bash
