@@ -24,11 +24,32 @@ echo -e "${GREEN}Provide a name for Ghosler Container [Default: $DEFAULT_CONTAIN
 read -r CONTAINER_NAME
 CONTAINER_NAME=${CONTAINER_NAME:-$DEFAULT_CONTAINER_NAME}
 
+# Fetch the releases from GitHub API
+releases=$(curl -s "https://api.github.com/repos/itznotabug/ghosler/releases")
+
+# latest version
+LATEST_VERSION=""
+
+# Loop through each line in the releases
+while read -r line; do
+    # Check if the line contains "tag_name" and LATEST_VERSION is not set
+    if [[ $line == *"tag_name"* && -z $LATEST_VERSION ]]; then
+        # Extract the version from the line
+        LATEST_VERSION=$(echo "$line" | cut -d '"' -f 4)
+        break
+    fi
+done <<< "$releases"
+
+# Check if a version was found
+if [[ -z "$LATEST_VERSION" ]]; then
+    LATEST_VERSION="0.94" # default to the docker supported version.
+fi
+
 echo -e "${GREEN}Starting Ghosler Docker installation...${NC}"
 echo ""
 
 # Use the variables in the docker run command
-if ! docker run --rm --name "$CONTAINER_NAME" -d -p "$PORT":2369 -v "${CONTAINER_NAME}"-logs:/usr/src/app/.logs -v "${CONTAINER_NAME}"-analytics:/usr/src/app/files -v "${CONTAINER_NAME}"-configuration:/usr/src/app/configuration itznotabug/ghosler:0.94; then
+if ! docker run --rm --name "$CONTAINER_NAME" -d -p "$PORT":2369 -v "${CONTAINER_NAME}"-logs:/usr/src/app/.logs -v "${CONTAINER_NAME}"-analytics:/usr/src/app/files -v "${CONTAINER_NAME}"-configuration:/usr/src/app/configuration itznotabug/ghosler:"${LATEST_VERSION}"; then
     echo ""
     echo -e "${RED}Error: Failed to start Ghosler. Please check the Docker logs for more details.${NC}" >&2
     exit 1
