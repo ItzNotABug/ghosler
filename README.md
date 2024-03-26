@@ -8,6 +8,17 @@ with the capability to use **multiple** email accounts.
 
 ---
 
+### Table of Contents
+
+- [Screenshots](#screenshots)
+- [Key Features](#key-features)
+- [Running Ghosler](#running-ghosler)
+- [Setup Instructions](#setup-instructions)
+- [Testing Configurations](#testing-configurations)
+- [Using Custom Templates](#custom-template)
+
+---
+
 ### Screenshots
 
 - **Newsletter**
@@ -19,44 +30,6 @@ with the capability to use **multiple** email accounts.
         <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/e5fdc7c9-f762-46f1-bee2-65a564909919" alt="Ghosler - Newsletter Preview" /></td>
       </tr>
     </table>
-
-- **Dashboard**
-
-    <details>
-    <summary>
-    Mobile View
-    </summary>
-    <table>
-      <tr>
-        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/225d6929-68f1-474d-a694-257197c41424" alt="Ghosler - Login" /></td>
-        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/39571ef5-d1f0-4145-b205-37963e28fda7" alt="Ghosler - Home" /></td>
-        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/dc72d8c0-7943-44ce-8ffa-56fbac51c703" alt="Ghosler - Analytics" /></td>
-      </tr>
-      <tr>
-        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/e06ac7aa-9e6b-4bd4-8227-d8ea76f58f64" alt="Ghosler - Analytics - Details" /></td>
-        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/3c75cb17-dc0a-4662-aef3-b696d70cca65" alt="Ghosler - Settings" /></td>
-        <td><img style="border-radius: 2px;" src="https://github.com/ItzNotABug/ghosler/assets/20625965/55e45089-fac1-40ef-b818-a440465d7c9d" alt="Ghosler - Logs" /></td>
-      </tr>
-    </table>
-    </details>
-
-    <details>
-    <summary>
-    Desktop View
-    </summary>
-    <table>
-      <tr>
-        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/39e5a0b1-2053-4a5f-8efa-96c45f3e3369" alt="Ghosler - Login" /></td>
-        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/3f18b7a5-8fcd-4bed-821f-963237052d4f" alt="Ghosler - Home" /></td>
-        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/60e9c9ad-6ae6-46c3-8708-0b9d91a960d9" alt="Ghosler - Analytics" /></td>
-      </tr>
-      <tr>
-        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/eadacf4f-e9dd-45e3-b8f1-4aa18be4a41c" alt="Ghosler - Analytics - Details" /></td>
-        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/0061ac2b-7aa5-48ca-8de4-9383c7a5d81e" alt="Ghosler - Settings" /></td>
-        <td><img src="https://github.com/ItzNotABug/ghosler/assets/20625965/a6fa0f5e-8fd4-4fc4-ac01-e27b756ba749" alt="Ghosler - Logs" /></td>
-      </tr>
-    </table>
-    </details>
 
 ### Key Features
 
@@ -71,30 +44,39 @@ with the capability to use **multiple** email accounts.
   your members are interacting with added links.
 - **Newsletter Post Feedback**: Gain insights into reader preferences with detailed feedback on each post, including
   likes, dislikes, and overall sentiment.
-- **Ghost Native Widgets**: Ghosler supports major Ghost widgets (cards) for your newsletter, out of the box.\
-  See: [#17](https://github.com/ItzNotABug/ghosler/pull/17) for more info.
-- **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.\
-  See: [#28](https://github.com/ItzNotABug/ghosler/pull/28) for more info.
+- **Ghost Native Widgets**: Ghosler supports major Ghost widgets (cards) for your newsletter, out of the box.
+- **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.
 - **Multiple Newsletters**: Ghosler supports managing multiple newsletters! Publish a post & select the newsletter to
-  associate with & instantly send emails.\
-  See: [#32](https://github.com/ItzNotABug/ghosler/pull/32) for more info.
+  associate with & instantly send emails.
+- **Docker Support**: Ghosler also supports a straight forward Docker container.
 
 ### Running Ghosler
+
+#### 1. Installation with `NPM`
 
 Pre-requisites: `Node 18^` & `pm2` installed.
 
 1. Install the `CLI` -
 
-   ```npm
-   npm install -g ghosler-cli
-   ```
+  ```npm
+  npm install -g ghosler-cli
+  ```
 
 2. Go to the directory you want to install `Ghosler`, make sure its empty & run below command -
 
-   ```shell
-   ghosler install
-   ```
-   Now navigate to main site & edit required settings after completing the Setup instructions below.
+  ```shell
+  ghosler install
+  ```
+
+#### 2. Installation with `Docker`
+
+Execute this script to install or update `Ghosler` via `Docker` -
+
+```bash
+curl -sSL https://raw.githubusercontent.com/ItzNotABug/ghosler/master/docker-install.sh | bash
+```
+
+Now navigate to main site & edit required settings after completing the Setup instructions below.
 
 ### Setup Instructions
 
@@ -123,7 +105,7 @@ Now as soon as you publish your Post, it will be sent to your Subscribers who ha
 ### Testing Configurations
 
 Ghosler defaults to using a debug configuration file, `config.debug.json`, if it exists. The structure of this file is
-identical to that in [config.production.json](./config.production.json) file.
+identical to that in [config.production.json](./configuration/config.production.json) file.
 
 **Local Builds:**
 Make sure to execute -
@@ -148,6 +130,9 @@ You can use below for combining the above commands -
     npm run cleanstart
    ```
 
+**Note**: For testing the Docker container over a publicly accessible URL, I used `Cloudflare Tunnel` as it doesn't have
+a startup page like `ngrok` or the `VSCode`'s dev tunnel and works good for testing the Ghost Webhooks.
+
 ### Custom Template
 
 If you want to customize the newsletter template even more, follow the steps -
@@ -156,15 +141,6 @@ If you want to customize the newsletter template even more, follow the steps -
 2. Customize it as you like, take a look at [pre-defined template](./views/newsletter.ejs) for reference.
 3. That's it! Ghosler will use the new template for preview & sending newsletter.
 4. Rename the file to anything if you don't want to use the custom template.
-
-#### Looking for a dockerized solution?
-
-See this [issue](https://github.com/ItzNotABug/ghosler/issues/31), and
-this [comment](https://github.com/ItzNotABug/ghosler/issues/31#issuecomment-1987150626) which mentions an article
-written by **[@viriatusX](https://github.com/viriatusX)** for containerizing Ghosler.
-
-*Please note that due to my limited experience with Docker, I haven't tested this yet. For any issues, feel free to add
-comments on the above linked issue.*
 
 ---
 

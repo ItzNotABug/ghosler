@@ -78,7 +78,7 @@ export default class Post {
             post.title,
             post.html,
             post.primary_tag?.name ?? '',
-            post.custom_excerpt ?? post.excerpt ?? post.plaintext.substring(0, 75),
+            post.custom_excerpt ?? post.excerpt ?? post.plaintext?.substring(0, 75) ?? (post.title + '...'),
             post.feature_image,
             post.feature_image_caption,
             post.primary_author.name,

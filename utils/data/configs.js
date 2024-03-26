@@ -252,8 +252,10 @@ export default class ProjectConfigs {
      */
     static async #getConfigFilePath() {
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
-        const debugConfigPath = path.resolve(__dirname, '../../config.debug.json');
-        const prodConfigPath = path.resolve(__dirname, '../../config.production.json');
+
+        // TODO: this change would require a migration via ghosler-cli.
+        const debugConfigPath = path.resolve(__dirname, '../../configuration/config.debug.json');
+        const prodConfigPath = path.resolve(__dirname, '../../configuration/config.production.json');
 
         try {
             await fs.access(debugConfigPath);

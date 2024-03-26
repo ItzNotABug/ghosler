@@ -1,0 +1,30 @@
+# build files
+.idea/
+.vscode/
+node_modules/
+
+# local development files
+.logs/
+*.log
+files/
+
+# spam
+.DS_Store
+
+# git
+.git
+.gitignore
+
+# markdown
+LICENSE.md
+README.md
+
+# custom template
+custom-template.ejs
+
+# tailwind files
+tailwind.config.js
+public/styles/tailwind.css
+
+# installer
+docker-install.sh
