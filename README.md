@@ -44,8 +44,8 @@ with the capability to use **multiple** email accounts.
   your members are interacting with added links.
 - **Newsletter Post Feedback**: Gain insights into reader preferences with detailed feedback on each post, including
   likes, dislikes, and overall sentiment.
-- **Ghost Native Widgets**: Ghosler supports major Ghost widgets (cards) for your newsletter, out of the box.\
-- **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.\
+- **Ghost Native Widgets**: Ghosler supports major Ghost widgets (cards) for your newsletter, out of the box.
+- **Custom Email Subjects**: Ghosler allows using customised email subject for your newsletter.
 - **Multiple Newsletters**: Ghosler supports managing multiple newsletters! Publish a post & select the newsletter to
   associate with & instantly send emails.
 - **Docker Support**: Ghosler also supports a straight forward Docker container.
