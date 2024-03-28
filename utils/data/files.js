@@ -26,7 +26,7 @@ export default class Files {
      * Get the custom template's path.
      */
     static #customTemplatePath() {
-        return path.join(process.cwd(), 'custom-template.ejs');
+        return path.join(process.cwd(), 'configuration/custom-template.ejs');
     }
 
     /**

@@ -24,5 +24,8 @@
     "show_powered_by_ghosler": true,
     "track_links": true
   },
+  "custom_template": {
+    "enabled": false
+  },
   "mail": []
 }

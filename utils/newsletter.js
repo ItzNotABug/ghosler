@@ -136,8 +136,9 @@ export default class Newsletter {
     static async renderTemplate(renderingData) {
         let templatePath;
         const injectUrlTracking = renderingData.trackLinks;
+        const isCustomTemplateEnabled = (await ProjectConfigs.customTemplate()).enabled;
 
-        if (await Files.customTemplateExists()) {
+        if (isCustomTemplateEnabled && await Files.customTemplateExists()) {
             templatePath = Files.customTemplatePath();
         } else templatePath = path.join(process.cwd(), '/views/newsletter.ejs');
 

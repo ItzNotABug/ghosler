@@ -69,6 +69,21 @@ export default class ProjectConfigs {
     }
 
     /**
+     * Retrieves the newsletter configuration for customization.
+     *
+     * @returns {Promise<Object>} The newsletter configuration object.
+     * @throws {Error} If the configuration is missing or invalid.
+     */
+    static async customTemplate() {
+        if (this.#cachedSettings.custom_template) {
+            return this.#cachedSettings.custom_template;
+        }
+
+        const configs = await this.#getConfigs();
+        return configs.custom_template;
+    }
+
+    /**
      * Retrieves the mail configuration.
      *
      * @returns {Promise<Object>} The mail configuration object.
@@ -171,6 +186,7 @@ export default class ProjectConfigs {
         const newsletterCustomSubject = formData['newsletter.custom_subject_pattern'];
         const newsletterPoweredByGhost = formData['newsletter.show_powered_by_ghost'];
         const newsletterPoweredByGhosler = formData['newsletter.show_powered_by_ghosler'];
+        const customTemplateEnabled = formData['custom_template.enabled'];
 
         const email = formData['email'];
         if (!Array.isArray(email) || email.length === 0) {
@@ -206,6 +222,11 @@ export default class ProjectConfigs {
         configs.newsletter.footer_content = newsletterFooterContent;
         configs.newsletter.custom_subject_pattern = newsletterCustomSubject;
 
+        // may not exist on an update, so create one anyway.
+        if (!configs.custom_template) configs.custom_template = {};
+
+        configs.custom_template.enabled = customTemplateEnabled === 'on' ?? false;
+
         // mail configurations
         configs.mail = [...email.map(({batch_size, delay_per_batch, auth_user, auth_pass, ...rest}) => {
             return {
@@ -225,6 +246,22 @@ export default class ProjectConfigs {
             this.#cachedSettings = configs;
             return {level: 'success', message: 'Settings updated!'};
         } else return {level: 'error', message: 'Error updating settings, check error logs for more info.'};
+    }
+
+    /**
+     * Updates the custom template file.
+     *
+     * @param {UploadedFile | UploadedFile[]} templateFile The uploaded custom template file.
+     * @returns {Promise<{level: string, message: string}>} True if updated, false if something went wrong.
+     */
+    static async updateCustomTemplate(templateFile) {
+        try {
+            await templateFile.mv('./configuration/custom-template.ejs');
+            return {level: 'success', message: 'Template file uploaded!'};
+        } catch (error) {
+            logError(logTags.Configs, error);
+            return {level: 'error', message: 'Error updating settings, check error logs for more info.'};
+        }
     }
 
     /**

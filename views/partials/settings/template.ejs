@@ -1,0 +1,33 @@
+<div class="bg-gray-800 rounded-lg shadow-md p-4 mb-4">
+    <div class="flex justify-between items-center cursor-pointer" onclick="toggleCard(this, 'customTemplateSettings')">
+        <h3 class="text-lg text-gray-300 font-bold">Custom Template Settings</h3>
+        <svg class="h-6 w-6 text-gray-300 rotate-0 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </div>
+
+    <div id="customTemplateSettings" class="mt-4 mb-4" style="display: none;">
+        <!-- Enable Disable Custom Template -->
+        <div class="form-group mb-4 flex items-center">
+            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                   id="custom_template.enabled" name="custom_template.enabled"
+            <% if (Boolean(configs.custom_template?.enabled ?? false)) { %> checked
+                    <% } %>
+            >
+            <label for="custom_template.enabled" class="text-gray-300">Use Custom Template</label>
+        </div>
+
+        <div class="flex flex-wrap gap-x-2 text-xs text-gray-300 mt-2">
+            <a href="/settings/template" type="button"
+               class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded mb-2"
+               onclick="">Upload Template
+            </a>
+
+            <a href="/settings/template/download/base" type="button"
+               class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-2 px-4 rounded mb-2"
+               onclick="">Download Base Template
+            </a>
+        </div>
+    </div>
+</div>
