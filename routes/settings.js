@@ -21,7 +21,7 @@ router.get('/template/download/:type', async (req, res) => {
     const downloadType = req.params.type ?? 'base'; // default is base.
 
     let newsletterFilePath = path.join(process.cwd(), '/views/newsletter.ejs');
-    if (downloadType === 'custom_template') newsletterFilePath = path.join(process.cwd(), Files.customTemplatePath());
+    if (downloadType === 'custom_template') newsletterFilePath = Files.customTemplatePath();
 
     const newsletterFile = fs.readFileSync(newsletterFilePath);
     res.setHeader('Content-Type', 'text/plain');
