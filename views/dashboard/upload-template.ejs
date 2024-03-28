@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload Template - Ghosler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles/style.css" rel="stylesheet"/>
+</head>
+
+<body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
+
+<%- include('../partials/common/header.ejs') %>
+
+<main class="container mx-auto p-6 flex-grow">
+    <nav class="text-gray-400 mb-4">
+        <ul class="flex">
+            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><span class="mx-2">></span></li>
+            <li><a href="/settings" class="hover:text-white">Settings</a></li>
+            <li><span class="mx-2">></span></li>
+            <li>Upload Custom Template</li>
+        </ul>
+    </nav>
+
+    <%- include('../partials/common/message.ejs') %>
+
+    <form action="/settings/template" method="post" enctype="multipart/form-data"
+          class="max-w-lg mx-auto bg-gray-800 rounded-lg shadow-md p-8">
+        <div class="mb-8">
+            <!-- Upload a Custom Template -->
+            <div class="form-group mb-8">
+                <label for="custom_template.file" class="block mb-4 text-gray-300">Select a Custom Template to
+                    upload</label>
+                <input type="file" accept=".ejs" class="block w-full text-sm text-gray-300
+                   file:mr-4 file:py-2 file:px-4
+                   file:rounded file:border-0
+                   file:text-sm file:font-semibold
+                   file:bg-blue-600 file:text-white
+                   hover:file:bg-blue-700" id="custom_template.file" name="custom_template.file" required>
+            </div>
+        </div>
+
+        <p class="text-gray-400 mx-1 mb-4 text-xs font-bold">Note: Uploading a new custom template overrides the
+            previous one.</p>
+
+        <div class="flex flex-wrap gap-x-3 text-sm mt-2">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 mb-4 text-white font-bold py-2 px-4 rounded">
+                Upload
+            </button>
+
+            <% if (customTemplateExists) { %>
+                <a href="/settings/template/download/custom_template" type="submit"
+                   class="bg-blue-600 hover:bg-blue-700 mb-4 text-white font-bold py-2 px-4 rounded">
+                    Download Current Template
+                </a>
+            <% } %>
+        </div>
+    </form>
+</main>
+
+<%- include('../partials/common/footer.ejs') %>
+
+</body>
+</html>
