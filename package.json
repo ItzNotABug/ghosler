@@ -1,13 +1,13 @@
 {
   "name": "ghosler",
   "description": "Send newsletter emails to your members, using your own email credentials!",
-  "version": "0.94",
+  "version": "0.95",
   "private": true,
   "main": "app.js",
   "type": "module",
   "author": "@itznotabug",
   "scripts": {
-    "dev": "nodemon -e js,ejs app.js",
+    "dev": "nodemon -e js,ejs --ignore custom-template.ejs app.js",
     "cleanstart": "npm run buildcss && npm run dev",
     "buildcss": "npx tailwindcss -i ./public/styles/tailwind.css -o ./public/styles/style.css --minify"
   },
@@ -19,6 +19,7 @@
     "css-inline": "^0.11.2",
     "ejs": "^3.1.9",
     "express": "^4.19.1",
+    "express-fileupload": "^1.5.0",
     "he": "^1.2.0",
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^9.0.0",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/cheerio": "^0.22.35",
     "nodemon": "^3.1.0",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "@types/express-fileupload": "^1.5.0"
   }
 }
