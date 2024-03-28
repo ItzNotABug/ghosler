@@ -136,8 +136,29 @@ You can use below for combining the above commands -
     npm run cleanstart
    ```
 
+##### Building the Docker Image -
+
+```bash
+docker build -t ghosler . --no-cache
+```
+
+After a successful local build, run the container -
+
+```bash
+docker run --rm name ghosler -d -p 2369:2369 -v ghosler-logs:/usr/src/app/.logs -v ghosler-analytics:/usr/src/app/files -v ghosler-configuration:/usr/src/app/configuration ghosler
+```
+
 **Note**: For testing the Docker container over a publicly accessible URL, I used `Cloudflare Tunnel` as it doesn't have
 a startup page like `ngrok` or the `VSCode`'s dev tunnel and works good for testing the Ghost Webhooks.
+
+Assuming you have `TryCloudflare CLI` installed, you can do something like this -
+
+```bash
+cloudflared tunnel --url http://localhost:2369
+```
+
+This command will initialize a tunnel and return a URL that you can use to test.\
+For more info, see - [TryCloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/).
 
 ### Custom Template
 
