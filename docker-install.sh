@@ -48,7 +48,10 @@ fi
 echo -e "${GREEN}Starting Ghosler Docker installation...${NC}"
 echo ""
 
-# Use the variables in the docker run command
+# Stop the container silently if it's running in case of an update.
+docker stop "$CONTAINER_NAME" > /dev/null 2>&1
+
+# Run the container with latest version.
 if ! docker run --rm --name "$CONTAINER_NAME" -d -p "$PORT":2369 -v "${CONTAINER_NAME}"-logs:/usr/src/app/.logs -v "${CONTAINER_NAME}"-analytics:/usr/src/app/files -v "${CONTAINER_NAME}"-configuration:/usr/src/app/configuration itznotabug/ghosler:"${LATEST_VERSION}"; then
     echo ""
     echo -e "${RED}Error: Failed to start Ghosler. Please check the Docker logs for more details.${NC}" >&2
