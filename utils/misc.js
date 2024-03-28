@@ -3,6 +3,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import Files from './data/files.js';
 import cookieSession from 'cookie-session';
+import fileUpload from 'express-fileupload';
 import ProjectConfigs from './data/configs.js';
 import {extract} from '@extractus/oembed-extractor';
 import {logDebug, logError, logTags} from './log/logger.js';
@@ -23,6 +24,7 @@ export default class Miscellaneous {
         expressApp.use(express.static("public"));
         expressApp.use(express.json({limit: '50mb'}));
         expressApp.use(express.urlencoded({extended: true, limit: '50mb'}));
+        expressApp.use(fileUpload({safeFileNames: true, preserveExtension: true, useTempFiles: false}));
 
         // login sessions.
         expressApp.use(cookieSession({
