@@ -28,3 +28,7 @@ public/styles/tailwind.css
 
 # installer
 docker-install.sh
+
+# local, debug config files
+configuration/config.debug.json
+configuration/config.local.json
