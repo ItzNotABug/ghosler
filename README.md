@@ -113,6 +113,8 @@ Now as soon as you publish your Post, it will be sent to your Subscribers who ha
 Ghosler defaults to using a local configuration file, `config.local.json`, if it exists. The structure of this file is
 identical to that in [config.production.json](./configuration/config.production.json) file.
 
+**Note: `config.local.json` should be placed inside the `configuration` directory.**
+
 **Local Builds:**
 Make sure to execute -
 
@@ -158,7 +160,8 @@ cloudflared tunnel --url http://localhost:2369
 ```
 
 This command will initialize a tunnel and return a URL that you can use to test.\
-For more info, see - [TryCloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/).
+For more info,
+see - [TryCloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/).
 
 ### Custom Template
 
