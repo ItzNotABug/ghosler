@@ -18,6 +18,7 @@ node_modules
 
 # debug configuration
 configuration/config.debug.json
+configuration/config.local.json
 
 # custom template used for tests
 custom-template.ejs

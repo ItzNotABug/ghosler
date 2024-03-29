@@ -110,7 +110,7 @@ Now as soon as you publish your Post, it will be sent to your Subscribers who ha
 
 ### Testing Configurations
 
-Ghosler defaults to using a debug configuration file, `config.debug.json`, if it exists. The structure of this file is
+Ghosler defaults to using a local configuration file, `config.local.json`, if it exists. The structure of this file is
 identical to that in [config.production.json](./configuration/config.production.json) file.
 
 **Local Builds:**
