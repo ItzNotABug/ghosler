@@ -234,10 +234,18 @@ export default class Newsletter {
             let elementUrl = $(element).attr(tag);
             if (elementUrl === '#' || !elementUrl) return;
 
-            elementUrl = he.decode(elementUrl);
-            const urlHost = new URL(elementUrl).host;
+            /** @type {string | null} */
+            let urlHost = null;
 
-            if (!domainsToExclude.includes(urlHost) && !urlsToExclude.includes(elementUrl)) {
+            elementUrl = he.decode(elementUrl);
+
+            try {
+                urlHost = new URL(elementUrl).host;
+            } catch (error) {
+                logError(logTags.Newsletter, Error(`Invalid URL found: ${elementUrl}, ${error.stack}.`));
+            }
+
+            if (urlHost && !domainsToExclude.includes(urlHost) && !urlsToExclude.includes(elementUrl)) {
                 trackedLinks.add(elementUrl);
                 $(element).attr(tag, `${pingUrl}${elementUrl}`);
             }
