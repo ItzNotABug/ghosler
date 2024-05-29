@@ -3,7 +3,7 @@
 <head>
     <title>Upload Template - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/styles/style.css" rel="stylesheet"/>
+    <link href="<%= ghoslerUrl %>/styles/style.css" rel="stylesheet"/>
 </head>
 
 <body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
@@ -13,9 +13,9 @@
 <main class="container mx-auto p-6 flex-grow">
     <nav class="text-gray-400 mb-4">
         <ul class="flex">
-            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><a href="<%= ghoslerUrl %>/" class="hover:text-white">Home</a></li>
             <li><span class="mx-2">></span></li>
-            <li><a href="/settings" class="hover:text-white">Settings</a></li>
+            <li><a href="<%= ghoslerUrl %>/settings" class="hover:text-white">Settings</a></li>
             <li><span class="mx-2">></span></li>
             <li>Upload Custom Template</li>
         </ul>
@@ -23,7 +23,7 @@
 
     <%- include('../partials/common/message.ejs') %>
 
-    <form action="/settings/template" method="post" enctype="multipart/form-data"
+    <form action="<%= ghoslerUrl %>/settings/template" method="post" enctype="multipart/form-data"
           class="max-w-lg mx-auto bg-gray-800 rounded-lg shadow-md p-8">
         <div class="mb-8">
             <!-- Upload a Custom Template -->
@@ -46,7 +46,7 @@
             </button>
 
             <% if (customTemplateExists) { %>
-                <a href="/settings/template/download/custom_template" type="submit"
+                <a href="<%= ghoslerUrl %>/settings/template/download/custom_template" type="submit"
                    class="bg-blue-600 hover:bg-blue-700 mb-4 text-white font-bold py-2 px-4 rounded">
                     Download Current Template
                 </a>

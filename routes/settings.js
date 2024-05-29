@@ -39,7 +39,7 @@ router.post('/template', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const formData = req.body;
-    formData['ghosler.url'] = req.protocol + '://' + req.hostname;
+    formData['ghosler.url'] = req.protocol + '://' + req.get('Host') + req.originalUrl.split("/settings")[0];
 
     const result = await ProjectConfigs.update(formData);
     const configs = await ProjectConfigs.all();

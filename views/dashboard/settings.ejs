@@ -3,7 +3,7 @@
 <head>
     <title>Settings - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/styles/style.css" rel="stylesheet"/>
+    <link href="<%= ghoslerUrl %>/styles/style.css" rel="stylesheet"/>
     <script>
         function integrationIdFromAdminKey(secondID) {
             const lastTwo = secondID.slice(-2);
@@ -122,7 +122,7 @@
 <main class="container mx-auto p-6 flex-grow">
     <nav class="text-gray-400 mb-4">
         <ul class="flex">
-            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><a href="<%= ghoslerUrl %>/" class="hover:text-white">Home</a></li>
             <li><span class="mx-2">></span></li>
             <li>Settings</li>
         </ul>
@@ -134,7 +134,7 @@
 
         <%- include('../partials/common/message.ejs') %>
 
-        <form action="/settings" method="post">
+        <form action="<%= ghoslerUrl %>/settings" method="post">
 
             <!-- Profile -->
             <%- include('../partials/settings/profile.ejs') %>

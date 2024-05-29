@@ -3,7 +3,7 @@
 <head>
     <title>Logs - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/styles/style.css" rel="stylesheet"/>
+    <link href="<%= ghoslerUrl %>/styles/style.css" rel="stylesheet"/>
 </head>
 
 <body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
@@ -15,9 +15,9 @@
 
     <nav class="text-gray-400 mb-4">
         <ul class="flex">
-            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><a href="<%= ghoslerUrl %>/" class="hover:text-white">Home</a></li>
             <li><span class="mx-2">></span></li>
-            <li><a href="/logs" class="hover:text-white">Logs</a></li>
+            <li><a href="<%= ghoslerUrl %>/logs" class="hover:text-white">Logs</a></li>
             <li><span class="mx-2">></span></li>
             <li><%= logLevel %></li>
         </ul>
@@ -30,7 +30,7 @@
                 <button type="button"
                         class="px-3 py-1 bg-red-800 hover:bg-red-900 text-white font-bold rounded transition duration-300"
                         onclick="if (confirm('Do you really want to delete/clear these logs? Click OK to delete.')) {
-                                window.location = '/logs/clear/<%= logLevel.toLowerCase() %>'
+                                window.location = '<%= ghoslerUrl %>/logs/clear/<%= logLevel.toLowerCase() %>'
                                 }">
                     Clear
                 </button>
