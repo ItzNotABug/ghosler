@@ -18,18 +18,6 @@ import newsletters from './routes/newsletters.js';
 const expressApp = express();
 Miscellaneous.setup(expressApp).then();
 
-// Middleware to provide constants to all views
-expressApp.use(async (req, res, next) => {
-    try {
-        const configs = await ProjectConfigs.all();
-	res.locals.ghoslerUrl = configs.ghosler.url || '';
-    } catch (error) {
-        res.locals.ghoslerUrl = '';
-        logDebug(logTags.Express, 'Error loading configuration: ' + error.message);
-    }
-    next();
-});
-
 // define routes
 logDebug('Express', 'Setting routes...');
 expressApp.use(track);

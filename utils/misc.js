@@ -43,12 +43,21 @@ export default class Miscellaneous {
         expressApp.enable('trust proxy');
 
         // add common data for response.
-        expressApp.use((_, res, next) => {
+        expressApp.use(async (_, res, next) => {
             // add project version info for all render pages.
             res.locals.version = ProjectConfigs.ghoslerVersion;
 
             // add no robots header tag to all.
             res.header('X-Robots-Tag', 'noindex, nofollow');
+
+            // provide ghosler.url to every view.
+            try {
+                const ghosler = await ProjectConfigs.ghosler();
+                res.locals.ghoslerUrl = ghosler.url || '';
+            } catch {
+                res.locals.ghoslerUrl = '';
+                logDebug(logTags.Express, 'Error loading ghosler.url config: ' + error.message);
+            }
 
             // finally move ahead.
             next();
