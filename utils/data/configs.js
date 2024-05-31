@@ -228,7 +228,7 @@ export default class ProjectConfigs {
         configs.custom_template.enabled = customTemplateEnabled === 'on' ?? false;
 
         // mail configurations
-        configs.mail = [...email.map(({batch_size, delay_per_batch, auth_user, auth_pass, ...rest}) => {
+        configs.mail = [...email.map(({batch_size, delay_per_batch, auth_user, auth_pass, secure, ...rest}) => {
             return {
                 ...rest,
                 batch_size: parseInt(batch_size),
@@ -236,7 +236,8 @@ export default class ProjectConfigs {
                 auth: {
                     user: auth_user,
                     pass: auth_pass
-                }
+                },
+                secure: secure === 'on' ? true : false
             };
         })];
 

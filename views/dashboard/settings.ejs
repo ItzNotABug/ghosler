@@ -68,7 +68,7 @@
                         <div class="flex items-center">
                             <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
                                     id="email[${mailConfigIndex}][secure]" name="email[${mailConfigIndex}][secure]"
-                                <% if (Boolean(configs.mail[${mailConfigIndex}].secure)) { %> checked
+                                <% if (Boolean(configs.mail[configs.mail.length - 1].secure)) { %> checked
                                        <% } %>
                                 >
                             <label for="email[${mailConfigIndex}][secure]" class="text-gray-300">Secure</label>
