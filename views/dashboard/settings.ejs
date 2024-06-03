@@ -46,7 +46,7 @@
                 <div id="mailConfigInner${mailConfigIndex}" class="mt-4" style="display: none;">
                     <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][reply_to]" class="block text-gray-300 mb-1">Reply To</label>
-                        <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" id="email[${mailConfigIndex}][reply_to]" name="email[${mailConfigIndex}][reply_to]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" placeholder="'Author' <author@ghost.org> [Optional]" id="email[${mailConfigIndex}][reply_to]" name="email[${mailConfigIndex}][reply_to]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
@@ -65,13 +65,24 @@
                     </div>
 
                     <div class="form-group mb-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                                    id="email[${mailConfigIndex}][secure]" name="email[${mailConfigIndex}][secure]"
+                                <% if (Boolean(configs.mail[configs.mail.length - 1].secure)) { %> checked
+                                       <% } %>
+                                >
+                            <label for="email[${mailConfigIndex}][secure]" class="text-gray-300">Secure</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
                         <label for="email[${mailConfigIndex}][auth_user]" class="block text-gray-300 mb-1">Auth User</label>
-                        <input type="text" placeholder="Email Username" id="email[${mailConfigIndex}][auth_user]" name="email[${mailConfigIndex}][auth_user]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="text" placeholder="Email Username" id="email[${mailConfigIndex}][auth_user]" name="email[${mailConfigIndex}][auth_user]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">
                         <label id="email[${mailConfigIndex}][auth_pass]" class="block text-gray-300 mb-1">Auth Password</label>
-                        <input type="password" placeholder="Email Password" id="email[${mailConfigIndex}][auth_pass]" name="email[${mailConfigIndex}][auth_pass]" required class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
+                        <input type="password" placeholder="Email Password" id="email[${mailConfigIndex}][auth_pass]" name="email[${mailConfigIndex}][auth_pass]" class="shadow appearance-none border border-gray-600 rounded w-full py-2 px-3 bg-gray-700 text-white" />
                     </div>
 
                     <div class="form-group mb-4">

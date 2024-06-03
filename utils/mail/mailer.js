@@ -188,12 +188,25 @@ export default class NewsletterMailer {
      * @returns {Promise<*>} - The configured transporter.
      */
     async #transporter(mailConfig) {
-        return nodemailer.createTransport({
-            secure: true,
-            host: mailConfig.host,
-            port: mailConfig.port,
-            auth: {user: mailConfig.auth.user, pass: mailConfig.auth.pass}
-        });
+        // Destructure from mailConfig, defaulting secure to true if not specified
+        const { secure = true, host, port, auth } = mailConfig;
+    
+        // Initialize transport options
+        const transportOptions = {
+            secure,
+            host,
+            port
+        };
+    
+        // Conditionally add auth if both user and pass are provided
+        if (auth && auth.user && auth.pass) {
+            transportOptions.auth = {
+                user: auth.user,
+                pass: auth.pass
+            };
+        }
+    
+        return nodemailer.createTransport(transportOptions);
     }
 
     /**
