@@ -3,7 +3,7 @@
 <head>
     <title>Home - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/styles/style.css" rel="stylesheet"/>
+    <link href="<%= ghoslerUrl %>/styles/style.css" rel="stylesheet"/>
 </head>
 
 <body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
@@ -22,7 +22,7 @@
                 <h3 class="text-lg font-bold text-gray-300 mb-4">Manage Your Settings</h3>
                 <p class="text-gray-400 mb-4">Adjust your overall & newsletter settings for optimal experience.</p>
             </div>
-            <a href="/settings"
+            <a href="<%= ghoslerUrl %>/settings"
                class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">Settings</a>
         </div>
 
@@ -32,7 +32,7 @@
                 <h3 class="text-lg font-bold text-gray-300 mb-4">Analytics Dashboard</h3>
                 <p class="text-gray-400 mb-4">Explore comprehensive analytics for your newsletter.</p>
             </div>
-            <a href="/analytics"
+            <a href="<%= ghoslerUrl %>/analytics"
                class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300">Analytics</a>
         </div>
 
@@ -42,7 +42,7 @@
                 <h3 class="text-lg font-bold text-gray-300 mb-4">Debug Logs</h3>
                 <p class="text-gray-400 mb-4">Check debug level logs for debugging or finding certain info.</p>
             </div>
-            <a href="/logs/debug"
+            <a href="<%= ghoslerUrl %>/logs/debug"
                class="inline-block bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300">View
                 Logs</a>
         </div>
@@ -53,7 +53,7 @@
                 <h3 class="text-lg font-bold text-gray-300 mb-4">Error Logs</h3>
                 <p class="text-gray-400 mb-4">Check error level logs to see if something went wrong.</p>
             </div>
-            <a href="/logs/error"
+            <a href="<%= ghoslerUrl %>/logs/error"
                class="inline-block bg-pink-900 hover:bg-pink-950 text-white font-bold py-2 px-4 rounded transition duration-300">View
                 Logs</a>
         </div>

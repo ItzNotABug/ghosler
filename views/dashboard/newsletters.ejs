@@ -3,7 +3,7 @@
 <head>
     <title>Newsletters - Ghosler</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/styles/style.css" rel="stylesheet"/>
+    <link href="<%= ghoslerUrl %>/styles/style.css" rel="stylesheet"/>
 </head>
 
 <body class="bg-gray-900 text-gray-300 flex flex-col min-h-screen font-serif">
@@ -13,7 +13,7 @@
 <main class="container mx-auto p-6 flex-grow">
     <nav class="text-gray-400 mb-4">
         <ul class="flex">
-            <li><a href="/" class="hover:text-white">Home</a></li>
+            <li><a href="<%= ghoslerUrl %>/" class="hover:text-white">Home</a></li>
             <li><span class="mx-2">></span></li>
             <li>Newsletters</li>
         </ul>
@@ -48,7 +48,7 @@
                             <div class="text-sm text-gray-500 py-1"><%= element.description; %></div>
                         </td>
                         <td class="text-center px-6 py-4 relative">
-                            <form action="/newsletters/send" method="post">
+                            <form action="<%= ghoslerUrl %>/newsletters/send" method="post">
                                 <input type="hidden" name="postId" value="<%= post.id %>">
                                 <input type="hidden" name="newsletterId" value="<%= element.id %>">
                                 <input type="hidden" name="newsletterName" value="<%= element.name %>">
@@ -77,7 +77,7 @@
 
                     <div class="pt-4">
                         <div class="space-x-2">
-                            <form action="/newsletters/send" method="post">
+                            <form action="<%= ghoslerUrl %>/newsletters/send" method="post">
                                 <input type="hidden" name="postId" value="<%= post.id %>">
                                 <input type="hidden" name="newsletterId" value="<%= element.id %>">
                                 <input type="hidden" name="newsletterName" value="<%= element.name %>">
@@ -99,7 +99,7 @@
 <%- include('../partials/common/footer.ejs') %>
 
 <% if (typeof level !== 'undefined') { %>
-    <script>setTimeout(() => window.location = '/analytics', 1750);</script>
+    <script>setTimeout(() => window.location = '<%= ghoslerUrl %>/analytics', 1750);</script>
 <% } %>
 
 </body>

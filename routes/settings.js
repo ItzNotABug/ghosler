@@ -39,7 +39,16 @@ router.post('/template', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const formData = req.body;
-    formData['ghosler.url'] = req.protocol + '://' + req.hostname;
+
+    let fullUrl = new URL(`${req.protocol}://${req.get('Host')}${req.originalUrl}`);
+    if (req.get('Referer')) {
+        fullUrl = new URL(req.get('Referer'));
+    }
+    fullUrl.pathname = fullUrl.pathname.split('/settings')[0];
+    fullUrl.search = ''; // drops any query parameters
+    fullUrl.pathname = fullUrl.pathname.replace(/\/+/g, '/'); // combine repeated forward slashes in path
+    let normalizedUrl = fullUrl.href.replace(/\/$/, '').toString(); // drop a trailing slash
+    formData['ghosler.url'] = normalizedUrl;
 
     const result = await ProjectConfigs.update(formData);
     const configs = await ProjectConfigs.all();

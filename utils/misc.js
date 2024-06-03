@@ -34,7 +34,7 @@ export default class Miscellaneous {
         }));
 
         // Safeguard
-        Files.makeFilesDir().then();
+        await Files.makeFilesDir();
 
         logDebug(logTags.Express, '============================');
         logDebug(logTags.Express, 'View-engine set!');
@@ -43,12 +43,16 @@ export default class Miscellaneous {
         expressApp.enable('trust proxy');
 
         // add common data for response.
-        expressApp.use((_, res, next) => {
+        expressApp.use(async (_, res, next) => {
             // add project version info for all render pages.
             res.locals.version = ProjectConfigs.ghoslerVersion;
 
             // add no robots header tag to all.
             res.header('X-Robots-Tag', 'noindex, nofollow');
+
+            // provide ghosler.url to every view.
+            const ghosler = await ProjectConfigs.ghosler();
+            res.locals.ghoslerUrl = ghosler.url || '';
 
             // finally move ahead.
             next();
