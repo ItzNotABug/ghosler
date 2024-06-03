@@ -16,7 +16,7 @@ import analytics from './routes/analytics.js';
 import newsletters from './routes/newsletters.js';
 
 const expressApp = express();
-Miscellaneous.setup(expressApp).then();
+await Miscellaneous.setup(expressApp);
 
 // define routes
 logDebug('Express', 'Setting routes...');

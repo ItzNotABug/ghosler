@@ -46,7 +46,9 @@ router.post('/', async (req, res) => {
     }
     fullUrl.pathname = fullUrl.pathname.split('/settings')[0];
     fullUrl.search = ''; // drops any query parameters
-    formData['ghosler.url'] = fullUrl.toString();
+    fullUrl.pathname = fullUrl.pathname.replace(/\/+/g, '/'); // combine repeated forward slashes in path
+    let normalizedUrl = fullUrl.href.replace(/\/$/, '').toString(); // drop a trailing slash
+    formData['ghosler.url'] = normalizedUrl;
 
     const result = await ProjectConfigs.update(formData);
     const configs = await ProjectConfigs.all();

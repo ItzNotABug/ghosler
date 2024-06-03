@@ -34,7 +34,7 @@ export default class Miscellaneous {
         }));
 
         // Safeguard
-        Files.makeFilesDir().then();
+        await Files.makeFilesDir();
 
         logDebug(logTags.Express, '============================');
         logDebug(logTags.Express, 'View-engine set!');
@@ -51,13 +51,8 @@ export default class Miscellaneous {
             res.header('X-Robots-Tag', 'noindex, nofollow');
 
             // provide ghosler.url to every view.
-            try {
-                const ghosler = await ProjectConfigs.ghosler();
-                res.locals.ghoslerUrl = ghosler.url || '';
-            } catch {
-                res.locals.ghoslerUrl = '';
-                logDebug(logTags.Express, 'Error loading ghosler.url config: ' + error.message);
-            }
+            const ghosler = await ProjectConfigs.ghosler();
+            res.locals.ghoslerUrl = ghosler.url || '';
 
             // finally move ahead.
             next();
