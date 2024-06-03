@@ -1,13 +1,12 @@
 import Files from '../files.js';
 import BitSet from '../../bitset.js';
 import Miscellaneous from '../../misc.js';
-import {logDebug, logError, logTags} from '../../log/logger.js';
+import { logDebug, logError, logTags } from '../../log/logger.js';
 
 /**
  * A queue class for batching and processing updates to tracking statistics.
  */
 export default class EmailsQueue {
-
     /**
      * Creates a new Queue instance.
      *
@@ -67,7 +66,7 @@ export default class EmailsQueue {
 
             let requiresFileUpdate = false;
             const bitSet = new BitSet(post.stats.emailsOpened);
-            memberIndexes.forEach(index => {
+            memberIndexes.forEach((index) => {
                 if (bitSet.get(index) === 0) {
                     bitSet.set(index, 1);
                     requiresFileUpdate = true;
@@ -80,7 +79,10 @@ export default class EmailsQueue {
 
             const saved = await Files.create(post, true);
             if (saved) {
-                logDebug(logTags.Stats, `Batched tracking updated for post: ${post.title}.`);
+                logDebug(
+                    logTags.Stats,
+                    `Batched tracking updated for post: ${post.title}.`,
+                );
             }
         } catch (error) {
             logError(logTags.Stats, error);

@@ -2,7 +2,6 @@
  * Represents a BitSet, a data structure to handle a set of bits (0s and 1s).
  */
 export default class BitSet {
-
     /**
      * Creates a BitSet.
      *
@@ -24,7 +23,7 @@ export default class BitSet {
      * @returns {number} The count of bits set to 1.
      */
     popCount() {
-        return this.bits.filter(b => b === 1).length;
+        return this.bits.filter((b) => b === 1).length;
     }
 
     /**

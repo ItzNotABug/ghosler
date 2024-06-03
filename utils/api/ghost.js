@@ -2,13 +2,12 @@ import Miscellaneous from '../misc.js';
 import GhostAdminAPI from '@tryghost/admin-api';
 import ProjectConfigs from '../data/configs.js';
 import Subscriber from '../models/subscriber.js';
-import {logError, logTags, logToConsole} from '../log/logger.js';
+import { logError, logTags, logToConsole } from '../log/logger.js';
 
 /**
  * Class that handles api calls with Ghost's Admin APIs.
  */
 export default class Ghost {
-
     /**
      * A hardcoded 'Generic' newsletter type.
      *
@@ -19,7 +18,8 @@ export default class Ghost {
     static genericNewsletterItem = {
         id: '6de8d1d3d29a03060e1c4fa745e0eba7',
         name: 'Generic',
-        description: 'This option sends the post to all users, irrespective of their subscribed newsletter.'
+        description:
+            'This option sends the post to all users, irrespective of their subscribed newsletter.',
     };
 
     /**
@@ -67,16 +67,17 @@ export default class Ghost {
         try {
             const postInfo = await ghost.posts.read({
                 id: postId,
-                include: 'sentiment,count.positive_feedback,count.negative_feedback'
+                include:
+                    'sentiment,count.positive_feedback,count.negative_feedback',
             });
 
-            const {count, sentiment} = postInfo;
-            const {negative_feedback, positive_feedback} = count;
+            const { count, sentiment } = postInfo;
+            const { negative_feedback, positive_feedback } = count;
 
             return {
                 sentiment,
                 negative_feedback,
-                positive_feedback
+                positive_feedback,
             };
         } catch (error) {
             if (error.name !== 'NotFoundError') logError(logTags.Ghost, error);
@@ -87,7 +88,7 @@ export default class Ghost {
             return {
                 sentiment: 0,
                 negative_feedback: 0,
-                positive_feedback: 0
+                positive_feedback: 0,
             };
         }
     }
@@ -107,10 +108,9 @@ export default class Ghost {
 
         while (true) {
             const registeredMembers = await ghost.members.browse({
-                    page: page,
-                    filter: 'subscribed:true'
-                }
-            );
+                page: page,
+                filter: 'subscribed:true',
+            });
 
             subscribedMembers.push(...registeredMembers);
 
@@ -123,7 +123,8 @@ export default class Ghost {
 
         return subscribedMembers.reduce((activeSubscribers, member) => {
             const subscriber = Subscriber.make(member);
-            if (subscriber.isSubscribedTo(newsletterId)) activeSubscribers.push(subscriber);
+            if (subscriber.isSubscribedTo(newsletterId))
+                activeSubscribers.push(subscriber);
             return activeSubscribers;
         }, []);
     }
@@ -142,13 +143,23 @@ export default class Ghost {
             // supposed to be an array of objects but lets check anyway!
             if (Array.isArray(settings)) {
                 const commentsSettingsKey = 'comments_enabled';
-                const settingObject = settings.filter(obj => obj.key === commentsSettingsKey)[0];
-                const commentsEnabled = settingObject ? settingObject.value !== 'off' : true;
-                logToConsole(logTags.Ghost, `Site comments enabled: ${commentsEnabled}`);
+                const settingObject = settings.filter(
+                    (obj) => obj.key === commentsSettingsKey,
+                )[0];
+                const commentsEnabled = settingObject
+                    ? settingObject.value !== 'off'
+                    : true;
+                logToConsole(
+                    logTags.Ghost,
+                    `Site comments enabled: ${commentsEnabled}`,
+                );
                 return commentsEnabled;
             } else {
                 // no idea about this unknown structure, return a default value!
-                logToConsole(logTags.Ghost, 'Could not check if the site has comments enabled, defaulting to true');
+                logToConsole(
+                    logTags.Ghost,
+                    'Could not check if the site has comments enabled, defaulting to true',
+                );
                 return true;
             }
         } catch (error) {
@@ -167,8 +178,9 @@ export default class Ghost {
         const ghost = await this.#ghost();
         return await ghost.posts.browse({
             filter: `status:published+id:-${currentPostId}`,
-            order: 'published_at DESC', limit: 3,
-            fields: 'title, custom_excerpt, excerpt, url, feature_image'
+            order: 'published_at DESC',
+            limit: 3,
+            fields: 'title, custom_excerpt, excerpt, url, feature_image',
         });
     }
 
@@ -182,13 +194,17 @@ export default class Ghost {
     async registerWebhook() {
         const ghosler = await ProjectConfigs.ghosler();
         if (ghosler.url === '' || ghosler.url.includes('localhost')) {
-            return {level: 'warning', message: 'Ignore webhook check.'};
+            return { level: 'warning', message: 'Ignore webhook check.' };
         }
 
         const ghost = await this.#ghost();
         const secret = (await ProjectConfigs.ghost()).secret;
         if (!secret || secret === '') {
-            return {level: 'error', message: 'Secret is not set or empty or is less than 8 characters.'};
+            return {
+                level: 'error',
+                message:
+                    'Secret is not set or empty or is less than 8 characters.',
+            };
         }
 
         try {
@@ -199,16 +215,31 @@ export default class Ghost {
                 secret: secret,
             });
 
-            return {level: 'success', message: 'Webhook created successfully.'};
+            return {
+                level: 'success',
+                message: 'Webhook created successfully.',
+            };
         } catch (error) {
             const context = error.context;
             if (error.name === 'UnauthorizedError') {
-                return {level: 'error', message: 'Unable to check for Webhook, Ghost Admin API not valid.'};
-            } else if (context === 'Target URL has already been used for this event.') {
-                return {level: 'success', message: 'Webhook exists for this API Key.'};
+                return {
+                    level: 'error',
+                    message:
+                        'Unable to check for Webhook, Ghost Admin API not valid.',
+                };
+            } else if (
+                context === 'Target URL has already been used for this event.'
+            ) {
+                return {
+                    level: 'success',
+                    message: 'Webhook exists for this API Key.',
+                };
             } else {
                 logError(logTags.Ghost, error);
-                return {level: 'error', message: 'Webhook creation failed, see error logs.'};
+                return {
+                    level: 'error',
+                    message: 'Webhook creation failed, see error logs.',
+                };
             }
         }
     }
@@ -223,7 +254,7 @@ export default class Ghost {
     async registerIgnoreTag() {
         const ghosler = await ProjectConfigs.ghosler();
         if (ghosler.url === '' || ghosler.url.includes('localhost')) {
-            return {level: 'warning', message: 'Ignore tag check.'};
+            return { level: 'warning', message: 'Ignore tag check.' };
         }
 
         try {
@@ -232,20 +263,31 @@ export default class Ghost {
 
             // check if one already exists with given slug.
             const exists = await this.#ignoreTagExists(ghost, ignoreTagSlug);
-            if (exists) return {level: 'success', message: 'Ghosler ignore tag already exists.'};
+            if (exists)
+                return {
+                    level: 'success',
+                    message: 'Ghosler ignore tag already exists.',
+                };
 
             await ghost.tags.add({
                 slug: ignoreTagSlug,
                 name: '#GhoslerIgnore',
                 visibility: 'internal', // using # anyway makes it internal.
                 accent_color: '#0f0f0f',
-                description: 'Any post using this tag will be ignore by Ghosler & will not be sent as a newsletter email.'
+                description:
+                    'Any post using this tag will be ignore by Ghosler & will not be sent as a newsletter email.',
             });
 
-            return {level: 'success', message: 'Ignore tag created successfully.'};
+            return {
+                level: 'success',
+                message: 'Ignore tag created successfully.',
+            };
         } catch (error) {
             logError(logTags.Ghost, error);
-            return {level: 'error', message: 'Ignore tag creation failed, see error logs.'};
+            return {
+                level: 'error',
+                message: 'Ignore tag creation failed, see error logs.',
+            };
         }
     }
 
@@ -259,7 +301,7 @@ export default class Ghost {
      */
     async #ignoreTagExists(ghost, tagSlug) {
         try {
-            await ghost.tags.read({slug: tagSlug});
+            await ghost.tags.read({ slug: tagSlug });
             return true;
         } catch (error) {
             return false;
@@ -277,9 +319,14 @@ export default class Ghost {
     async #settings() {
         const ghost = await ProjectConfigs.ghost();
         let token = `Ghost ${Miscellaneous.ghostToken(ghost.key, '/admin/')}`;
-        const ghostHeaders = {Authorization: token, 'User-Agent': 'GhostAdminSDK/1.13.11'};
+        const ghostHeaders = {
+            Authorization: token,
+            'User-Agent': 'GhostAdminSDK/1.13.11',
+        };
 
-        const response = await fetch(`${ghost.url}/ghost/api/admin/settings`, {headers: ghostHeaders});
+        const response = await fetch(`${ghost.url}/ghost/api/admin/settings`, {
+            headers: ghostHeaders,
+        });
         if (!response.ok) {
             // will be caught by the calling function anyway.
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -295,7 +342,7 @@ export default class Ghost {
         return new GhostAdminAPI({
             url: ghost.url,
             key: ghost.key,
-            version: ghost.version
+            version: ghost.version,
         });
     }
 }

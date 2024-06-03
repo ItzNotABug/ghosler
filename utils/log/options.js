@@ -45,9 +45,13 @@ const filterOnly = (level) => {
  * @param {string} level - The log level for which the file transport should be configured.
  * @returns {winston.FileTransportInstance} - A Winston file transport instance configured for the specified level.
  */
-const transport = (level) => new winston.transports.File({
-    level: level, dirname: '.logs', filename: `${level}.log`, format: filterOnly(level)
-});
+const transport = (level) =>
+    new winston.transports.File({
+        level: level,
+        dirname: '.logs',
+        filename: `${level}.log`,
+        format: filterOnly(level),
+    });
 
 /**
  * `options` contains the configurations for the logger.
@@ -57,7 +61,7 @@ const transport = (level) => new winston.transports.File({
  */
 const options = {
     format: logFormat(),
-    transports: [transport('debug'), transport('error')]
+    transports: [transport('debug'), transport('error')],
 };
 
 export default options;

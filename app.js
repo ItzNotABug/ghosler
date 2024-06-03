@@ -1,7 +1,7 @@
 import express from 'express';
 import Miscellaneous from './utils/misc.js';
 import ProjectConfigs from './utils/data/configs.js';
-import {logDebug, logTags} from './utils/log/logger.js';
+import { logDebug, logTags } from './utils/log/logger.js';
 
 // route imports
 import logs from './routes/logs.js';
@@ -37,7 +37,7 @@ expressApp.use((req, res) => res.status(404).render('errors/404'));
 logDebug(logTags.Express, 'Routes configured!');
 
 // start the app with given port!
-ProjectConfigs.ghosler().then(configs => {
+ProjectConfigs.ghosler().then((configs) => {
     expressApp.listen(configs.port);
     logDebug(logTags.Express, 'App started successfully!');
     logDebug(logTags.Express, '============================');

@@ -15,6 +15,12 @@ files/
 .git
 .gitignore
 
+# prettier
+.prettierignore
+
+# ci
+.github
+
 # markdown
 LICENSE.md
 README.md

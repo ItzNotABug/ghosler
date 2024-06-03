@@ -36,7 +36,7 @@ export default class Post {
         primaryAuthor = '',
         visibility = '',
         tiers = [],
-        stats = new Stats()
+        stats = new Stats(),
     ) {
         this.id = id;
         this.url = url;
@@ -78,13 +78,16 @@ export default class Post {
             post.title,
             post.html,
             post.primary_tag?.name ?? '',
-            post.custom_excerpt ?? post.excerpt ?? post.plaintext?.substring(0, 75) ?? (post.title + '...'),
+            post.custom_excerpt ??
+                post.excerpt ??
+                post.plaintext?.substring(0, 75) ??
+                post.title + '...',
             post.feature_image,
             post.feature_image_caption,
             post.primary_author.name,
             post.visibility,
             post.tiers,
-            new Stats()
+            new Stats(),
         );
     }
 
@@ -109,7 +112,7 @@ export default class Post {
     static containsIgnoreTag(payload) {
         // it is always an array.
         const postTags = payload.post.current.tags;
-        return postTags.some(tag => tag.slug === 'ghosler_ignore');
+        return postTags.some((tag) => tag.slug === 'ghosler_ignore');
     }
 
     /**
@@ -161,8 +164,7 @@ export default class Post {
             date: this.date,
             title: this.title,
             author: this.primaryAuthor,
-            stats: this.stats
+            stats: this.stats,
         };
     }
 }
-

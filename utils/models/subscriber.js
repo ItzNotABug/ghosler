@@ -5,7 +5,15 @@ import Miscellaneous from '../misc.js';
  * A class that represents a user on the site who has enabled receiving the newsletters via email.
  */
 export default class Subscriber {
-    constructor(uuid, name, email, status, created, newsletters = [], subscriptions = []) {
+    constructor(
+        uuid,
+        name,
+        email,
+        status,
+        created,
+        newsletters = [],
+        subscriptions = [],
+    ) {
         this.uuid = uuid;
         this.name = name;
         this.email = email;
@@ -31,7 +39,7 @@ export default class Subscriber {
             jsonObject.status,
             jsonObject.created_at,
             jsonObject.newsletters,
-            jsonObject.subscriptions
+            jsonObject.subscriptions,
         );
     }
 
@@ -42,7 +50,9 @@ export default class Subscriber {
      * @returns {boolean} True if this is a paying member & has an active subscription.
      */
     isPaying(tierIds) {
-        const hasTier = this.subscriptions.some(subscription => tierIds.includes(subscription.tier.id));
+        const hasTier = this.subscriptions.some((subscription) =>
+            tierIds.includes(subscription.tier.id),
+        );
 
         // possible values are 'active', 'expired', 'canceled'.
         // also see why we use the first subscription object:
@@ -60,6 +70,9 @@ export default class Subscriber {
         // probably no/one newsletter exists.
         if (newsletterId === null) return true;
         else if (newsletterId === Ghost.genericNewsletterItem.id) return true;
-        else return this.newsletters.some(newsletter => newsletter.id === newsletterId);
+        else
+            return this.newsletters.some(
+                (newsletter) => newsletter.id === newsletterId,
+            );
     }
 }

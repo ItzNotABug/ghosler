@@ -5,14 +5,13 @@ import Files from './data/files.js';
 import cookieSession from 'cookie-session';
 import fileUpload from 'express-fileupload';
 import ProjectConfigs from './data/configs.js';
-import {extract} from '@extractus/oembed-extractor';
-import {logDebug, logError, logTags} from './log/logger.js';
+import { extract } from '@extractus/oembed-extractor';
+import { logDebug, logError, logTags } from './log/logger.js';
 
 /**
  * This class provides general utility methods.
  */
 export default class Miscellaneous {
-
     /**
      * Set up miscellaneous middlewares and configurations for a given express app instance.
      *
@@ -21,17 +20,25 @@ export default class Miscellaneous {
      */
     static async setup(expressApp) {
         expressApp.set('view engine', 'ejs');
-        expressApp.use(express.static("public"));
-        expressApp.use(express.json({limit: '50mb'}));
-        expressApp.use(express.urlencoded({extended: true, limit: '50mb'}));
-        expressApp.use(fileUpload({safeFileNames: true, preserveExtension: true, useTempFiles: false}));
+        expressApp.use(express.static('public'));
+        expressApp.use(express.json({ limit: '50mb' }));
+        expressApp.use(express.urlencoded({ extended: true, limit: '50mb' }));
+        expressApp.use(
+            fileUpload({
+                safeFileNames: true,
+                preserveExtension: true,
+                useTempFiles: false,
+            }),
+        );
 
         // login sessions.
-        expressApp.use(cookieSession({
-            name: 'ghosler',
-            maxAge: 24 * 60 * 60 * 1000,
-            secret: crypto.randomUUID(), // dynamic secret, always invalidated on a restart.
-        }));
+        expressApp.use(
+            cookieSession({
+                name: 'ghosler',
+                maxAge: 24 * 60 * 60 * 1000,
+                secret: crypto.randomUUID(), // dynamic secret, always invalidated on a restart.
+            }),
+        );
 
         // Safeguard
         await Files.makeFilesDir();
@@ -64,14 +71,16 @@ export default class Miscellaneous {
         expressApp.all('*', async (req, res, next) => {
             const path = req.path;
             const isUnrestrictedPath = /\/login$|\/preview$|\/track/.test(path);
-            const isPostPublish = req.method === 'POST' && /\/published$/.test(path);
+            const isPostPublish =
+                req.method === 'POST' && /\/published$/.test(path);
 
             if (isUnrestrictedPath || isPostPublish) return next();
 
             if (req.session.user) return next();
 
             // redirect to page the user wanted to go to, after auth.
-            const redirect = path !== '/' ? `?redirect=${encodeURIComponent(path)}` : '';
+            const redirect =
+                path !== '/' ? `?redirect=${encodeURIComponent(path)}` : '';
             res.status(401).redirect(`/login${redirect}`);
         });
     }
@@ -83,7 +92,8 @@ export default class Miscellaneous {
      */
     static trackingPixel() {
         return Buffer.from(
-            'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==', 'base64'
+            'R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
+            'base64',
         );
     }
 
@@ -95,17 +105,26 @@ export default class Miscellaneous {
      */
     static async authenticated(req) {
         if (!req.body || !req.body.username || !req.body.password) {
-            return {level: 'error', message: 'Please enter both Username & Password!'};
+            return {
+                level: 'error',
+                message: 'Please enter both Username & Password!',
+            };
         }
 
-        const {username, password} = req.body;
+        const { username, password } = req.body;
         const ghosler = await ProjectConfigs.ghosler();
 
-        if (username === ghosler.auth.user && this.hash(password) === ghosler.auth.pass) {
+        if (
+            username === ghosler.auth.user &&
+            this.hash(password) === ghosler.auth.pass
+        ) {
             req.session.user = ghosler.auth.user;
-            return {level: 'success', message: 'Successfully logged in!'};
+            return { level: 'success', message: 'Successfully logged in!' };
         } else {
-            return {level: 'error', message: 'Username or Password does not match!'};
+            return {
+                level: 'error',
+                message: 'Username or Password does not match!',
+            };
         }
     }
 
@@ -119,7 +138,20 @@ export default class Miscellaneous {
         const date = new Date(dateString);
 
         const day = String(date.getDate()).padStart(2, '0');
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const months = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+        ];
         const month = months[date.getMonth()];
         const year = date.getFullYear();
 
@@ -158,7 +190,7 @@ export default class Miscellaneous {
      */
     static detectUnsplashImage(imageUrl) {
         return /images\.unsplash\.com/.test(imageUrl);
-    };
+    }
 
     /**
      * Removes the tracking if it exists and returns a clean url.
@@ -219,7 +251,7 @@ export default class Miscellaneous {
      * @returns {Promise<void>}
      */
     static sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
     /**
@@ -265,7 +297,10 @@ export default class Miscellaneous {
 
         // Secret set on Ghosler but not recd. in the request headers.
         if (ghostConfigs.secret && !signatureWithDateHeader) {
-            logError(logTags.Express, 'The \'X-Ghost-Signature\' header not found in the request. Did you setup the Secret Key correctly?');
+            logError(
+                logTags.Express,
+                "The 'X-Ghost-Signature' header not found in the request. Did you setup the Secret Key correctly?",
+            );
             return false;
         }
 
@@ -275,19 +310,26 @@ export default class Miscellaneous {
         const signature = signatureAndTimeStamp[0].replace('sha256=', '');
         const timeStamp = parseInt(signatureAndTimeStamp[1].replace('t=', ''));
         if (!signature || isNaN(timeStamp)) {
-            logError(logTags.Express, 'Either the signature or the timestamp in the \'X-Ghost-Signature\' header is not valid or doesn\'t exist.');
+            logError(
+                logTags.Express,
+                "Either the signature or the timestamp in the 'X-Ghost-Signature' header is not valid or doesn't exist.",
+            );
             return false;
         }
 
         const maxTimeDiff = 5 * 60 * 1000; // 5 minutes
         if (Math.abs(Date.now() - timeStamp) > maxTimeDiff) {
-            logError(logTags.Express, 'The timestamp in the \'X-Ghost-Signature\' header exceeds 5 minutes.');
+            logError(
+                logTags.Express,
+                "The timestamp in the 'X-Ghost-Signature' header exceeds 5 minutes.",
+            );
             return false;
         }
 
         const expectedSignature = crypto
             .createHmac('sha256', ghostConfigs.secret)
-            .update(payload).digest('hex');
+            .update(payload)
+            .digest('hex');
 
         return signature === expectedSignature;
     }
@@ -304,7 +346,10 @@ export default class Miscellaneous {
         const [id, secret] = key.split(':');
 
         return jwt.sign({}, Buffer.from(secret, 'hex'), {
-            keyid: id, algorithm: 'HS256', expiresIn: '5m', audience
+            keyid: id,
+            algorithm: 'HS256',
+            expiresIn: '5m',
+            audience,
         });
     }
 }

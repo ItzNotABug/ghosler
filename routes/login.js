@@ -4,7 +4,7 @@ import Miscellaneous from '../utils/misc.js';
 const router = express.Router();
 
 router.get('/login', (req, res) => {
-    res.render('login', {redirect: req.query.redirect ?? ''});
+    res.render('login', { redirect: req.query.redirect ?? '' });
 });
 
 router.post('/login', async (req, res) => {
@@ -21,6 +21,5 @@ router.get('/logout', (req, res) => {
     req.session = null;
     res.redirect('/');
 });
-
 
 export default router;
