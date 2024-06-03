@@ -1,13 +1,12 @@
 import Miscellaneous from '../misc.js';
 import * as nodemailer from 'nodemailer';
 import ProjectConfigs from '../data/configs.js';
-import {logDebug, logError, logTags, logToConsole} from '../log/logger.js';
+import { logDebug, logError, logTags, logToConsole } from '../log/logger.js';
 
 /**
  * Class responsible for sending newsletters to subscribers.
  */
 export default class NewsletterMailer {
-
     /**
      * Creates an instance of NewsletterMailer.
      *
@@ -18,7 +17,14 @@ export default class NewsletterMailer {
      * @param {string|undefined} partialContent - Partial HTML content of the email for non-paying users.
      * @param {string} unsubscribeLink - An unsubscribe link for the subscribers.
      */
-    constructor(post, subscribers, newsletterName, fullContent, partialContent, unsubscribeLink) {
+    constructor(
+        post,
+        subscribers,
+        newsletterName,
+        fullContent,
+        partialContent,
+        unsubscribeLink,
+    ) {
         this.post = post;
         this.subscribers = subscribers;
         this.newsletterName = newsletterName;
@@ -39,28 +45,49 @@ export default class NewsletterMailer {
 
         let totalEmailsSent = 0;
         const mailConfigs = await ProjectConfigs.mail();
-        let tierIds = this.post.isPaid ? [...this.post.tiers.map(tier => tier.id)] : [];
+        let tierIds = this.post.isPaid
+            ? [...this.post.tiers.map((tier) => tier.id)]
+            : [];
 
         if (mailConfigs.length > 1 && this.subscribers.length > 1) {
-            logDebug(logTags.Newsletter, 'More than one subscriber & email configs found, splitting the subscribers.');
+            logDebug(
+                logTags.Newsletter,
+                'More than one subscriber & email configs found, splitting the subscribers.',
+            );
 
-            const chunkSize = Math.ceil(this.subscribers.length / mailConfigs.length);
+            const chunkSize = Math.ceil(
+                this.subscribers.length / mailConfigs.length,
+            );
             for (let i = 0; i < mailConfigs.length; i++) {
-
                 // settings
                 const mailConfig = mailConfigs[i];
                 const emailsPerBatch = mailConfig.batch_size ?? 10;
                 const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
-                const chunkedSubscribers = this.subscribers.slice(i * chunkSize, (i + 1) * chunkSize);
+                const chunkedSubscribers = this.subscribers.slice(
+                    i * chunkSize,
+                    (i + 1) * chunkSize,
+                );
 
                 // create required batches and send.
-                const batches = this.#createBatches(chunkedSubscribers, emailsPerBatch);
+                const batches = this.#createBatches(
+                    chunkedSubscribers,
+                    emailsPerBatch,
+                );
 
                 // we need increment this stat as we are inside a loop.
-                totalEmailsSent += await this.#processBatches(mailConfig, batches, chunkSize, tierIds, delayPerBatch);
+                totalEmailsSent += await this.#processBatches(
+                    mailConfig,
+                    batches,
+                    chunkSize,
+                    tierIds,
+                    delayPerBatch,
+                );
             }
         } else {
-            logDebug(logTags.Newsletter, 'Single user or email config found, sending email(s).');
+            logDebug(
+                logTags.Newsletter,
+                'Single user or email config found, sending email(s).',
+            );
 
             // settings
             const mailConfig = mailConfigs[0];
@@ -68,8 +95,17 @@ export default class NewsletterMailer {
             const delayPerBatch = mailConfig.delay_per_batch ?? 1250;
 
             // create required batches and send.
-            const batches = this.#createBatches(this.subscribers, emailsPerBatch);
-            totalEmailsSent = await this.#processBatches(mailConfig, batches, emailsPerBatch, tierIds, delayPerBatch);
+            const batches = this.#createBatches(
+                this.subscribers,
+                emailsPerBatch,
+            );
+            totalEmailsSent = await this.#processBatches(
+                mailConfig,
+                batches,
+                emailsPerBatch,
+                tierIds,
+                delayPerBatch,
+            );
         }
 
         // Update post status and save it.
@@ -92,7 +128,13 @@ export default class NewsletterMailer {
      *
      * @returns {Promise<boolean>} - Promise resolving to true if email was sent successfully, false otherwise.
      */
-    async #sendEmailToSubscriber(transporter, mailConfig, subscriber, index, html) {
+    async #sendEmailToSubscriber(
+        transporter,
+        mailConfig,
+        subscriber,
+        index,
+        html,
+    ) {
         const correctHTML = this.#correctHTML(html, subscriber, index);
         const customSubject = await this.#makeEmailSubject(subscriber);
 
@@ -106,12 +148,15 @@ export default class NewsletterMailer {
                 list: {
                     unsubscribe: {
                         comment: 'Unsubscribe',
-                        url: this.unsubscribeLink.replace('{MEMBER_UUID}', subscriber.uuid),
+                        url: this.unsubscribeLink.replace(
+                            '{MEMBER_UUID}',
+                            subscriber.uuid,
+                        ),
                     },
                 },
                 headers: {
-                    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
-                }
+                    'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+                },
             });
 
             return info.response.includes('250');
@@ -137,14 +182,17 @@ export default class NewsletterMailer {
             .replace('19 September 2013', subscriber.created) // default value due to preview
             .replace('jamie@example.com', subscriber.email) // default value due to preview
             .replace('free subscriber', `${subscriber.status} subscriber`) // default value due to preview
-            .replace('{TRACKING_PIXEL_LINK}', Miscellaneous.encode(`${this.post.id}_${index}`));
+            .replace(
+                '{TRACKING_PIXEL_LINK}',
+                Miscellaneous.encode(`${this.post.id}_${index}`),
+            );
 
         if (subscriber.name === '') {
             // we use wrong class tag to keep the element visible,
             // use the right one to hide it as it is defined in the styles.
             source = source.replace(
-                'class=\"wrong-user-subscription-name-field\"',
-                'class=\"user-subscription-name-field\"'
+                'class="wrong-user-subscription-name-field"',
+                'class="user-subscription-name-field"',
             );
         }
 
@@ -160,7 +208,8 @@ export default class NewsletterMailer {
     async #makeEmailSubject(subscriber) {
         // already cached => fast path.
         const newsletterConfig = await ProjectConfigs.newsletter();
-        let customSubject = newsletterConfig.custom_subject_pattern || this.post.title;
+        let customSubject =
+            newsletterConfig.custom_subject_pattern || this.post.title;
 
         customSubject = customSubject
             .replace('{{post_title}}', this.post.title)
@@ -168,13 +217,28 @@ export default class NewsletterMailer {
 
         // a post may not have a primary tag.
         if (customSubject.includes('{{primary_tag}}')) {
-            if (this.post.primaryTag) customSubject = customSubject.replace('{{primary_tag}}', this.post.primaryTag);
-            else customSubject = customSubject.replace(/( • #| • )?{{primary_tag}}/, '');
+            if (this.post.primaryTag)
+                customSubject = customSubject.replace(
+                    '{{primary_tag}}',
+                    this.post.primaryTag,
+                );
+            else
+                customSubject = customSubject.replace(
+                    /( • #| • )?{{primary_tag}}/,
+                    '',
+                );
         }
 
         if (customSubject.includes('{{newsletter_name}}')) {
-            const nlsName = this.newsletterName ?? subscriber.newsletters.filter(nls => nls.status === 'active')[0].name;
-            customSubject = customSubject.replace('{{newsletter_name}}', nlsName);
+            const nlsName =
+                this.newsletterName ??
+                subscriber.newsletters.filter(
+                    (nls) => nls.status === 'active',
+                )[0].name;
+            customSubject = customSubject.replace(
+                '{{newsletter_name}}',
+                nlsName,
+            );
         }
 
         return customSubject;
@@ -192,7 +256,7 @@ export default class NewsletterMailer {
             secure: true,
             host: mailConfig.host,
             port: mailConfig.port,
-            auth: {user: mailConfig.auth.user, pass: mailConfig.auth.pass}
+            auth: { user: mailConfig.auth.user, pass: mailConfig.auth.pass },
         });
     }
 
@@ -223,7 +287,13 @@ export default class NewsletterMailer {
      *
      * @returns {Promise<number>} Total emails sent.
      */
-    async #processBatches(mailConfig, batches, chunkSize, tierIds, delayBetweenBatches) {
+    async #processBatches(
+        mailConfig,
+        batches,
+        chunkSize,
+        tierIds,
+        delayBetweenBatches,
+    ) {
         let emailsSent = 0;
         const totalBatchLength = batches.length;
         const transporter = await this.#transporter(mailConfig);
@@ -235,23 +305,35 @@ export default class NewsletterMailer {
             const promises = [
                 ...batch.map((subscriber, index) => {
                     const globalIndex = startIndex + index;
-                    const contentToSend = this.post.isPaid ?
-                        subscriber.isPaying(tierIds) ?
-                            this.fullContent :
-                            this.partialContent ?? this.fullContent
+                    const contentToSend = this.post.isPaid
+                        ? subscriber.isPaying(tierIds)
+                            ? this.fullContent
+                            : this.partialContent ?? this.fullContent
                         : this.fullContent;
-                    return this.#sendEmailToSubscriber(transporter, mailConfig, subscriber, globalIndex, contentToSend);
-                })
+                    return this.#sendEmailToSubscriber(
+                        transporter,
+                        mailConfig,
+                        subscriber,
+                        globalIndex,
+                        contentToSend,
+                    );
+                }),
             ];
 
             const batchResults = await Promise.allSettled(promises);
-            emailsSent += batchResults.filter(result => result.value === true).length;
+            emailsSent += batchResults.filter(
+                (result) => result.value === true,
+            ).length;
 
             if (totalBatchLength > 1) {
-                logToConsole(logTags.Newsletter, `Batch ${batchIndex + 1}/${totalBatchLength} complete.`);
+                logToConsole(
+                    logTags.Newsletter,
+                    `Batch ${batchIndex + 1}/${totalBatchLength} complete.`,
+                );
             }
 
-            if (batchIndex < batches.length - 1) await Miscellaneous.sleep(delayBetweenBatches);
+            if (batchIndex < batches.length - 1)
+                await Miscellaneous.sleep(delayBetweenBatches);
         }
 
         return emailsSent;

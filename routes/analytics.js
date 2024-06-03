@@ -18,7 +18,7 @@ router.get('/details/:postId', async (req, res) => {
     const postId = req.params.postId;
     const post = await Files.get(postId);
     const postSentiments = await new Ghost().postSentiments(postId);
-    res.render('dashboard/details', {post, postSentiments});
+    res.render('dashboard/details', { post, postSentiments });
 });
 
 export default router;

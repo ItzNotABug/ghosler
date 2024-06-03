@@ -9,19 +9,20 @@ const router = express.Router();
 
 router.get('/', async (_, res) => {
     const configs = await ProjectConfigs.all();
-    res.render('dashboard/settings', {configs: configs});
+    res.render('dashboard/settings', { configs: configs });
 });
 
 router.get('/template', async (_, res) => {
     const customTemplateExists = await Files.customTemplateExists();
-    res.render('dashboard/upload-template', {customTemplateExists});
+    res.render('dashboard/upload-template', { customTemplateExists });
 });
 
 router.get('/template/download/:type', async (req, res) => {
     const downloadType = req.params.type ?? 'base'; // default is base.
 
     let newsletterFilePath = path.join(process.cwd(), '/views/newsletter.ejs');
-    if (downloadType === 'custom_template') newsletterFilePath = Files.customTemplatePath();
+    if (downloadType === 'custom_template')
+        newsletterFilePath = Files.customTemplatePath();
 
     const newsletterFile = fs.readFileSync(newsletterFilePath);
     res.setHeader('Content-Type', 'text/plain');
@@ -31,16 +32,22 @@ router.get('/template/download/:type', async (req, res) => {
 
 router.post('/template', async (req, res) => {
     const customTemplateFile = req.files['custom_template.file'];
-    // noinspection JSCheckFunctionSignatures
-    const {level, message} = await ProjectConfigs.updateCustomTemplate(customTemplateFile);
+    const { level, message } =
+        await ProjectConfigs.updateCustomTemplate(customTemplateFile);
     const customTemplateExists = await Files.customTemplateExists();
-    res.render('dashboard/upload-template', {level, message, customTemplateExists});
+    res.render('dashboard/upload-template', {
+        level,
+        message,
+        customTemplateExists,
+    });
 });
 
 router.post('/', async (req, res) => {
     const formData = req.body;
 
-    let fullUrl = new URL(`${req.protocol}://${req.get('Host')}${req.originalUrl}`);
+    let fullUrl = new URL(
+        `${req.protocol}://${req.get('Host')}${req.originalUrl}`,
+    );
     if (req.get('Referer')) {
         fullUrl = new URL(req.get('Referer'));
     }
@@ -53,7 +60,7 @@ router.post('/', async (req, res) => {
     const result = await ProjectConfigs.update(formData);
     const configs = await ProjectConfigs.all();
 
-    let {level, message} = result;
+    let { level, message } = result;
 
     if (configs.ghost.url && configs.ghost.key) {
         const ghost = new Ghost();
@@ -69,8 +76,7 @@ router.post('/', async (req, res) => {
         }
     }
 
-    res.render('dashboard/settings', {level, message, configs});
+    res.render('dashboard/settings', { level, message, configs });
 });
-
 
 export default router;

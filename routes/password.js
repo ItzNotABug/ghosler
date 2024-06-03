@@ -13,5 +13,4 @@ router.post('/', async (req, res) => {
     res.render('dashboard/password', result);
 });
 
-
 export default router;

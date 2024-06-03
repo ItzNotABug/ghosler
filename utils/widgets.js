@@ -1,14 +1,13 @@
 // noinspection HtmlUnknownAttribute,CssOverwrittenProperties,JSJQueryEfficiency
 
-import {inline} from 'css-inline';
 import * as cheerio from 'cheerio';
+import { inline } from 'css-inline';
 import probe from 'probe-image-size';
-import {minify} from 'html-minifier';
+import { minify } from 'html-minifier';
 
 import Miscellaneous from './misc.js';
 
 export default class Widgets {
-
     /**
      * Handles adding Bookmarks, Video, Audio, File, YouTube, Twitter, Image/Unsplash cards.
      *
@@ -38,7 +37,10 @@ export default class Widgets {
         await this.#unsplashOrImage($, postId, trackedLinks, isTracking);
 
         //trackedLinks: [], modifiedHtml: template
-        return {trackedLinks: Array.from(trackedLinks), modifiedHtml: this.#inlineAndMinify($)};
+        return {
+            trackedLinks: Array.from(trackedLinks),
+            modifiedHtml: this.#inlineAndMinify($),
+        };
     }
 
     /**
@@ -48,7 +50,9 @@ export default class Widgets {
      */
     static #bookmark($) {
         const bookmarkPublisher = $('.kg-bookmark-publisher');
-        bookmarkPublisher.html(`<span style="margin:0 6px">•</span>${bookmarkPublisher.html()}`);
+        bookmarkPublisher.html(
+            `<span style="margin:0 6px">•</span>${bookmarkPublisher.html()}`,
+        );
 
         $('.kg-bookmark-thumbnail').each(function () {
             const img = $(this).find('img');
@@ -56,7 +60,10 @@ export default class Widgets {
 
             if (imageUrl) {
                 const currentStyle = $(this).attr('style') || '';
-                $(this).attr('style', `${currentStyle} background-image: url('${imageUrl}');`);
+                $(this).attr(
+                    'style',
+                    `${currentStyle} background-image: url('${imageUrl}');`,
+                );
             }
         });
     }
@@ -73,7 +80,10 @@ export default class Widgets {
             const figure = $(this);
             let thumbnailUrl = figure.attr('data-kg-custom-thumbnail');
             if (!thumbnailUrl) thumbnailUrl = figure.attr('data-kg-thumbnail');
-            if (!thumbnailUrl) thumbnailUrl = 'https://img.spacergif.org/v1/1280x720/0a/spacer.png';
+            if (!thumbnailUrl) {
+                thumbnailUrl =
+                    'https://img.spacergif.org/v1/1280x720/0a/spacer.png';
+            }
 
             const videoContent = `
                 <a href="${postUrl}" target="_blank">
@@ -113,7 +123,9 @@ export default class Widgets {
         audioFigures.each(function () {
             const audioFigure = $(this);
             const fileName = audioFigure.find('.kg-audio-title').text().trim();
-            const duration = Miscellaneous.formatDuration(audioFigure.find('.kg-audio-duration').text().trim());
+            const duration = Miscellaneous.formatDuration(
+                audioFigure.find('.kg-audio-duration').text().trim(),
+            );
 
             // this is pretty huge actually!
             const audioElement = `
@@ -194,9 +206,18 @@ export default class Widgets {
             const file = $(this);
             const metaData = file.find('.kg-file-card-metadata');
             const fileTitle = file.find('.kg-file-card-title').text().trim();
-            const fileCaption = file.find('.kg-file-card-caption').text().trim();
-            const fileName = metaData.find('.kg-file-card-filename').text().trim();
-            const fileSize = metaData.find('.kg-file-card-filesize').text().trim();
+            const fileCaption = file
+                .find('.kg-file-card-caption')
+                .text()
+                .trim();
+            const fileName = metaData
+                .find('.kg-file-card-filename')
+                .text()
+                .trim();
+            const fileSize = metaData
+                .find('.kg-file-card-filesize')
+                .text()
+                .trim();
 
             const fileElement = `
                 <table border="0" cellpadding="4" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0; mso-table-rspace: 0; width: 100%; margin: 0 0 1.5em 0; border-radius: 3px; border: 1px solid #e5eff5;" width="100%">
@@ -281,13 +302,17 @@ export default class Widgets {
             let trackedVideoLink = embedUrl;
 
             if (isYoutube) {
-                const videoId = (embedUrl.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/) || [])[1];
+                const videoId = (embedUrl.match(
+                    /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
+                ) || [])[1];
                 if (videoId) {
                     videoLink = `https://youtu.be/${videoId}`;
                     trackedVideoLink = videoLink;
                 }
             } else if (isVimeo) {
-                const videoId = (embedUrl.match(/player\.vimeo\.com\/video\/([a-zA-Z0-9_-]+)/) || [])[1];
+                const videoId = (embedUrl.match(
+                    /player\.vimeo\.com\/video\/([a-zA-Z0-9_-]+)/,
+                ) || [])[1];
                 if (videoId) {
                     videoLink = `https://vimeo.com/${videoId}`;
                     trackedVideoLink = videoLink;
@@ -379,15 +404,19 @@ export default class Widgets {
      * @param {boolean} isTracking
      */
     static async #gallery($, trackedLinks, isTracking) {
-        const galleryImages = $('.kg-gallery-card .kg-gallery-image img').toArray();
+        const galleryImages = $(
+            '.kg-gallery-card .kg-gallery-image img',
+        ).toArray();
         const promises = galleryImages.map(async (element) => {
             const image = $(element);
             const sourceUrl = image.attr('src');
             const originalLink = Miscellaneous.getOriginalUrl(sourceUrl);
 
-            let dimensions = {width: 600, height: 0};
+            let dimensions = { width: 600, height: 0 };
             const probeSize = await probe(sourceUrl);
-            dimensions.height = Math.round(probeSize.height * (dimensions.width / probeSize.width));
+            dimensions.height = Math.round(
+                probeSize.height * (dimensions.width / probeSize.width),
+            );
 
             let anchorTrackableUrl = originalLink;
             if (isTracking) anchorTrackableUrl = sourceUrl; // if tracking, this already is a tracked link!
@@ -419,7 +448,7 @@ export default class Widgets {
             const figure = $(element);
             let image = figure.find('img');
             let imageUrl = image.attr('src');
-            let dimensions = {width: 600, height: 0};
+            let dimensions = { width: 600, height: 0 };
 
             const imageParent = image.parent();
             const wasInsideAnchor = imageParent.is('a');
@@ -434,7 +463,10 @@ export default class Widgets {
                 imageUrl.searchParams.delete('w');
                 imageUrl.searchParams.delete('h');
 
-                imageUrl.searchParams.set('w', (dimensions.width * 2).toFixed(0));
+                imageUrl.searchParams.set(
+                    'w',
+                    (dimensions.width * 2).toFixed(0),
+                );
                 imageUrl = imageUrl.href;
             }
 
@@ -447,20 +479,28 @@ export default class Widgets {
             }
 
             // we need to remove the tracked links inside caption too!
-            $(caption).find('a').each(function () {
-                let anchorTag = $(this);
-                let href = anchorTag.attr('href');
+            $(caption)
+                .find('a')
+                .each(function () {
+                    let anchorTag = $(this);
+                    let href = anchorTag.attr('href');
 
-                // replacing happens after the links have been added for tracking.
-                // so, we need to remove these links, like unsplash & the caption.
-                if (href && href.includes('/track/link?')) {
-                    anchorTag.attr('href', cleanImageUrl);
-                    if (isTracking) trackedLinks.delete(Miscellaneous.getOriginalUrl(href));
-                }
-            });
+                    // replacing happens after the links have been added for tracking.
+                    // so, we need to remove these links, like unsplash & the caption.
+                    if (href && href.includes('/track/link?')) {
+                        anchorTag.attr('href', cleanImageUrl);
+                        if (isTracking) {
+                            trackedLinks.delete(
+                                Miscellaneous.getOriginalUrl(href),
+                            );
+                        }
+                    }
+                });
 
             const probeSize = await probe(cleanImageUrl);
-            dimensions.height = Math.round(probeSize.height * (dimensions.width / probeSize.width));
+            dimensions.height = Math.round(
+                probeSize.height * (dimensions.width / probeSize.width),
+            );
 
             let imageHtml = `<img alt="${image.attr('alt')}" class="kg-image" height="${dimensions.height}" loading="lazy" src="${cleanImageUrl}" width="${dimensions.width}">`;
 
@@ -468,7 +508,10 @@ export default class Widgets {
                 imageHtml = `<a href="${anchorHref}">${imageHtml}</a>`;
             } else {
                 const trackedAnchorLink = isTracking
-                    ? await Miscellaneous.addTrackingToUrl(cleanImageUrl, postId)
+                    ? await Miscellaneous.addTrackingToUrl(
+                          cleanImageUrl,
+                          postId,
+                      )
                     : cleanImageUrl;
                 imageHtml = `<a href="${trackedAnchorLink}">${imageHtml}</a>`;
             }
@@ -495,12 +538,14 @@ export default class Widgets {
      */
     static #inlineAndMinify($) {
         // a few things have been taken straight from Ghost's repo.
-        const originalImageSizes = $('img').get().map((image) => {
-            const src = image.attribs.src;
-            const width = image.attribs.width;
-            const height = image.attribs.height;
-            return {src, width, height};
-        });
+        const originalImageSizes = $('img')
+            .get()
+            .map((image) => {
+                const src = image.attribs.src;
+                const width = image.attribs.width;
+                const height = image.attribs.height;
+                return { src, width, height };
+            });
 
         const inlinedCssHtml = inline($.html(), {
             keep_style_tags: true,
@@ -513,10 +558,16 @@ export default class Widgets {
 
         for (let i = 0; i < imageTags.length; i += 1) {
             if (imageTags[i].attribs.src === originalImageSizes[i].src) {
-                if (imageTags[i].attribs.width === 'auto' && originalImageSizes[i].width) {
+                if (
+                    imageTags[i].attribs.width === 'auto' &&
+                    originalImageSizes[i].width
+                ) {
                     imageTags[i].attribs.width = originalImageSizes[i].width;
                 }
-                if (imageTags[i].attribs.height === 'auto' && originalImageSizes[i].height) {
+                if (
+                    imageTags[i].attribs.height === 'auto' &&
+                    originalImageSizes[i].height
+                ) {
                     imageTags[i].attribs.height = originalImageSizes[i].height;
                 }
             }
@@ -527,7 +578,9 @@ export default class Widgets {
 
         // convert figure and figcaption to div so that Outlook applies margins.
         // styles are already inlined at this point, so it's kinda fine to do this.
-        $('figure, figcaption').each((index, element) => !!(element.tagName = 'div'));
+        $('figure, figcaption').each(
+            (index, element) => !!(element.tagName = 'div'),
+        );
 
         return minify($.html(), {
             minifyCSS: true,

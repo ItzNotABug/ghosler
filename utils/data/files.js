@@ -1,13 +1,12 @@
 import path from 'path';
 import fs from 'fs/promises';
 import BitSet from '../bitset.js';
-import {logDebug, logError, logTags} from '../log/logger.js';
+import { logDebug, logError, logTags } from '../log/logger.js';
 
 /**
  * This class manages the analytics for each post sent via email as a newsletter.
  */
 export default class Files {
-
     /**
      * Get the files' directory.
      */
@@ -67,7 +66,6 @@ export default class Files {
     static async get(postId) {
         const isExists = await this.exists(postId);
         if (!isExists) return undefined;
-
         else {
             const filePath = path.join(this.#filesPath(), `${postId}.json`);
 
@@ -132,31 +130,39 @@ export default class Files {
             let totalSent = 0;
             let totalOpens = 0;
 
-            const analytics = await Promise.all(files.map(async (file) => {
-                const filePath = path.join(this.#filesPath(), file);
-                const data = JSON.parse(await fs.readFile(filePath, 'utf8'));
+            const analytics = await Promise.all(
+                files.map(async (file) => {
+                    const filePath = path.join(this.#filesPath(), file);
+                    const data = JSON.parse(
+                        await fs.readFile(filePath, 'utf8'),
+                    );
 
-                const numbered = new BitSet(data.stats.emailsOpened ?? '').popCount();
+                    const numbered = new BitSet(
+                        data.stats.emailsOpened ?? '',
+                    ).popCount();
 
-                totalPosts += 1;
-                totalOpens += numbered;
-                totalSent += data.stats.emailsSent ? data.stats.emailsSent : 0;
+                    totalPosts += 1;
+                    totalOpens += numbered;
+                    totalSent += data.stats.emailsSent
+                        ? data.stats.emailsSent
+                        : 0;
 
-                data.stats.emailsOpened = numbered;
+                    data.stats.emailsOpened = numbered;
 
-                return data;
-            }));
+                    return data;
+                }),
+            );
 
             const overview = {
                 posts: totalPosts,
                 sent: totalSent,
-                opens: totalOpens
+                opens: totalOpens,
             };
 
-            return {overview, analytics};
+            return { overview, analytics };
         } catch (error) {
             logError(logTags.Files, error);
-            return {overview: {posts: 0, sent: 0, opens: 0}, analytics: []};
+            return { overview: { posts: 0, sent: 0, opens: 0 }, analytics: [] };
         }
     }
 
@@ -190,7 +196,7 @@ export default class Files {
             let logContent = await fs.readFile(filePath, 'utf8');
             logContent = this.#reverseLogEntries(logContent);
 
-            return {content: logContent, level: type};
+            return { content: logContent, level: type };
         } catch (error) {
             if (error.toString().includes('no such file or directory')) {
                 // Check and create the directory if it doesn't exist
@@ -203,7 +209,7 @@ export default class Files {
             } else logError(logTags.Files, error);
 
             // empty anyway!
-            return {content: '', level: type};
+            return { content: '', level: type };
         }
     }
 
@@ -238,7 +244,7 @@ export default class Files {
      */
     static async makeFilesDir(directory = this.#filesPath()) {
         // Create if it doesn't exist.
-        await fs.mkdir(directory, {recursive: true});
+        await fs.mkdir(directory, { recursive: true });
     }
 
     /**
@@ -253,7 +259,7 @@ export default class Files {
         const entries = [];
         let currentEntry = [];
 
-        logContent.split('\n').forEach(line => {
+        logContent.split('\n').forEach((line) => {
             const trimmedLine = line.trim();
             if (entryPattern.test(trimmedLine)) {
                 if (currentEntry.length) {

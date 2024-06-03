@@ -2,7 +2,6 @@
  * Represents statistics related to a Post.
  */
 export default class Stats {
-
     /**
      * Creates an instance of Stats.
      *
@@ -19,7 +18,7 @@ export default class Stats {
         emailsOpened = '',
         newsletterName = '',
         newsletterStatus = 'na',
-        postContentTrackedLinks = []
+        postContentTrackedLinks = [],
     ) {
         this.members = members;
         this.emailsSent = emailsSent;

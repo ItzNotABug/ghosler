@@ -1,11 +1,10 @@
 import Files from '../files.js';
-import {logDebug, logError, logTags} from '../../log/logger.js';
+import { logDebug, logError, logTags } from '../../log/logger.js';
 
 /**
  * A queue class for batching and processing updates to links click tracking statistics.
  */
 export default class LinksQueue {
-
     /**
      * Creates a new Queue instance.
      *
@@ -69,14 +68,18 @@ export default class LinksQueue {
             const post = await Files.get(postId);
             if (!post) return;
 
-            post.stats.postContentTrackedLinks.forEach(linkObject => {
+            post.stats.postContentTrackedLinks.forEach((linkObject) => {
                 const linkUrl = Object.keys(linkObject)[0];
-                if (urlStats.has(linkUrl)) linkObject[linkUrl] += urlStats.get(linkUrl);
+                if (urlStats.has(linkUrl))
+                    linkObject[linkUrl] += urlStats.get(linkUrl);
             });
 
             const saved = await Files.create(post, true);
             if (saved) {
-                logDebug(logTags.Stats, `Batched link click tracking updated for post: ${post.title}.`);
+                logDebug(
+                    logTags.Stats,
+                    `Batched link click tracking updated for post: ${post.title}.`,
+                );
             }
         } catch (error) {
             logError(logTags.Stats, error);

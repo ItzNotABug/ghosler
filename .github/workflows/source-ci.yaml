@@ -1,0 +1,26 @@
+name: Source CI
+
+on:
+  workflow_dispatch: # for manual runs
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build-and-test:
+    name: Run Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Prettier
+        run: npm run lint

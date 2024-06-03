@@ -15,11 +15,15 @@ router.get('/:postId', async (req, res) => {
     if (!postObject) {
         return res.render('dashboard/newsletters', {
             level: 'error',
-            message: 'Invalid Post Id!'
+            message: 'Invalid Post Id!',
         });
     }
 
-    if (postObject && postObject.stats && postObject.stats.newsletterStatus === 'Unsent') {
+    if (
+        postObject &&
+        postObject.stats &&
+        postObject.stats.newsletterStatus === 'Unsent'
+    ) {
         const newsletterItems = await new Ghost().newsletters();
         delete newsletterItems.meta; // we don't need meta here.
 
@@ -28,12 +32,12 @@ router.get('/:postId', async (req, res) => {
 
         res.render('dashboard/newsletters', {
             post: postObject,
-            newsletters: newsletters
+            newsletters: newsletters,
         });
     } else {
         res.render('dashboard/newsletters', {
             level: 'error',
-            message: 'This post is already sent as a newsletter via email.'
+            message: 'This post is already sent as a newsletter via email.',
         });
     }
 });
@@ -47,7 +51,7 @@ router.post('/send', async (req, res) => {
     if (!postId || !newsletterId || !newsletterName) {
         return res.render('dashboard/newsletters', {
             level: 'error',
-            message: 'Post Id, Newsletter Id or Newsletter Name is missing!'
+            message: 'Post Id, Newsletter Id or Newsletter Name is missing!',
         });
     }
 
@@ -55,7 +59,7 @@ router.post('/send', async (req, res) => {
     if (!postObject) {
         return res.render('dashboard/newsletters', {
             level: 'error',
-            message: 'Invalid Post Id!'
+            message: 'Invalid Post Id!',
         });
     }
 
@@ -72,7 +76,12 @@ router.post('/send', async (req, res) => {
      * 3. Post contains stats object &
      * 4. Post's Stats newsletter status is 'Unsent'.
      */
-    if (post && post.content && post.stats && post.stats.newsletterStatus === 'Unsent') {
+    if (
+        post &&
+        post.content &&
+        post.stats &&
+        post.stats.newsletterStatus === 'Unsent'
+    ) {
         /**
          * Mark the post's current status as 'Sending'
          * This is done to prevent re-sending until Ghosler fetches members.
@@ -82,19 +91,25 @@ router.post('/send', async (req, res) => {
         await post.update(true);
 
         // send the newsletter as usual.
-        Newsletter.send(post, {id: newsletterId, name: newsletterName}).then();
+        Newsletter.send(post, {
+            id: newsletterId,
+            name: newsletterName,
+        }).then();
 
         res.render('dashboard/newsletters', {
             post: post,
             level: 'success',
-            message: 'Newsletter will be sent shortly.'
+            message: 'Newsletter will be sent shortly.',
         });
-
     } else {
         let message = 'This post is already sent as a newsletter via email.';
-        if (!post || !post.content || !post.stats) message = 'Post does not seem to be valid.';
+        if (!post || !post.content || !post.stats)
+            message = 'Post does not seem to be valid.';
 
-        res.render('dashboard/newsletters', {level: 'error', message: message});
+        res.render('dashboard/newsletters', {
+            level: 'error',
+            message: message,
+        });
     }
 });
 

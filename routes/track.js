@@ -18,8 +18,8 @@ router.get('/track/pixel.png', async (req, res) => {
         'Content-Type': 'image/png',
         'Content-Length': pixel.length,
         'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+        Pragma: 'no-cache',
+        Expires: '0',
     });
 
     res.end(pixel);
@@ -32,7 +32,7 @@ router.get('/track/link', async (req, res) => {
         res.redirect(req.query.redirect);
     } else {
         // redirect to main ghost blog.
-        ProjectConfigs.ghost().then(cfg => res.redirect(cfg.url));
+        ProjectConfigs.ghost().then((cfg) => res.redirect(cfg.url));
     }
 });
 
