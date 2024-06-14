@@ -19,6 +19,16 @@
             <label for="newsletter.center_title" class="text-gray-300">Center Title</label>
         </div>
 
+        <!-- Show Excerpts Checkbox -->
+        <div class="form-group mb-4 flex items-center">
+            <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-600 mr-2"
+                   id="newsletter.show_excerpt" name="newsletter.show_excerpt"
+            <% if (Boolean(configs.newsletter.show_excerpt) ?? false) { %> checked
+                    <% } %>
+            >
+            <label for="newsletter.show_excerpt" class="text-gray-300">Show Excerpts</label>
+        </div>
+
         <!-- Track URL Clicks Checkbox -->
         <div class="form-group mb-4">
             <div class="flex items-center">
