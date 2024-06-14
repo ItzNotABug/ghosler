@@ -15,6 +15,7 @@
   },
   "newsletter": {
     "center_title": false,
+    "show_excerpt": false,
     "footer_content": "",
     "show_comments": true,
     "show_feedback": true,
