@@ -193,6 +193,7 @@ export default class ProjectConfigs {
         const ghostAdminSecret = formData['ghost.secret'];
         const newsletterTrackLinks = formData['newsletter.track_links'];
         const newsletterCenterTitle = formData['newsletter.center_title'];
+        const newsletterShowExcerpt = formData['newsletter.show_excerpt'];
         const newsletterShowFeedback = formData['newsletter.show_feedback'];
         const newsletterShowComments = formData['newsletter.show_comments'];
         const newsletterShowLatestPosts =
@@ -248,6 +249,8 @@ export default class ProjectConfigs {
         configs.newsletter.track_links = newsletterTrackLinks === 'on' ?? true;
         configs.newsletter.center_title =
             newsletterCenterTitle === 'on' ?? false;
+        configs.newsletter.show_excerpt =
+            newsletterShowExcerpt === 'on' ?? false;
         configs.newsletter.show_feedback =
             newsletterShowFeedback === 'on' ?? true;
         configs.newsletter.show_comments =
