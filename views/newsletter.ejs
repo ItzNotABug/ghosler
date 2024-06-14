@@ -931,7 +931,7 @@
                                 </tr>
 
                                 <!-- Post Excerpt If Enabled -->
-                                <% if (show_excerpt) { %>
+                                <% if (show_excerpt && post.preview) { %>
                                     <tr>
                                         <td class="post-excerpt"
                                             align="<% if (center_title) { %>center<% } else { %>left<% } %>"
