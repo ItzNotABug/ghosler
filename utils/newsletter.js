@@ -107,6 +107,7 @@ export default class Newsletter {
 
         const customisations = await ProjectConfigs.newsletter();
         postData.center_title = customisations.center_title;
+        postData.show_excerpt = customisations.show_excerpt;
         postData.show_feedback = customisations.show_feedback;
         postData.show_subscription = customisations.show_subscription;
         postData.show_featured_image = customisations.show_featured_image;
@@ -311,7 +312,7 @@ export default class Newsletter {
                 title: 'Welcome',
                 author: 'Ghost',
                 preview:
-                    "We've crammed the most important information to help you get started with Ghost into this one post. It's your cheat-sheet to get started, and your shortcut to advanced features.",
+                    'The most important info. to get you started with Ghost.',
                 content:
                     "<div><p><strong>Hey there</strong>, welcome to your new home on the web!</p><hr><h3>Ghost</h3><p>Ghost is an independent, open source app, which means you can customize absolutely everything. Inside the admin area, you'll find straightforward controls for changing themes, colors, navigation, logos and settings — so you can set your site up just how you like it. No technical knowledge required.</p><hr><h3>Ghosler</h3><p>Ghosler is an open source project designed for those starting with Ghost or managing a small to moderate user base. It provides extensive control over newsletter settings and customization, enhancing your outreach with features like URL Click Tracking, Newsletter Feedback, Email Deliverability, and Email Open Rate Analytics. Additionally, Ghosler handles both Free & Paid members content management efficiently.</p><p>Moreover, Ghosler supports popular Ghost widgets, including Images/Unsplash, Audio, Video, File, Toggle, Callout Card, and social media integrations like Twitter (X), YouTube, Vimeo, along with Button, Bookmark, and Blockquote features.</p><hr><h3>Ending the Preview</h3><p>Once you're ready to begin publishing and want to clear out these starter posts, you can delete the Ghost staff user. Deleting an author will automatically remove all of their posts, leaving you with a clean blank canvas.</p></div>",
                 comments: 'https://bulletin.ghost.io/welcome/#ghost-comments',
@@ -334,6 +335,7 @@ export default class Newsletter {
 
         const customisations = await ProjectConfigs.newsletter();
         preview.center_title = customisations.center_title;
+        preview.show_excerpt = customisations.show_excerpt;
         preview.show_feedback = customisations.show_feedback;
         preview.show_comments = customisations.show_comments;
         preview.show_subscription = customisations.show_subscription;

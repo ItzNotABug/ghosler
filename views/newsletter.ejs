@@ -643,6 +643,10 @@
                 line-height: 1.15em !important;
             }
 
+            table.body .post-excerpt {
+                font-size: 16px !important;
+            }
+
             table.body .post-meta.view-online-mobile {
                 display: table-row !important;
             }
@@ -925,6 +929,19 @@
                                                    overflow-wrap: anywhere;" target="_blank"><%= post.title %> </a>
                                     </td>
                                 </tr>
+
+                                <!-- Post Excerpt If Enabled -->
+                                <% if (show_excerpt && post.preview) { %>
+                                    <tr>
+                                        <td class="post-excerpt"
+                                            align="<% if (center_title) { %>center<% } else { %>left<% } %>"
+                                            style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; vertical-align: top; color: #15212A; width: 100%; max-width: 600px; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>;"
+                                            valign="top" width="100%">
+                                            <p class="post-excerpt"
+                                               style="margin: 0; padding-bottom: 20px; color: #15212A; line-height: 1.6em; font-size: 18px; font-family: Georgia, serif; text-align: <% if (center_title) { %>center<% } else { %>left<% } %>;"><%= post.preview %> </p>
+                                        </td>
+                                    </tr>
+                                <% } %>
 
                                 <!-- Post Meta -->
                                 <tr>
