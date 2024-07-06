@@ -292,11 +292,11 @@ export default class Miscellaneous {
      */
     static async isPostSecure(request) {
         const payload = JSON.stringify(request.body);
-        const ghostConfigs = await ProjectConfigs.ghost();
+        const ghostSecretSignature = (await ProjectConfigs.ghost()).secret;
         const signatureWithDateHeader = request.headers['x-ghost-signature'];
 
         // Secret set on Ghosler but not recd. in the request headers.
-        if (ghostConfigs.secret && !signatureWithDateHeader) {
+        if (ghostSecretSignature && !signatureWithDateHeader) {
             logError(
                 logTags.Express,
                 "The 'X-Ghost-Signature' header not found in the request. Did you setup the Secret Key correctly?",
@@ -327,25 +327,27 @@ export default class Miscellaneous {
         }
 
         /**
+         * Build signature for versions below `Ghost:5.87.1`.
+         */
+        const expectedOldSignature = this.#createHmac(
+            ghostSecretSignature,
+            payload,
+        );
+
+        /**
          * Build signature with new logic for `Ghost:5.87.1` & above.
          * @see https://github.com/TryGhost/Ghost/pull/20500
          */
-        const expectedNewSignature = crypto
-            .createHmac('sha256', ghostConfigs.secret)
-            .update(`${payload}${timeStamp}`)
-            .digest('hex');
+        const expectedNewSignature = this.#createHmac(
+            ghostSecretSignature,
+            `${payload}${timeStamp}`,
+        );
 
-        /**
-         * Build signature for versions below `Ghost:5.87.1`.
-         */
-        const expectedOldSignature = crypto
-            .createHmac('sha256', ghostConfigs.secret)
-            .update(payload)
-            .digest('hex');
-
-        if (signature === expectedNewSignature) {
-            return true;
-        } else if (signature === expectedOldSignature) {
+        // Check if either of the signatures match
+        if (
+            signature === expectedOldSignature ||
+            signature === expectedNewSignature
+        ) {
             return true;
         } else {
             logError(
@@ -373,5 +375,20 @@ export default class Miscellaneous {
             expiresIn: '5m',
             audience,
         });
+    }
+
+    /**
+     * Creates a signature based on given inputs.
+     *
+     * @param {string} secret - The ghost secret key.
+     * @param {string} payload - The payload to create the hash for.
+     *
+     * @returns {string} The generated HMAC hex digest.
+     */
+    static #createHmac(secret, payload) {
+        return crypto
+            .createHmac('sha256', secret)
+            .update(payload)
+            .digest('hex');
     }
 }
