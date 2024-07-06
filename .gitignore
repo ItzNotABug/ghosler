@@ -22,3 +22,6 @@ configuration/config.local.json
 
 # custom template used for tests
 custom-template.ejs
+
+# helper script for docker publish
+docker-publish.sh
