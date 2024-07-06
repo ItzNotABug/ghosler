@@ -326,12 +326,34 @@ export default class Miscellaneous {
             return false;
         }
 
-        const expectedSignature = crypto
+        /**
+         * Build signature with new logic for `Ghost:5.87.1` & above.
+         * @see https://github.com/TryGhost/Ghost/pull/20500
+         */
+        const expectedNewSignature = crypto
+            .createHmac('sha256', ghostConfigs.secret)
+            .update(`${payload}${timeStamp}`)
+            .digest('hex');
+
+        /**
+         * Build signature for versions below `Ghost:5.87.1`.
+         */
+        const expectedOldSignature = crypto
             .createHmac('sha256', ghostConfigs.secret)
             .update(payload)
             .digest('hex');
 
-        return signature === expectedSignature;
+        if (signature === expectedNewSignature) {
+            return true;
+        } else if (signature === expectedOldSignature) {
+            return true;
+        } else {
+            logError(
+                logTags.Express,
+                "The signature in the 'X-Ghost-Signature' header is not valid.",
+            );
+            return false;
+        }
     }
 
     /**
