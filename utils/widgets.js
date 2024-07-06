@@ -516,10 +516,12 @@ export default class Widgets {
                 imageHtml = `<a href="${trackedAnchorLink}">${imageHtml}</a>`;
             }
 
+            const captionContentHtml = caption.html();
+
             const imageFigure = `
                 <div class="kg-card kg-image-card">
                     ${imageHtml}
-                    <div class="kg-image-card-caption">${caption.html()}</div>
+                    ${captionContentHtml ? `<div class="kg-image-card-caption">${captionContentHtml}</div>` : ''}
                 </div>
             `;
 
