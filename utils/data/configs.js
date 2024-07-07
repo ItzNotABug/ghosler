@@ -108,7 +108,7 @@ export default class ProjectConfigs {
     }
 
     /**
-     * Resets & updates the config caches.
+     * Resets & updates the config cache.
      */
     static async reset() {
         await this.all();

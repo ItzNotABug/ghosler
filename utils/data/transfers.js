@@ -50,7 +50,10 @@ export default class Transfers {
         }
 
         try {
-            const tempDirectoryPath = path.join(os.tmpdir(), `import_${Date.now()}`);
+            const tempDirectoryPath = path.join(
+                os.tmpdir(),
+                `import_${Date.now()}`,
+            );
             await fs.mkdir(tempDirectoryPath, { recursive: true });
 
             const tempZipPath = path.join(tempDirectoryPath, 'import.zip');
@@ -62,7 +65,10 @@ export default class Transfers {
             const configsDir = path.join(process.cwd(), 'configuration');
 
             const tempFilesDir = path.join(tempDirectoryPath, 'files');
-            const tempConfigsDir = path.join(tempDirectoryPath, 'configuration');
+            const tempConfigsDir = path.join(
+                tempDirectoryPath,
+                'configuration',
+            );
 
             // direct copy the analytics.
             await this.#copy(tempFilesDir, filesDir);

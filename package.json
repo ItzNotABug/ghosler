@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "prettier . --check",
     "format": "prettier . --write",
-    "dev": "nodemon -e js --ignore custom-template.ejs app.js",
+    "dev": "nodemon -e js app.js",
     "cleanstart": "npm run buildcss && npm run dev",
     "buildcss": "npx tailwindcss -i ./public/styles/tailwind.css -o ./public/styles/style.css --minify"
   },
