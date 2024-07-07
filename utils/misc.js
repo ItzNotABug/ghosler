@@ -235,16 +235,6 @@ export default class Miscellaneous {
     }
 
     /**
-     * Check if a given object is empty.
-     *
-     * @param {Object} object
-     * @returns {boolean}
-     */
-    static isObjectEmpty(object) {
-        return Object.keys(object).length === 0;
-    }
-
-    /**
      * Sleep for a given period of time.
      *
      * @param {number} ms Milliseconds to sleep.
