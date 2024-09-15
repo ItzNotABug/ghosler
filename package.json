@@ -1,7 +1,7 @@
 {
   "name": "ghosler",
   "description": "Send newsletter emails to your members, using your own email credentials!",
-  "version": "0.98.2",
+  "version": "0.98.4",
   "main": "app.js",
   "type": "module",
   "author": "@itznotabug",
@@ -23,7 +23,7 @@
     "cheerio": "^1.0.0-rc.12",
     "cookie-session": "^2.1.0",
     "css-inline": "^0.11.2",
-    "ejs": "^3.1.9",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-fileupload": "^1.5.0",
     "extract-zip": "^2.0.1",
