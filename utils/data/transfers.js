@@ -97,7 +97,7 @@ export default class Transfers {
 
             return {
                 level: 'success',
-                message: 'Import successful!',
+                message: 'Import successful! You will now be logged out.',
             };
         } catch (error) {
             logError(logTags.Configs, error);
@@ -176,8 +176,8 @@ export default class Transfers {
             'newsletter.show_subscription',
             'newsletter.show_featured_image',
             'newsletter.show_powered_by_ghost',
+            'newsletter.custom_subject_pattern',
             'newsletter.show_powered_by_ghosler',
-            // 'newsletter.custom_subject_pattern',
 
             'custom_template',
             'custom_template.enabled',

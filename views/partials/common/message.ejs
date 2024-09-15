@@ -15,6 +15,10 @@
                 alertMessage.style.margin = '0';
                 alertMessage.style.padding = '0';
             }, 500);
+
+            <% if ((typeof invalidate_session !== 'undefined' && invalidate_session === true)) { %>
+                window.location.href = '/logout';
+            <% } %>
         }, 3000);
     </script>
 <% } %>

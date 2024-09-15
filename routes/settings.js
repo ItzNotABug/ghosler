@@ -93,6 +93,7 @@ router.post('/configs', async (req, res) => {
     res.render('dashboard/import-export', {
         level,
         message,
+        invalidate_session: level === 'success',
     });
 });
 
