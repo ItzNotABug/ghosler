@@ -108,6 +108,13 @@ export default class ProjectConfigs {
     }
 
     /**
+     * Resets & updates the config cache.
+     */
+    static async reset() {
+        await this.all();
+    }
+
+    /**
      * Internal method to read and parse the configuration file.
      *
      * @returns {Promise<Object>} Parsed configuration data.
@@ -121,9 +128,8 @@ export default class ProjectConfigs {
             const fileContents = await fs.readFile(configFilePath, 'utf8');
             const configs = JSON.parse(fileContents);
 
-            // Update the cached settings if they are not already set.
-            if (Miscellaneous.isObjectEmpty(this.#cachedSettings))
-                this.#cachedSettings = configs;
+            // Update the cached settings.
+            this.#cachedSettings = configs;
 
             return configs;
         } catch (error) {

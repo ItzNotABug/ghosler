@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 import Ghost from '../utils/api/ghost.js';
 import Files from '../utils/data/files.js';
+import Transfers from '../utils/data/transfers.js';
 import ProjectConfigs from '../utils/data/configs.js';
 
 const router = express.Router();
@@ -48,14 +49,17 @@ router.post('/', async (req, res) => {
     let fullUrl = new URL(
         `${req.protocol}://${req.get('Host')}${req.originalUrl}`,
     );
+
     if (req.get('Referer')) {
         fullUrl = new URL(req.get('Referer'));
     }
+
+    fullUrl.search = ''; // drop query params
     fullUrl.pathname = fullUrl.pathname.split('/settings')[0];
-    fullUrl.search = ''; // drops any query parameters
-    fullUrl.pathname = fullUrl.pathname.replace(/\/+/g, '/'); // combine repeated forward slashes in path
-    let normalizedUrl = fullUrl.href.replace(/\/$/, '').toString(); // drop a trailing slash
-    formData['ghosler.url'] = normalizedUrl;
+    fullUrl.pathname = fullUrl.pathname.replace(/\/+/g, '/');
+
+    // drop a trailing slash
+    formData['ghosler.url'] = fullUrl.href.replace(/\/$/, '').toString();
 
     const result = await ProjectConfigs.update(formData);
     const configs = await ProjectConfigs.all();
@@ -77,6 +81,20 @@ router.post('/', async (req, res) => {
     }
 
     res.render('dashboard/settings', { level, message, configs });
+});
+
+router.get('/configs/export', async (_, res) => await Transfers.export(res));
+
+router.get('/configs', async (_, res) => res.render('dashboard/import-export'));
+
+router.post('/configs', async (req, res) => {
+    const { level, message } = await Transfers.import(req);
+
+    res.render('dashboard/import-export', {
+        level,
+        message,
+        invalidate_session: level === 'success',
+    });
 });
 
 export default router;

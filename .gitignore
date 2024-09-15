@@ -25,3 +25,6 @@ custom-template.ejs
 
 # helper script for docker publish
 docker-publish.sh
+
+# internal backed up files for quick tests, `.bak` extensions
+*.bak
