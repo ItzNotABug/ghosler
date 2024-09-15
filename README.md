@@ -167,10 +167,10 @@ see - [TryCloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/co
 
 If you want to customize the newsletter template even more, follow the steps -
 
-1. Create a **custom-template.ejs** in the root directory.
-2. Customize it as you like, take a look at [pre-defined template](./views/newsletter.ejs) for reference.
-3. That's it! Ghosler will use the new template for preview & sending newsletter.
-4. Rename the file to anything if you don't want to use the custom template.
+1. Create a **custom-template.ejs**
+2. Customize it as you like, for reference - you can download the `Base Template` from settings itself
+3. Upload it via dashboard & that's it! Ghosler will use the new template for preview & sending newsletter
+4. Disable from settings if you don't want to use the custom template
 
 ---
 
