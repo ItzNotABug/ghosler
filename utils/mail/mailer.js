@@ -253,7 +253,7 @@ export default class NewsletterMailer {
      */
     async #transporter(mailConfig) {
         return nodemailer.createTransport({
-            secure: true,
+            secure: false,
             host: mailConfig.host,
             port: mailConfig.port,
             auth: { user: mailConfig.auth.user, pass: mailConfig.auth.pass },

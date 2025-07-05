@@ -267,9 +267,14 @@ export default class Newsletter {
             if (elementUrl === '#' || !elementUrl) return;
 
             /** @type {string | null} */
-            let urlHost = null;
+             let urlHost = null;
 
             elementUrl = he.decode(elementUrl);
+
+            // ignore non http/https begin
+            if (!elementUrl.startsWith('http://') && !elementUrl.startsWith('https://')) {
+                return;
+            }
 
             try {
                 urlHost = new URL(elementUrl).host;
@@ -278,6 +283,7 @@ export default class Newsletter {
                     logTags.Newsletter,
                     Error(`Invalid URL found: ${elementUrl}, ${error.stack}.`),
                 );
+                return; // skip fail
             }
 
             if (
